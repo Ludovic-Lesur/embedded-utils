@@ -7,6 +7,9 @@
 
 #include "error.h"
 
+#ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
+#include "embedded_utils_flags.h"
+#endif
 #include "types.h"
 #ifdef EMBEDDED_UTILS_ERROR_STACK_SIGFOX
 #include "error_base.h"

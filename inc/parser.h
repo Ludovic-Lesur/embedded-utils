@@ -93,13 +93,13 @@ PARSER_status_t PARSER_get_parameter(PARSER_context_t* parser_ctx, STRING_format
 PARSER_status_t PARSER_get_byte_array(PARSER_context_t* parser_ctx, char_t separator, uint8_t maximum_length, uint8_t exact_length, uint8_t* parameter, uint8_t* extracted_length);
 
 /*******************************************************************/
-#define PARSER_exit_error(error_base) { if (parser_status != PARSER_SUCCESS) { status = (error_base + parser_status); goto errors; } }
+#define PARSER_exit_error(base) { if (parser_status != PARSER_SUCCESS) { status = (base + parser_status); goto errors; } }
 
 /*******************************************************************/
-#define PARSER_stack_error(void) { if (parser_status != PARSER_SUCCESS) { ERROR_stack_add(ERROR_BASE_PARSER + parser_status); } }
+#define PARSER_stack_error(base) { if (parser_status != PARSER_SUCCESS) { ERROR_stack_add(base + parser_status); } }
 
 /*******************************************************************/
-#define PARSER_stack_exit_error(error_code) { if (parser_status != PARSER_SUCCESS) { ERROR_stack_add(ERROR_BASE_PARSER + parser_status); status = error_code; goto errors; } }
+#define PARSER_stack_exit_error(base, code) { if (parser_status != PARSER_SUCCESS) { ERROR_stack_add(base + parser_status); status = code; goto errors; } }
 
 #endif	/* __PARSER_H__ */
 

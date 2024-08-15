@@ -181,12 +181,12 @@ STRING_status_t STRING_append_value(char_t* str, uint8_t str_size_max, int32_t v
 STRING_status_t STRING_value_to_5_digits_string(int32_t value, char_t* str);
 
 /*******************************************************************/
-#define STRING_exit_error(error_base) { if (string_status != STRING_SUCCESS) { status = (error_base + string_status); goto errors; } }
+#define STRING_exit_error(base) { if (string_status != STRING_SUCCESS) { status = (base + string_status); goto errors; } }
 
 /*******************************************************************/
-#define STRING_stack_error(void) { if (string_status != STRING_SUCCESS) { ERROR_stack_add(ERROR_BASE_STRING + string_status); } }
+#define STRING_stack_error(base) { if (string_status != STRING_SUCCESS) { ERROR_stack_add(base + string_status); } }
 
 /*******************************************************************/
-#define STRING_stack_exit_error(error_code) { if (string_status != STRING_SUCCESS) { ERROR_stack_add(ERROR_BASE_STRING + string_status); status = error_code; goto errors; } }
+#define STRING_stack_exit_error(base, code) { if (string_status != STRING_SUCCESS) { ERROR_stack_add(base + string_status); status = code; goto errors; } }
 
 #endif /* __STRING_H__ */

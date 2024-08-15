@@ -8,6 +8,9 @@
 #ifndef __ERROR_H__
 #define __ERROR_H__
 
+#ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
+#include "embedded_utils_flags.h"
+#endif
 #include "types.h"
 
 /*!******************************************************************
