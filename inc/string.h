@@ -71,7 +71,7 @@ typedef enum {
 } STRING_justification_t;
 
 /*!******************************************************************
- * \enum STRING_copy_t
+ * \struct STRING_copy_t
  * \brief String copy operation parameters.
  *******************************************************************/
 typedef struct {

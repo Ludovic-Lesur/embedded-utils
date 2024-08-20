@@ -45,7 +45,7 @@ typedef enum {
 } PARSER_mode_t;
 
 /*!******************************************************************
- * \enum PARSER_context_t
+ * \struct PARSER_context_t
  * \brief PARSER context structure.
  *******************************************************************/
 typedef struct {

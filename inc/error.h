@@ -14,7 +14,7 @@
 #include "types.h"
 
 /*!******************************************************************
- * \enum ERROR_code_t
+ * \typedef ERROR_code_t
  * \brief Board error code type.
  *******************************************************************/
 typedef uint16_t ERROR_code_t;

@@ -1,6 +1,6 @@
 # Description
 
-This repository contains utility functions for embedded projects.
+This repository contains **utility functions** for embedded projects.
 
 # Compilation flags
 
