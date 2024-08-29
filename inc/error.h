@@ -68,4 +68,13 @@ uint8_t ERROR_stack_is_empty(void);
 void ERROR_import_sigfox_stack(void);
 #endif
 
+/*******************************************************************/
+#define ERROR_check_exit(status, success, base)  { if (status != success) { status = ((base << 0) + status); goto errors; } }
+
+/*******************************************************************/
+#define ERROR_check_stack(status, success, base) { if (status != success) { ERROR_stack_add((base << 0) + status); } }
+
+/*******************************************************************/
+#define ERROR_check_stack_exit(status, success, base, code) { if (status != success) { ERROR_stack_add((base << 0) + status); status = code; goto errors; } }
+
 #endif /* __ERROR_H__ */

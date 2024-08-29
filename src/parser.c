@@ -7,6 +7,7 @@
 
 #include "parser.h"
 
+#include "error.h"
 #include "string.h"
 #include "math.h"
 #include "types.h"

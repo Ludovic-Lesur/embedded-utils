@@ -240,12 +240,12 @@ MATH_status_t MATH_int32_to_signed_magnitude(int32_t value, uint8_t sign_bit_pos
 }
 
 /*******************************************************************/
-#define MATH_exit_error(base) { if (math_status != MATH_SUCCESS) { status = (base + math_status); goto errors; } }
+#define MATH_exit_error(base) { ERROR_check_exit(math_status, MATH_SUCCESS, base) }
 
 /*******************************************************************/
-#define MATH_stack_error(base) { if (math_status != MATH_SUCCESS) { ERROR_stack_add(base + math_status); } }
+#define MATH_stack_error(base) { ERROR_check_stack(math_status, MATH_SUCCESS, base) }
 
 /*******************************************************************/
-#define MATH_stack_exit_error(base, code) { if (math_status != MATH_SUCCESS) { ERROR_stack_add(base + math_status); status = code; goto errors; } }
+#define MATH_stack_exit_error(base, code) { ERROR_check_stack_exit(math_status, MATH_SUCCESS, base, code) }
 
 #endif /* __MATH_H__ */
