@@ -69,12 +69,12 @@ void ERROR_import_sigfox_stack(void);
 #endif
 
 /*******************************************************************/
-#define ERROR_check_exit(status, success, base)  { if (status != success) { status = ((base << 0) + status); goto errors; } }
+#define ERROR_check_exit(ll_status, ll_success, ll_base)  { if (ll_status != ll_success) { status = ((ll_base << 0) + ll_status); goto errors; } }
 
 /*******************************************************************/
-#define ERROR_check_stack(status, success, base) { if (status != success) { ERROR_stack_add((base << 0) + status); } }
+#define ERROR_check_stack(ll_status, ll_success, ll_base) { if (ll_status != ll_success) { ERROR_stack_add((ll_base << 0) + ll_status); } }
 
 /*******************************************************************/
-#define ERROR_check_stack_exit(status, success, base, code) { if (status != success) { ERROR_stack_add((base << 0) + status); status = code; goto errors; } }
+#define ERROR_check_stack_exit(ll_status, ll_success, ll_base, code) { if (ll_status != ll_success) { ERROR_stack_add((ll_base << 0) + ll_status); status = code; goto errors; } }
 
 #endif /* __ERROR_H__ */

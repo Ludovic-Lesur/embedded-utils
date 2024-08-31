@@ -2,6 +2,12 @@
 
 This repository contains **utility functions** for embedded projects.
 
+# Dependencies
+
+The driver relies on:
+
+* An external `types.h` header file defining the **standard C types** of the targetted MCU.
+
 # Compilation flags
 
 | **Flag name** | **Value** | **Description** |
