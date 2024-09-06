@@ -51,7 +51,7 @@ static STRING_status_t _STRING_decimal_value_to_char(uint8_t value, char_t* chr)
 	// Local variables.
 	STRING_status_t status = STRING_SUCCESS;
 	// Check parameters.
-	if (value > MATH_DECIMAL_DIGIT_MAX_VALUE) {
+	if (value > MATH_DECIMAL_DIGIT_VALUE_MAX) {
 		status = STRING_ERROR_DECIMAL_OVERFLOW;
 		goto errors;
 	}
@@ -97,7 +97,7 @@ static STRING_status_t _STRING_hexadecimal_value_to_char(uint8_t value, char_t* 
 	// Local variables.
 	STRING_status_t status = STRING_SUCCESS;
 	// Check parameters.
-	if (value > MATH_HEXADECIMAL_DIGIT_MAX_VALUE) {
+	if (value > MATH_HEXADECIMAL_DIGIT_VALUE_MAX) {
 		status = STRING_ERROR_HEXADECIMAL_OVERFLOW;
 		goto errors;
 	}
@@ -136,7 +136,7 @@ STRING_status_t STRING_value_to_string(int32_t value, STRING_format_t format, ui
             str[str_idx++] = '0';
             str[str_idx++] = 'b';
 		}
-		for (idx=(MATH_BINARY_DIGIT_MAX_NUMBER - 1) ; idx>=0 ; idx--) {
+		for (idx=(MATH_S32_SIZE_BITS - 1) ; idx>=0 ; idx--) {
 			if (abs_value & (0b1 << idx)) {
 				str[str_idx++] = '1';
 				first_non_zero_found = 1;
@@ -154,8 +154,8 @@ STRING_status_t STRING_value_to_string(int32_t value, STRING_format_t format, ui
 			str[str_idx++] = '0';
 			str[str_idx++] = 'x';
 		}
-		for (idx=((MATH_HEXADECIMAL_DIGIT_MAX_NUMBER / 2) - 1) ; idx>=0 ; idx--) {
-			generic_byte = (abs_value >> (8 * idx)) & 0xFF;
+		for (idx=((MATH_S32_SIZE_HEXADECIMAL_DIGITS >> 1) - 1) ; idx>=0 ; idx--) {
+			generic_byte = (abs_value >> (8 * idx)) & MATH_U8_MASK;
 			if (generic_byte != 0) {
 				first_non_zero_found = 1;
 			}
@@ -174,7 +174,7 @@ STRING_status_t STRING_value_to_string(int32_t value, STRING_format_t format, ui
 			str[str_idx++] = '0';
 			str[str_idx++] = 'd';
 		}
-		for (idx=(MATH_DECIMAL_DIGIT_MAX_NUMBER - 1) ; idx>=0 ; idx--) {
+		for (idx=(MATH_S32_SIZE_DECIMAL_DIGITS - 1) ; idx>=0 ; idx--) {
 			generic_byte = (abs_value - previous_decade) / (MATH_POWER_10[idx]);
 			previous_decade += (generic_byte * MATH_POWER_10[idx]);
 			if (generic_byte != 0) {
@@ -205,7 +205,7 @@ STRING_status_t STRING_byte_array_to_hexadecimal_string(uint8_t* data, uint8_t d
 	_STRING_check_pointer(str);
 	// Build string.
 	for (idx=0 ; idx<data_size ; idx++) {
-		status = STRING_value_to_string((int32_t) data[idx], STRING_FORMAT_HEXADECIMAL, print_prefix, &(str[2 * idx]));
+		status = STRING_value_to_string((int32_t) data[idx], STRING_FORMAT_HEXADECIMAL, print_prefix, &(str[idx << 1]));
 		if (status != STRING_SUCCESS) goto errors;
 	}
 errors:
@@ -236,7 +236,7 @@ STRING_status_t STRING_string_to_value(char_t* str, STRING_format_t format, uint
 	switch (format) {
 	case STRING_FORMAT_BOOLEAN:
 		// Check if there is only 1 digit (start and end index are equal).
-		if (number_of_digits != MATH_BOOLEAN_DIGIT_MAX_NUMBER) {
+		if (number_of_digits != MATH_BOOLEAN_SIZE_BITS) {
 			status = STRING_ERROR_BOOLEAN_SIZE;
 			goto errors;
 		}
@@ -259,9 +259,8 @@ STRING_status_t STRING_string_to_value(char_t* str, STRING_format_t format, uint
 			status = STRING_ERROR_HEXADECIMAL_ODD_SIZE;
 			goto errors;
 		}
-		// Check if parameter can be binary coded on 32 bits = 4 bytes.
-		if (number_of_digits > MATH_HEXADECIMAL_DIGIT_MAX_NUMBER) {
-			// Error in parameter -> value is too large.
+		// Check if parameter can be binary coded on 32 bits.
+		if (number_of_digits > MATH_S32_SIZE_HEXADECIMAL_DIGITS) {
 			status = STRING_ERROR_HEXADECIMAL_OVERFLOW;
 			goto errors;
 		}
@@ -271,12 +270,12 @@ STRING_status_t STRING_string_to_value(char_t* str, STRING_format_t format, uint
 			status = _STRING_hexadecimal_char_to_value((str[start_idx + char_idx]), &digit_value);
 			if (status != STRING_SUCCESS) goto errors;
 			// Add digit to result.
-			(*value) |= (digit_value << ((number_of_digits - char_idx - 1) * 4));
+			(*value) |= (digit_value << ((number_of_digits - char_idx - 1) << 2));
 		}
 		break;
 	case STRING_FORMAT_DECIMAL:
 		// Check if parameter can be binary coded on 32 bits.
-		if (number_of_digits > MATH_DECIMAL_DIGIT_MAX_NUMBER) {
+		if (number_of_digits > MATH_S32_SIZE_DECIMAL_DIGITS) {
 			// Error in parameter -> value is too large.
 			status = STRING_ERROR_DECIMAL_OVERFLOW;
 			goto errors;

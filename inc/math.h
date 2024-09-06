@@ -15,21 +15,64 @@
 
 /*** MATH macros ***/
 
-#define MATH_BOOLEAN_DIGIT_MAX_NUMBER		1
+#define MATH_BOOLEAN_MIN						0
+#define MATH_BOOLEAN_MAX						1
+#define MATH_BOOLEAN_MASK						0x01
+#define MATH_BOOLEAN_SIZE_BITS					1
+#define MATH_BOOLEAN_SIZE_DECIMAL_DIGITS		1
+#define MATH_BOOLEAN_SIZE_HEXADECIMAL_DIGITS	1
 
-#define MATH_HEXADECIMAL_DIGIT_MAX_NUMBER	8
-#define MATH_HEXADECIMAL_DIGIT_MAX_VALUE	0x0F
+#define MATH_U8_MIN								0
+#define MATH_U8_MAX								255
+#define MATH_U8_MASK							0xFF
+#define MATH_U8_SIZE_BITS						8
+#define MATH_U8_SIZE_DECIMAL_DIGITS				3
+#define MATH_U8_SIZE_HEXADECIMAL_DIGITS			2
 
-#define MATH_DECIMAL_DIGIT_MAX_NUMBER		10
-#define MATH_DECIMAL_DIGIT_MAX_VALUE		9
+#define MATH_U16_MIN							0
+#define MATH_U16_MAX							65535
+#define MATH_U16_MASK							0xFFFF
+#define MATH_U16_SIZE_BITS						16
+#define MATH_U16_SIZE_DECIMAL_DIGITS			5
+#define MATH_U16_SIZE_HEXADECIMAL_DIGITS		4
 
-#define MATH_BINARY_DIGIT_MAX_NUMBER		32
+#define MATH_U32_MIN							0
+#define MATH_U32_MAX							4294967295
+#define MATH_U32_MASK							0xFFFFFFFF
+#define MATH_U32_SIZE_BITS						32
+#define MATH_U32_SIZE_DECIMAL_DIGITS			10
+#define MATH_U32_SIZE_HEXADECIMAL_DIGITS		8
 
-#define MATH_TRIGONOMETRIC_TABLE_SIZE		360
+#define MATH_S8_MIN								(-128)
+#define MATH_S8_MAX								127
+#define MATH_S8_MASK							0xFF
+#define MATH_S8_SIZE_BITS						8
+#define MATH_S8_SIZE_DECIMAL_DIGITS				3
+#define MATH_S8_SIZE_HEXADECIMAL_DIGITS			2
+
+#define MATH_S16_MIN							(-32768)
+#define MATH_S16_MAX							32767
+#define MATH_S16_MASK							0xFFFF
+#define MATH_S16_SIZE_BITS						16
+#define MATH_S16_SIZE_DECIMAL_DIGITS			5
+#define MATH_S16_SIZE_HEXADECIMAL_DIGITS		4
+
+#define MATH_S32_MIN							(-2147483648)
+#define MATH_S32_MAX							2147483647
+#define MATH_S32_MASK							0xFFFFFFFF
+#define MATH_S32_SIZE_BITS						32
+#define MATH_S32_SIZE_DECIMAL_DIGITS			10
+#define MATH_S32_SIZE_HEXADECIMAL_DIGITS		8
+
+#define MATH_BOOLEAN_DIGIT_VALUE_MAX			1
+#define MATH_DECIMAL_DIGIT_VALUE_MAX			9
+#define MATH_HEXADECIMAL_DIGIT_VALUE_MAX		15
+
+#define MATH_TRIGONOMETRIC_TABLE_SIZE			360
 
 /*** MATH global variables ***/
 
-extern const uint32_t MATH_POWER_10[MATH_DECIMAL_DIGIT_MAX_NUMBER];
+extern const uint32_t MATH_POWER_10[MATH_U32_SIZE_DECIMAL_DIGITS];
 #ifdef EMBEDDED_UTILS_MATH_COS_TABLE
 extern const int16_t MATH_COS_TABLE[MATH_TRIGONOMETRIC_TABLE_SIZE];
 #endif
@@ -58,119 +101,37 @@ typedef enum {
 /*** MATH functions ***/
 
 /*!******************************************************************
- * \fn MATH_status_t MATH_min_u8(uint8_t* data, uint8_t data_size, uint8_t* result)
- * \brief Returns the minimum value of a 8-bits data array.
- * \param[in]  	data: Input array.
- * \param[in]	data_size: Number of elements in the array.
- * \param[out] 	result: Pointer to the result.
- * \retval		Function execution status.
- *******************************************************************/
-MATH_status_t MATH_min_u8(uint8_t* data, uint8_t data_size, uint8_t* result);
-
-/*!******************************************************************
- * \fn MATH_status_t MATH_min_u16(uint16_t* data, uint8_t data_size, uint16_t* result)
- * \brief Returns the minimum value of a 16-bits data array.
- * \param[in]  	data: Input array.
- * \param[in]	data_size: Number of elements in the array.
- * \param[out] 	result: Pointer to the result.
- * \retval		Function execution status.
- *******************************************************************/
-MATH_status_t MATH_min_u16(uint16_t* data, uint8_t data_size, uint16_t* result);
-
-/*!******************************************************************
- * \fn MATH_status_t MATH_min_u32(uint32_t* data, uint8_t data_size, uint32_t* result)
+ * \fn MATH_status_t MATH_min(int32_t* data, uint8_t data_size, int32_t* result)
  * \brief Returns the minimum value of a 32-bits data array.
  * \param[in]  	data: Input array.
  * \param[in]	data_size: Number of elements in the array.
  * \param[out] 	result: Pointer to the result.
  * \retval		Function execution status.
  *******************************************************************/
-MATH_status_t MATH_min_u32(uint32_t* data, uint8_t data_size, uint32_t* result);
+MATH_status_t MATH_min(int32_t* data, uint8_t data_size, int32_t* result);
 
 /*!******************************************************************
- * \fn MATH_status_t MATH_max_u8(uint8_t* data, uint8_t data_size, uint8_t* result)
- * \brief Returns the maximum value of a 8-bits data array.
- * \param[in]  	data: Input array.
- * \param[in]	data_size: Number of elements in the array.
- * \param[out] 	result: Pointer to the result.
- * \retval		Function execution status.
- *******************************************************************/
-MATH_status_t MATH_max_u8(uint8_t* data, uint8_t data_size, uint8_t* result);
-
-/*!******************************************************************
- * \fn MATH_status_t MATH_max_u16(uint16_t* data, uint8_t data_size, uint16_t* result)
- * \brief Returns the maximum value of a 16-bits data array.
- * \param[in]  	data: Input array.
- * \param[in]	data_size: Number of elements in the array.
- * \param[out] 	result: Pointer to the result.
- * \retval		Function execution status.
- *******************************************************************/
-MATH_status_t MATH_max_u16(uint16_t* data, uint8_t data_size, uint16_t* result);
-
-/*!******************************************************************
- * \fn MATH_status_t MATH_max_u32(uint32_t* data, uint8_t data_size, uint32_t* result)
+ * \fn MATH_status_t MATH_max(int32_t* data, uint8_t data_size, int32_t* result)
  * \brief Returns the maximum value of a 32-bits data array.
  * \param[in]  	data: Input array.
  * \param[in]	data_size: Number of elements in the array.
  * \param[out] 	result: Pointer to the result.
  * \retval		Function execution status.
  *******************************************************************/
-MATH_status_t MATH_max_u32(uint32_t* data, uint8_t data_size, uint32_t* result);
+MATH_status_t MATH_max(int32_t* data, uint8_t data_size, int32_t* result);
 
 /*!******************************************************************
- * \fn MATH_status_t MATH_average_u8(uint8_t* data, uint8_t data_size, uint8_t* result)
- * \brief Compute the average value of a 8-bits data array.
- * \param[in]  	data: Input array.
- * \param[in]	data_size: Number of elements in the array.
- * \param[out] 	result: Pointer to the result.
- * \retval		Function execution status.
- *******************************************************************/
-MATH_status_t MATH_average_u8(uint8_t* data, uint8_t data_size, uint8_t* result);
-
-/*!******************************************************************
- * \fn MATH_status_t MATH_average_u16(uint16_t* data, uint8_t data_size, uint16_t* result)
- * \brief Compute the average value of a 16-bits data array.
- * \param[in]  	data: Input array.
- * \param[in]	data_size: Number of elements in the array.
- * \param[out] 	result: Pointer to the result.
- * \retval		Function execution status.
- *******************************************************************/
-MATH_status_t MATH_average_u16(uint16_t* data, uint8_t data_size, uint16_t* result);
-
-/*!******************************************************************
- * \fn MATH_status_t MATH_average_u32(uint32_t* data, uint8_t data_size, uint32_t* result)
+ * \fn MATH_status_t MATH_average(int32_t* data, uint8_t data_size, int32_t* result)
  * \brief Compute the average value of a 32-bits data array.
  * \param[in]  	data: Input array.
  * \param[in]	data_size: Number of elements in the array.
  * \param[out] 	result: Pointer to the result.
  * \retval		Function execution status.
  *******************************************************************/
-MATH_status_t MATH_average_u32(uint32_t* data, uint8_t data_size, uint32_t* result);
+MATH_status_t MATH_average(int32_t* data, uint8_t data_size, int32_t* result);
 
 /*!******************************************************************
- * \fn MATH_status_t MATH_median_filter_u8(uint8_t* data, uint8_t median_size, uint8_t average_size, uint8_t* result)
- * \brief Compute an averaged median value of a 8-bits data array.
- * \param[in]  	data: Input array.
- * \param[in]	median_size: Number of elements used to compute the median filter.
- * \param[in]	average_size: Number of elements used to compute average of the median values.
- * \param[out] 	result: Pointer to the result.
- * \retval		Function execution status.
- *******************************************************************/
-MATH_status_t MATH_median_filter_u8(uint8_t* data, uint8_t median_size, uint8_t average_size, uint8_t* result);
-
-/*!******************************************************************
- * \fn MATH_status_t MATH_median_filter_u16(uint16_t* data, uint8_t median_size, uint8_t average_size, uint16_t* result)
- * \brief Compute an averaged median value of a 16-bits data array.
- * \param[in]  	data: Input array.
- * \param[in]	median_size: Number of elements used to compute the median filter.
- * \param[in]	average_size: Number of elements used to compute average of the median values.
- * \param[out] 	result: Pointer to the result.
- * \retval		Function execution status.
- *******************************************************************/
-MATH_status_t MATH_median_filter_u16(uint16_t* data, uint8_t median_size, uint8_t average_size, uint16_t* result);
-
-/*!******************************************************************
- * \fn MATH_status_t MATH_median_filter_u32(uint32_t* data, uint8_t median_size, uint8_t average_size, uint32_t* result)
+ * \fn MATH_status_t MATH_median_filter(int32_t* data, uint8_t median_size, uint8_t average_size, int32_t* result)
  * \brief Compute an averaged median value of a 32-bits data array.
  * \param[in]  	data: Input array.
  * \param[in]	median_size: Number of elements used to compute the median filter.
@@ -178,7 +139,7 @@ MATH_status_t MATH_median_filter_u16(uint16_t* data, uint8_t median_size, uint8_
  * \param[out] 	result: Pointer to the result.
  * \retval		Function execution status.
  *******************************************************************/
-MATH_status_t MATH_median_filter_u32(uint32_t* data, uint8_t median_size, uint8_t average_size, uint32_t* result);
+MATH_status_t MATH_median_filter(int32_t* data, uint8_t median_size, uint8_t average_size, int32_t* result);
 
 /*!******************************************************************
  * \fn MATH_status_t MATH_atan2(int32_t x, int32_t y, uint32_t* alpha)
@@ -191,24 +152,24 @@ MATH_status_t MATH_median_filter_u32(uint32_t* data, uint8_t median_size, uint8_
 MATH_status_t MATH_atan2(int32_t x, int32_t y, uint32_t* alpha);
 
 /*!******************************************************************
- * \fn MATH_status_t MATH_two_complement_to_int32(uint32_t value, uint8_t sign_bit_position, int32_t* result)
+ * \fn MATH_status_t MATH_two_complement_to_integer(uint32_t value, uint8_t sign_bit_position, int32_t* result)
  * \brief Convert a two complement value with configurable sign bit position to the standard 32-bits two complement value.
  * \param[in]  	value: Two complement value to convert.
  * \param[in]  	sign_bit_position: Sign bit position expressed as a bit index from 0.
  * \param[out] 	result: Pointer to the result.
  * \retval		Function execution status.
  *******************************************************************/
-MATH_status_t MATH_two_complement_to_int32(uint32_t value, uint8_t sign_bit_position, int32_t* result);
+MATH_status_t MATH_two_complement_to_integer(uint32_t value, uint8_t sign_bit_position, int32_t* result);
 
 /*!******************************************************************
- * \fn MATH_status_t MATH_int32_to_signed_magnitude(int32_t value, uint8_t sign_bit_position, uint32_t* result)
+ * \fn MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_position, uint32_t* result)
  * \brief Convert a standard 32-bits two complement value to the corresponding signed magnitude representation.
  * \param[in]  	value: Two complement value to convert.
  * \param[in]  	sign_bit_position: Sign bit position in the result, expressed as a bit index from 0.
  * \param[out] 	result: Pointer to the result.
  * \retval		Function execution status.
  *******************************************************************/
-MATH_status_t MATH_int32_to_signed_magnitude(int32_t value, uint8_t sign_bit_position, uint32_t* result);
+MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_position, uint32_t* result);
 
 /*!******************************************************************
  * \fn MATH_abs(x, y)

@@ -18,7 +18,7 @@
 
 /*** MATH global variables ***/
 
-const uint32_t MATH_POWER_10[MATH_DECIMAL_DIGIT_MAX_NUMBER] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
+const uint32_t MATH_POWER_10[MATH_U32_SIZE_DECIMAL_DIGITS] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
 
 #ifdef EMBEDDED_UTILS_MATH_COS_TABLE
 const int16_t MATH_COS_TABLE[MATH_TRIGONOMETRIC_TABLE_SIZE] = {
@@ -118,9 +118,9 @@ const int16_t MATH_SIN_TABLE[MATH_TRIGONOMETRIC_TABLE_SIZE] = {
 }
 
 /*******************************************************************/
-#define _MATH_max(data, data_size, type) { \
+#define _MATH_max(data, data_size, type, init_value) { \
 	/* Local variables */ \
-	type max = 0; \
+	type max = init_value; \
 	uint8_t idx = 0; \
 	for (idx=0 ; idx<data_size ; idx++) { \
 		if (data[idx] > max) { \
@@ -190,123 +190,33 @@ const int16_t MATH_SIN_TABLE[MATH_TRIGONOMETRIC_TABLE_SIZE] = {
 /*** MATH functions ***/
 
 /*******************************************************************/
-MATH_status_t MATH_min_u8(uint8_t* data, uint8_t data_size, uint8_t* result) {
+MATH_status_t MATH_min(int32_t* data, uint8_t data_size, int32_t* result) {
 	// Local variables.
 	MATH_status_t status = MATH_SUCCESS;
 	// Check parameters.
 	_MATH_check_pointer(data);
 	_MATH_check_pointer(result);
 	// Compute minimum value.
-	_MATH_min(data, data_size, uint8_t, 0xFF);
+	_MATH_min(data, data_size, int32_t, MATH_S32_MAX);
 errors:
 	return status;
 }
 
 /*******************************************************************/
-MATH_status_t MATH_min_u16(uint16_t* data, uint8_t data_size, uint16_t* result) {
+MATH_status_t MATH_max(int32_t* data, uint8_t data_size, int32_t* result) {
 	// Local variables.
 	MATH_status_t status = MATH_SUCCESS;
 	// Check parameters.
 	_MATH_check_pointer(data);
 	_MATH_check_pointer(result);
 	// Compute minimum value.
-	_MATH_min(data, data_size, uint16_t, 0xFFFF);
+	_MATH_max(data, data_size, int32_t, MATH_S32_MIN);
 errors:
 	return status;
 }
 
 /*******************************************************************/
-MATH_status_t MATH_min_u32(uint32_t* data, uint8_t data_size, uint32_t* result) {
-	// Local variables.
-	MATH_status_t status = MATH_SUCCESS;
-	// Check parameters.
-	_MATH_check_pointer(data);
-	_MATH_check_pointer(result);
-	// Compute minimum value.
-	_MATH_min(data, data_size, uint32_t, 0xFFFFFFFF);
-errors:
-	return status;
-}
-
-/*******************************************************************/
-MATH_status_t MATH_max_u8(uint8_t* data, uint8_t data_size, uint8_t* result) {
-	// Local variables.
-	MATH_status_t status = MATH_SUCCESS;
-	// Check parameters.
-	_MATH_check_pointer(data);
-	_MATH_check_pointer(result);
-	// Compute minimum value.
-	_MATH_max(data, data_size, uint8_t);
-errors:
-	return status;
-}
-
-/*******************************************************************/
-MATH_status_t MATH_max_u16(uint16_t* data, uint8_t data_size, uint16_t* result) {
-	// Local variables.
-	MATH_status_t status = MATH_SUCCESS;
-	// Check parameters.
-	_MATH_check_pointer(data);
-	_MATH_check_pointer(result);
-	// Compute minimum value.
-	_MATH_max(data, data_size, uint16_t);
-errors:
-	return status;
-}
-
-/*******************************************************************/
-MATH_status_t MATH_max_u32(uint32_t* data, uint8_t data_size, uint32_t* result) {
-	// Local variables.
-	MATH_status_t status = MATH_SUCCESS;
-	// Check parameters.
-	_MATH_check_pointer(data);
-	_MATH_check_pointer(result);
-	// Compute minimum value.
-	_MATH_max(data, data_size, uint32_t);
-errors:
-	return status;
-}
-
-/*******************************************************************/
-MATH_status_t MATH_average_u8(uint8_t* data, uint8_t data_size, uint8_t* result) {
-	// Local variables.
-	MATH_status_t status = MATH_SUCCESS;
-	// Check parameters.
-	_MATH_check_pointer(data);
-	_MATH_check_pointer(result);
-	// Compute average.
-#if (EMBEDDED_UTILS_MATH_PRECISION == 2)
-	_MATH_average(data, data_size, float64_t, uint8_t);
-#elif (EMBEDDED_UTILS_MATH_PRECISION == 1)
-	_MATH_average(data, data_size, float32_t, uint8_t);
-#else
-	_MATH_average(data, data_size, uint8_t, uint8_t);
-#endif
-errors:
-	return status;
-}
-
-/*******************************************************************/
-MATH_status_t MATH_average_u16(uint16_t* data, uint8_t data_size, uint16_t* result) {
-	// Local variables.
-	MATH_status_t status = MATH_SUCCESS;
-	// Check parameters.
-	_MATH_check_pointer(data);
-	_MATH_check_pointer(result);
-	// Compute average.
-#if (EMBEDDED_UTILS_MATH_PRECISION == 2)
-	_MATH_average(data, data_size, float64_t, uint16_t);
-#elif (EMBEDDED_UTILS_MATH_PRECISION == 1)
-	_MATH_average(data, data_size, float32_t, uint16_t);
-#else
-	_MATH_average(data, data_size, uint16_t, uint16_t);
-#endif
-errors:
-	return status;
-}
-
-/*******************************************************************/
-MATH_status_t MATH_average_u32(uint32_t* data, uint8_t data_size, uint32_t* result) {
+MATH_status_t MATH_average(int32_t* data, uint8_t data_size, int32_t* result) {
 // Local variables.
 	MATH_status_t status = MATH_SUCCESS;
 	// Check parameters.
@@ -314,22 +224,22 @@ MATH_status_t MATH_average_u32(uint32_t* data, uint8_t data_size, uint32_t* resu
 	_MATH_check_pointer(result);
 	// Compute average.
 #if (EMBEDDED_UTILS_MATH_PRECISION == 2)
-	_MATH_average(data, data_size, float64_t, uint32_t);
+	_MATH_average(data, data_size, float64_t, int32_t);
 #elif (EMBEDDED_UTILS_MATH_PRECISION == 1)
-	_MATH_average(data, data_size, float32_t, uint32_t);
+	_MATH_average(data, data_size, float32_t, int32_t);
 #else
-	_MATH_average(data, data_size, uint32_t, uint32_t);
+	_MATH_average(data, data_size, int32_t, int32_t);
 #endif
 errors:
 	return status;
 }
 
 /*******************************************************************/
-MATH_status_t MATH_median_filter_u8(uint8_t* data, uint8_t median_size, uint8_t average_size, uint8_t* result) {
+MATH_status_t MATH_median_filter(int32_t* data, uint8_t median_size, uint8_t average_size, int32_t* result) {
 	// Local variables.
 	MATH_status_t status = MATH_SUCCESS;
-	uint8_t local_buf[MATH_MEDIAN_FILTER_SIZE_MAX];
-	uint8_t temp = 0;
+	int32_t local_buf[MATH_MEDIAN_FILTER_SIZE_MAX];
+	int32_t temp = 0;
 	uint8_t start_idx = 0;
 	uint8_t end_idx = 0;
 	// Check parameters.
@@ -339,55 +249,7 @@ MATH_status_t MATH_median_filter_u8(uint8_t* data, uint8_t median_size, uint8_t 
 	_MATH_median_filter(data, median_size, average_size);
 	// Compute average or median value.
 	if (average_size > 0) {
-		status = MATH_average_u8(&(data[start_idx]), (end_idx - start_idx + 1), result);
-	}
-	else {
-		(*result) = local_buf[(median_size >> 1)];
-	}
-errors:
-	return status;
-}
-
-/*******************************************************************/
-MATH_status_t MATH_median_filter_u16(uint16_t* data, uint8_t median_size, uint8_t average_size, uint16_t* result) {
-	// Local variables.
-	MATH_status_t status = MATH_SUCCESS;
-	uint16_t local_buf[MATH_MEDIAN_FILTER_SIZE_MAX];
-	uint16_t temp = 0;
-	uint8_t start_idx = 0;
-	uint8_t end_idx = 0;
-	// Check parameters.
-	_MATH_check_pointer(data);
-	_MATH_check_pointer(result);
-	// Compute median filter.
-	_MATH_median_filter(data, median_size, average_size);
-	// Compute average or median value.
-	if (average_size > 0) {
-		status = MATH_average_u16(&(data[start_idx]), (end_idx - start_idx + 1), result);
-	}
-	else {
-		(*result) = local_buf[(median_size >> 1)];
-	}
-errors:
-	return status;
-}
-
-/*******************************************************************/
-MATH_status_t MATH_median_filter_u32(uint32_t* data, uint8_t median_size, uint8_t average_size, uint32_t* result) {
-	// Local variables.
-	MATH_status_t status = MATH_SUCCESS;
-	uint32_t local_buf[MATH_MEDIAN_FILTER_SIZE_MAX];
-	uint32_t temp = 0;
-	uint8_t start_idx = 0;
-	uint8_t end_idx = 0;
-	// Check parameters.
-	_MATH_check_pointer(data);
-	_MATH_check_pointer(result);
-	// Compute median filter.
-	_MATH_median_filter(data, median_size, average_size);
-	// Compute average or median value.
-	if (average_size > 0) {
-		status = MATH_average_u32(&(data[start_idx]), (end_idx - start_idx + 1), result);
+		status = MATH_average(&(data[start_idx]), (end_idx - start_idx + 1), result);
 	}
 	else {
 		(*result) = local_buf[(median_size >> 1)];
@@ -462,14 +324,14 @@ errors:
 }
 
 /*******************************************************************/
-MATH_status_t MATH_two_complement_to_int32(uint32_t value, uint8_t sign_bit_position, int32_t* result) {
+MATH_status_t MATH_two_complement_to_integer(uint32_t value, uint8_t sign_bit_position, int32_t* result) {
 	// Local variables.
 	MATH_status_t status = MATH_SUCCESS;
 	uint8_t bit_idx = 0;
 	uint32_t not_value = 0;
 	uint32_t absolute_value = 0;
 	// Check parameters.
-	if (sign_bit_position > (MATH_BINARY_DIGIT_MAX_NUMBER - 1)) {
+	if (sign_bit_position >= MATH_S32_SIZE_BITS) {
 		status = MATH_ERROR_SIGN_BIT;
 		goto errors;
 	}
@@ -494,13 +356,13 @@ errors:
 }
 
 /*******************************************************************/
-MATH_status_t MATH_int32_to_signed_magnitude(int32_t value, uint8_t sign_bit_position, uint32_t* result) {
+MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_position, uint32_t* result) {
 	// Local variables.
 	MATH_status_t status = MATH_SUCCESS;
 	uint32_t absolute_value = 0;
 	uint32_t absolute_mask = ((0b1 << sign_bit_position) - 1);
 	// Check parameters.
-	if (sign_bit_position > (MATH_BINARY_DIGIT_MAX_NUMBER - 1)) {
+	if (sign_bit_position >= MATH_S32_SIZE_BITS) {
 		status = MATH_ERROR_SIGN_BIT;
 		goto errors;
 	}
