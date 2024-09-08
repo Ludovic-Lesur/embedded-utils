@@ -7,8 +7,13 @@
 
 #include "string.h"
 
+#ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
+#include "embedded_utils_flags.h"
+#endif
 #include "math.h"
 #include "types.h"
+
+#ifndef EMBEDDED_UTILS_STRING_DRIVER_DISABLE
 
 /*** STRING local macros ***/
 
@@ -548,3 +553,5 @@ STRING_status_t STRING_value_to_5_digits_string(int32_t value, char_t* str) {
 errors:
 	return status;
 }
+
+#endif /* EMBEDDED_UTILS_STRING_DRIVER_DISABLE */

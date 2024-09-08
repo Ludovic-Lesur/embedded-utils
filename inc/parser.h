@@ -8,6 +8,9 @@
 #ifndef __PARSER_H__
 #define __PARSER_H__
 
+#ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
+#include "embedded_utils_flags.h"
+#endif
 #include "string.h"
 #include "types.h"
 
@@ -33,6 +36,8 @@ typedef enum {
 	// Last base value.
 	PARSER_ERROR_BASE_LAST = (PARSER_ERROR_BASE_STRING + STRING_ERROR_BASE_LAST)
 } PARSER_status_t;
+
+#ifndef EMBEDDED_UTILS_PARSER_DRIVER_DISABLE
 
 /*!******************************************************************
  * \enum PARSER_mode_t
@@ -101,5 +106,6 @@ PARSER_status_t PARSER_get_byte_array(PARSER_context_t* parser_ctx, char_t separ
 /*******************************************************************/
 #define PARSER_stack_exit_error(base, code) { ERROR_check_stack_exit(parser_status, PARSER_SUCCESS, base, code) }
 
-#endif	/* __PARSER_H__ */
+#endif /* EMBEDDED_UTILS_PARSER_DRIVER_DISABLE */
 
+#endif	/* __PARSER_H__ */

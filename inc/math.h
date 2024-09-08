@@ -98,6 +98,8 @@ typedef enum {
 	MATH_ERROR_BASE_LAST = 0x0100
 } MATH_status_t;
 
+#ifndef EMBEDDED_UTILS_MATH_DRIVER_DISABLE
+
 /*** MATH functions ***/
 
 /*!******************************************************************
@@ -208,5 +210,7 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
 
 /*******************************************************************/
 #define MATH_stack_exit_error(base, code) { ERROR_check_stack_exit(math_status, MATH_SUCCESS, base, code) }
+
+#endif /* EMBEDDED_UTILS_MATH_DRIVER_DISABLE */
 
 #endif /* __MATH_H__ */

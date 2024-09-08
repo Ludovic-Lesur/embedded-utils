@@ -17,6 +17,8 @@
 #include "sigfox_error.h"
 #endif
 
+#ifndef EMBEDDED_UTILS_ERROR_DRIVER_DISABLE
+
 /*** ERROR local structures ***/
 
 /*******************************************************************/
@@ -99,3 +101,5 @@ errors:
 	return;
 }
 #endif
+
+#endif /* EMBEDDED_UTILS_ERROR_DRIVER_DISABLE */

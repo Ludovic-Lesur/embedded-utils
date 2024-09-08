@@ -7,10 +7,15 @@
 
 #include "parser.h"
 
+#ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
+#include "embedded_utils_flags.h"
+#endif
 #include "error.h"
 #include "string.h"
 #include "math.h"
 #include "types.h"
+
+#ifndef EMBEDDED_UTILS_PARSER_DRIVER_DISABLE
 
 /*** PARSER local functions ***/
 
@@ -176,3 +181,5 @@ PARSER_status_t PARSER_get_byte_array(PARSER_context_t* parser_ctx, char_t separ
 errors:
 	return status;
 }
+
+#endif /* EMBEDDED_UTILS_PARSER_DRIVER_DISABLE */

@@ -19,6 +19,8 @@
  *******************************************************************/
 typedef uint16_t ERROR_code_t;
 
+#ifndef EMBEDDED_UTILS_ERROR_DRIVER_DISABLE
+
 /*** ERROR functions ***/
 
 /*!******************************************************************
@@ -76,5 +78,7 @@ void ERROR_import_sigfox_stack(void);
 
 /*******************************************************************/
 #define ERROR_check_stack_exit(ll_status, ll_success, ll_base, code) { if (ll_status != ll_success) { ERROR_stack_add((ll_base << 0) + ll_status); status = code; goto errors; } }
+
+#endif /* EMBEDDED_UTILS_ERROR_DRIVER_DISABLE */
 
 #endif /* __ERROR_H__ */

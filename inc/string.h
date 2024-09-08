@@ -8,6 +8,9 @@
 #ifndef __STRING_H__
 #define __STRING_H__
 
+#ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
+#include "embedded_utils_flags.h"
+#endif
 #include "types.h"
 
 /*** STRING macros ***/
@@ -47,6 +50,8 @@ typedef enum {
 	// Last base value.
 	STRING_ERROR_BASE_LAST = 0x0100
 } STRING_status_t;
+
+#ifndef EMBEDDED_UTILS_STRING_DRIVER_DISABLE
 
 /*!******************************************************************
  * \enum STRING_format_t
@@ -188,5 +193,7 @@ STRING_status_t STRING_value_to_5_digits_string(int32_t value, char_t* str);
 
 /*******************************************************************/
 #define STRING_stack_exit_error(base, code) { ERROR_check_stack_exit(string_status, STRING_SUCCESS, base, code) }
+
+#endif /* EMBEDDED_UTILS_STRING_DRIVER_DISABLE */
 
 #endif /* __STRING_H__ */

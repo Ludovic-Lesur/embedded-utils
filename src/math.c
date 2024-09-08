@@ -12,6 +12,8 @@
 #endif
 #include "types.h"
 
+#ifndef EMBEDDED_UTILS_MATH_DRIVER_DISABLE
+
 /*** MATH local macros ***/
 
 #define MATH_MEDIAN_FILTER_SIZE_MAX		0xFF
@@ -381,3 +383,5 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
 errors:
 	return status;
 }
+
+#endif /* EMBEDDED_UTILS_MATH_DRIVER_DISABLE */
