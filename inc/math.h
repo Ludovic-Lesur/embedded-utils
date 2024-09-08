@@ -144,14 +144,14 @@ MATH_status_t MATH_average(int32_t* data, uint8_t data_size, int32_t* result);
 MATH_status_t MATH_median_filter(int32_t* data, uint8_t median_size, uint8_t average_size, int32_t* result);
 
 /*!******************************************************************
- * \fn MATH_status_t MATH_atan2(int32_t x, int32_t y, uint32_t* alpha)
+ * \fn MATH_status_t MATH_atan2(int32_t x, int32_t y, int32_t* alpha)
  * \brief Compute the atan2 approximated value.
  * \param[in]  	x: Input argument 1.
  * \param[in]  	y: Input argument 2.
  * \param[out] 	alpha: Pointer to the result.
  * \retval		Function execution status.
  *******************************************************************/
-MATH_status_t MATH_atan2(int32_t x, int32_t y, uint32_t* alpha);
+MATH_status_t MATH_atan2(int32_t x, int32_t y, int32_t* alpha);
 
 /*!******************************************************************
  * \fn MATH_status_t MATH_two_complement_to_integer(uint32_t value, uint8_t sign_bit_position, int32_t* result)

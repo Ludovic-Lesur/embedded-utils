@@ -261,11 +261,11 @@ errors:
 }
 
 /*******************************************************************/
-MATH_status_t MATH_atan2(int32_t x, int32_t y, uint32_t* alpha) {
+MATH_status_t MATH_atan2(int32_t x, int32_t y, int32_t* alpha) {
 	// Local variables.
 	MATH_status_t status = MATH_SUCCESS;
-	uint32_t abs_x = 0;
-	uint32_t abs_y = 0;
+	int32_t abs_x = 0;
+	int32_t abs_y = 0;
 	// Check parameters.
 	if ((x == 0) && (y == 0)) {
 		status = MATH_ERROR_UNDEFINED;
