@@ -68,7 +68,16 @@
 #define MATH_DECIMAL_DIGIT_VALUE_MAX			9
 #define MATH_HEXADECIMAL_DIGIT_VALUE_MAX		15
 
-#define MATH_TRIGONOMETRIC_TABLE_SIZE			360
+#if (EMBEDDED_UTILS_MATH_PRECISION > 0)
+#define MATH_PI_RADIAN							3.141592654
+#endif
+#define MATH_2_PI_DEGREES						360
+#define MATH_3_PI_4_DEGREES						270
+#define MATH_PI_DEGREES							180
+#define MATH_PI_2_DEGREES						90
+#define MATH_PI_4_DEGREES						45
+
+#define MATH_TRIGONOMETRIC_TABLE_SIZE			MATH_2_PI_DEGREES
 
 /*** MATH global variables ***/
 
@@ -92,6 +101,8 @@ typedef enum {
 	MATH_ERROR_NULL_PARAMETER,
 	MATH_ERROR_OVERFLOW,
 	MATH_ERROR_UNDEFINED,
+	MATH_ERROR_ARCTAN_RANGE,
+	MATH_ERROR_ATAN2_RANGE,
 	MATH_ERROR_SIGN_BIT,
 	MATH_ERROR_MAGNITUDE_OVERFLOW,
 	// Last base value.
@@ -143,15 +154,17 @@ MATH_status_t MATH_average(int32_t* data, uint8_t data_size, int32_t* result);
  *******************************************************************/
 MATH_status_t MATH_median_filter(int32_t* data, uint8_t median_size, uint8_t average_size, int32_t* result);
 
+#ifdef EMBEDDED_UTILS_MATH_ATAN2
 /*!******************************************************************
- * \fn MATH_status_t MATH_atan2(int32_t x, int32_t y, int32_t* alpha)
+ * \fn MATH_status_t MATH_atan2(int32_t x, int32_t y, int32_t* angle_degrees)
  * \brief Compute the atan2 approximated value.
- * \param[in]  	x: Input argument 1.
- * \param[in]  	y: Input argument 2.
- * \param[out] 	alpha: Pointer to the result.
+ * \param[in]  	x: Abscissa coordinate of the vector.
+ * \param[in]  	y: Ordinate coordinate of the vector.
+ * \param[out] 	angle_degrees: Pointer to integer that will contain the angle of the input vector (in degrees between 0 and 359).
  * \retval		Function execution status.
  *******************************************************************/
-MATH_status_t MATH_atan2(int32_t x, int32_t y, int32_t* alpha);
+MATH_status_t MATH_atan2(int32_t x, int32_t y, int32_t* angle_degrees);
+#endif
 
 /*!******************************************************************
  * \fn MATH_status_t MATH_two_complement_to_integer(uint32_t value, uint8_t sign_bit_position, int32_t* result)

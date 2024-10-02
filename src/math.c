@@ -18,6 +18,23 @@
 
 #define MATH_MEDIAN_FILTER_SIZE_MAX		0xFF
 
+#ifdef EMBEDDED_UTILS_MATH_ATAN2
+#define MATH_ARCTAN_FIXED_90_START		11500
+
+#define MATH_ARCTAN_FIXED_89_START		4000
+
+#define MATH_ARCTAN_LUT_1_START			1001
+#define MATH_ARCTAN_LUT_1_STEP_FACTOR	1
+
+#define MATH_ARCTAN_LUT_2_START			201
+#define MATH_ARCTAN_LUT_2_STEP_FACTOR	10
+
+#define MATH_ARCTAN_LUT_3_START			1
+#define MATH_ARCTAN_LUT_3_STEP_FACTOR	100
+
+#define MATH_ARCTAN_RATIO_FACTOR		100
+#endif
+
 /*** MATH global variables ***/
 
 const uint32_t MATH_POWER_10[MATH_U32_SIZE_DECIMAL_DIGITS] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
@@ -101,6 +118,46 @@ const int16_t MATH_SIN_TABLE[MATH_TRIGONOMETRIC_TABLE_SIZE] = {
 	-500, -485, -469, -454, -438, -423, -407, -391, -375, -358,
 	-342, -326, -309, -292, -276, -259, -242, -225, -208, -191,
 	-174, -156, -139, -122, -105, -87, -70, -52, -35, -17
+};
+#endif
+
+#ifdef EMBEDDED_UTILS_MATH_ATAN2
+static const uint8_t MATH_ARCTAN_LUT_1[30] = {
+	85, 85, 86, 86, 86, 86, 87, 87, 87, 87,
+	87, 87, 88, 88, 88, 88, 88, 88, 88, 88,
+	88, 88, 88, 88, 88, 88, 88, 88, 89, 89,
+};
+static const uint8_t MATH_ARCTAN_LUT_2[80] = {
+	65, 66, 67, 67, 68, 69, 70, 70, 71, 72,
+	72, 73, 73, 74, 74, 74, 75, 75, 76, 76,
+	76, 77, 77, 77, 77, 78, 78, 78, 78, 79,
+	79, 79, 79, 80, 80, 80, 80, 80, 80, 81,
+	81, 81, 81, 81, 81, 81, 82, 82, 82, 82,
+	82, 82, 82, 82, 82, 83, 83, 83, 83, 83,
+	83, 83, 83, 83, 83, 83, 83, 84, 84, 84,
+	84, 84, 84, 84, 84, 84, 84, 84, 84, 84,
+};
+static const uint8_t MATH_ARCTAN_LUT_3[200] = {
+	1, 1, 2, 2, 3, 3, 4, 5, 5, 6,
+	6, 7, 7, 8, 9, 9, 10, 10, 11, 11,
+	12, 12, 13, 13, 14, 15, 15, 16, 16, 17,
+	17, 18, 18, 19, 19, 20, 20, 21, 21, 22,
+	22, 23, 23, 24, 24, 25, 25, 26, 26, 27,
+	27, 27, 28, 28, 29, 29, 30, 30, 31, 31,
+	31, 32, 32, 33, 33, 33, 34, 34, 35, 35,
+	35, 36, 36, 37, 37, 37, 38, 38, 38, 39,
+	39, 39, 40, 40, 40, 41, 41, 41, 42, 42,
+	42, 43, 43, 43, 44, 44, 44, 44, 45, 45,
+	45, 46, 46, 46, 46, 47, 47, 47, 47, 48,
+	48, 48, 48, 49, 49, 49, 49, 50, 50, 50,
+	50, 51, 51, 51, 51, 52, 52, 52, 52, 52,
+	53, 53, 53, 53, 53, 54, 54, 54, 54, 54,
+	55, 55, 55, 55, 55, 56, 56, 56, 56, 56,
+	56, 57, 57, 57, 57, 57, 58, 58, 58, 58,
+	58, 58, 58, 59, 59, 59, 59, 59, 59, 60,
+	60, 60, 60, 60, 60, 60, 61, 61, 61, 61,
+	61, 61, 61, 61, 62, 62, 62, 62, 62, 62,
+	62, 62, 63, 63, 63, 63, 63, 63, 63, 63,
 };
 #endif
 
@@ -189,6 +246,60 @@ const int16_t MATH_SIN_TABLE[MATH_TRIGONOMETRIC_TABLE_SIZE] = {
 	} \
 }
 
+#ifdef EMBEDDED_UTILS_MATH_ATAN2
+/*******************************************************************/
+MATH_status_t _MATH_arctan_ratio(int32_t x, int32_t y, int32_t* angle_degrees) {
+	// Local variables.
+	MATH_status_t status = MATH_SUCCESS;
+	int32_t result = 0;
+	int64_t ratio = 0;
+	int64_t ratio_abs = 0;
+	uint8_t lut_index = 0;
+	// Compute ratio.
+	ratio = (((int64_t) MATH_ARCTAN_RATIO_FACTOR) * ((int64_t) y)) / ((int64_t) x);
+	MATH_abs(ratio, ratio_abs);
+	// Check range.
+	if (ratio_abs >= MATH_ARCTAN_FIXED_90_START) {
+		// Fixed value.
+		result = 90;
+	}
+	else if (ratio_abs >= MATH_ARCTAN_FIXED_89_START) {
+		// Fixed value.
+		result = 89;
+	}
+	else if (ratio_abs >= MATH_ARCTAN_LUT_1_START) {
+		// Use LUT 1 with step 1.
+		lut_index = (uint8_t) (((ratio_abs - MATH_ARCTAN_LUT_1_START) * MATH_ARCTAN_LUT_1_STEP_FACTOR) / (MATH_ARCTAN_RATIO_FACTOR));
+		result = (int32_t) MATH_ARCTAN_LUT_1[lut_index];
+	}
+	else if (ratio_abs >= MATH_ARCTAN_LUT_2_START) {
+		// Use LUT 2 with step 0.1.
+		lut_index = (uint8_t) (((ratio_abs - MATH_ARCTAN_LUT_2_START) * MATH_ARCTAN_LUT_2_STEP_FACTOR) / (MATH_ARCTAN_RATIO_FACTOR));
+		result = (int32_t) MATH_ARCTAN_LUT_2[lut_index];
+	}
+	else if (ratio_abs >= MATH_ARCTAN_LUT_3_START) {
+		// Use LUT 3 with step 0.01.
+		lut_index = (uint8_t) (((ratio_abs - MATH_ARCTAN_LUT_3_START) * MATH_ARCTAN_LUT_3_STEP_FACTOR) / (MATH_ARCTAN_RATIO_FACTOR));
+		result = (int32_t) MATH_ARCTAN_LUT_3[lut_index];
+	}
+	else {
+		result = 0;
+	}
+	// Apply sign.
+	if (ratio < 0) {
+		result *= (-1);
+	}
+	// Check range.
+	if ((result < (-MATH_PI_2_DEGREES)) || (result > MATH_PI_2_DEGREES)) {
+		status = MATH_ERROR_ARCTAN_RANGE;
+		goto errors;
+	}
+	(*angle_degrees) = result;
+errors:
+	return status;
+}
+#endif
+
 /*** MATH functions ***/
 
 /*******************************************************************/
@@ -260,70 +371,50 @@ errors:
 	return status;
 }
 
+#ifdef EMBEDDED_UTILS_MATH_ATAN2
 /*******************************************************************/
-MATH_status_t MATH_atan2(int32_t x, int32_t y, int32_t* alpha) {
+MATH_status_t MATH_atan2(int32_t x, int32_t y, int32_t* angle_degrees) {
 	// Local variables.
 	MATH_status_t status = MATH_SUCCESS;
-	int32_t abs_x = 0;
-	int32_t abs_y = 0;
+	int32_t arctan_y_x = 0;
+	int32_t result = 0;
 	// Check parameters.
 	if ((x == 0) && (y == 0)) {
 		status = MATH_ERROR_UNDEFINED;
 		goto errors;
 	}
-	_MATH_check_pointer(alpha);
-	// Compute absolute values.
-	MATH_abs(x, abs_x);
-	MATH_abs(y, abs_y);
-	if (status != MATH_SUCCESS) goto errors;
-	// Scale x and y to avoid overflow.
-	while ((abs_x > 10000) || (abs_y > 10000)) {
-		abs_x >>= 1;
-		abs_y >>= 1;
+	_MATH_check_pointer(angle_degrees);
+	// Compute inverse tangent.
+	if (x != 0) {
+		status = _MATH_arctan_ratio(x, y, &arctan_y_x);
+		if (status != MATH_SUCCESS) goto errors;
 	}
-	// Use the quotient within [-1,1]
-	if (abs_x >= abs_y) {
-		// Use arctan approximation: arctan(z)=(pi/4)*z.
-		(*alpha) = (((45 * abs_y) << 10) / (abs_x)) >> 10; // Quadrant 1.
-		// Add offset depending on quadrant.
-		if ((x > 0) && (y < 0)) {
-			(*alpha) = (360 - (*alpha)); // Quadrant 8.
-		}
-		if (x < 0) {
-			if (y > 0) {
-				(*alpha) = (180 - (*alpha)); // Quadrant 4.
-			}
-			else {
-				(*alpha) = (180 + (*alpha)); // Quadrant 5.
-			}
-		}
+	// Check x sign.
+	if (x > 0) {
+		// Check y sign.
+		result = (y >= 0) ? arctan_y_x : (arctan_y_x + MATH_2_PI_DEGREES);
+	}
+	else if (x < 0) {
+		result = arctan_y_x + MATH_PI_DEGREES;
 	}
 	else {
-		// Use arctan approximation: arctan(z)=(pi/4)*z.
-		(*alpha) = (((45 * abs_x) << 10) / (abs_y)) >> 10;
-		// Add offset depending on quadrant and arctan(1/z)=+/-90-arctan(z).
-		if (x > 0) {
-			if (y > 0) {
-				(*alpha) = (90 - (*alpha)); // Quadrant 2.
-			}
-			else {
-				(*alpha) = (270 + (*alpha)); // Quadrant 7.
-			}
-		}
-		else {
-			if (y > 0) {
-				(*alpha) = (90 + (*alpha)); // Quadrant 3.
-			}
-			else {
-				(*alpha) = (270 - (*alpha)); // Quadrant 6.
-			}
-		}
+		// Check y sign.
+		result = (y >= 0) ? MATH_PI_2_DEGREES : MATH_3_PI_4_DEGREES;
 	}
-	// Ensure angle is in [0,359] range.
-	(*alpha) = ((*alpha) % 360);
+	// Apply modulo.
+	if (result == MATH_2_PI_DEGREES) {
+		result = 0;
+	}
+	// Check range.
+	if ((result < 0) || (result >= MATH_2_PI_DEGREES)) {
+		status = MATH_ERROR_ATAN2_RANGE;
+		goto errors;
+	}
+	(*angle_degrees) = result;
 errors:
 	return status;
 }
+#endif
 
 /*******************************************************************/
 MATH_status_t MATH_two_complement_to_integer(uint32_t value, uint8_t sign_bit_position, int32_t* result) {
