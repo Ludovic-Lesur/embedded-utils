@@ -68,6 +68,12 @@
 #define MATH_DECIMAL_DIGIT_VALUE_MAX			9
 #define MATH_HEXADECIMAL_DIGIT_VALUE_MAX		15
 
+#define MATH_PERCENT_MIN                        0
+#define MATH_PERCENT_MAX                        100
+
+#define MATH_PERMILLE_MIN                       0
+#define MATH_PERMILLE_MAX                       1000
+
 #if (EMBEDDED_UTILS_MATH_PRECISION > 0)
 #define MATH_PI_RADIAN							3.141592654
 #endif
