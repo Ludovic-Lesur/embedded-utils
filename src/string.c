@@ -38,13 +38,12 @@ static STRING_status_t _STRING_is_decimal_char(char_t chr) {
 }
 
 /*******************************************************************/
-static STRING_status_t _STRING_decimal_char_to_value(char_t chr, uint8_t* value) {
+static STRING_status_t _STRING_decimal_char_to_digit(char_t chr, uint8_t* value) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
     // Check parameters.
     status = _STRING_is_decimal_char(chr);
     if (status != STRING_SUCCESS) goto errors;
-    _STRING_check_pointer(value);
     // Perform conversion.
     (*value) = (chr - '0') & 0x0F;
 errors:
@@ -52,7 +51,7 @@ errors:
 }
 
 /*******************************************************************/
-static STRING_status_t _STRING_decimal_value_to_char(uint8_t value, char_t* chr) {
+static STRING_status_t _STRING_decimal_digit_to_char(uint8_t value, char_t* chr) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
     // Check parameters.
@@ -60,7 +59,6 @@ static STRING_status_t _STRING_decimal_value_to_char(uint8_t value, char_t* chr)
         status = STRING_ERROR_DECIMAL_OVERFLOW;
         goto errors;
     }
-    _STRING_check_pointer(chr);
     // Perform conversion.
     (*chr) = (value + '0');
 errors:
@@ -75,11 +73,9 @@ static STRING_status_t _STRING_is_hexadecimal_char(char_t chr) {
 }
 
 /*******************************************************************/
-static STRING_status_t _STRING_hexadecimal_char_to_value(char_t chr, uint8_t* value) {
+static STRING_status_t _STRING_hexadecimal_char_to_digit(char_t chr, uint8_t* value) {
     // Local variables.
     STRING_status_t status = STRING_ERROR_HEXADECIMAL_INVALID;
-    // Check parameters.
-    _STRING_check_pointer(value);
     // Check ranges.
     if ((chr >= 'A') && (chr <= 'F')) {
         (*value) = (chr - 'A' + 10) & 0x0F;
@@ -93,12 +89,11 @@ static STRING_status_t _STRING_hexadecimal_char_to_value(char_t chr, uint8_t* va
         (*value) = (chr - '0') & 0x0F;
         status = STRING_SUCCESS;
     }
-errors:
     return status;
 }
 
 /*******************************************************************/
-static STRING_status_t _STRING_hexadecimal_value_to_char(uint8_t value, char_t* chr) {
+static STRING_status_t _STRING_hexadecimal_digit_to_char(uint8_t value, char_t* chr) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
     // Check parameters.
@@ -106,7 +101,6 @@ static STRING_status_t _STRING_hexadecimal_value_to_char(uint8_t value, char_t* 
         status = STRING_ERROR_HEXADECIMAL_OVERFLOW;
         goto errors;
     }
-    _STRING_check_pointer(chr);
     // Perform conversion.
     (*chr) = (value <= 9 ? (value + '0') : (value + ('A' - 10)));
 errors:
@@ -125,8 +119,9 @@ static uint8_t _STRING_get_number_of_decimal_digits(uint32_t value) {
 }
 
 /*******************************************************************/
-static void _STRING_extract_decimal_digits(uint32_t value, char_t* digit_array) {
+static STRING_status_t _STRING_extract_decimal_digits(uint32_t value, char_t* digit_array) {
     // Local variables.
+    STRING_status_t status = STRING_SUCCESS;
     uint32_t previous_decade = 0;
     uint8_t digit = 0;
     uint8_t digit_array_index = 0;
@@ -140,9 +135,12 @@ static void _STRING_extract_decimal_digits(uint32_t value, char_t* digit_array) 
             first_non_zero_found = 1;
         }
         if ((first_non_zero_found != 0) || (idx == 0)) {
-            _STRING_decimal_value_to_char(digit, &(digit_array[digit_array_index++]));
+            status = _STRING_decimal_digit_to_char(digit, &(digit_array[digit_array_index++]));
+            if (status != STRING_SUCCESS) goto errors;
         }
     }
+errors:
+    return status;
 }
 
 /*** STRING functions ***/
@@ -192,15 +190,15 @@ STRING_status_t STRING_integer_to_string(int32_t value, STRING_format_t format, 
             str[str_idx++] = 'x';
         }
         for (idx = ((MATH_S32_SIZE_HEXADECIMAL_DIGITS >> 1) - 1); idx >= 0; idx--) {
-            generic_byte = (abs_value >> (8 * idx)) & MATH_U8_MASK;
+            generic_byte = (abs_value >> (idx << 3)) & MATH_U8_MASK;
             if (generic_byte != 0) {
                 first_non_zero_found = 1;
             }
             if ((first_non_zero_found != 0) || (idx == 0)) {
                 // Convert to character.
-                status = _STRING_hexadecimal_value_to_char(((generic_byte & 0xF0) >> 4), &(str[str_idx++]));
+                status = _STRING_hexadecimal_digit_to_char(((generic_byte & 0xF0) >> 4), &(str[str_idx++]));
                 if (status != STRING_SUCCESS) goto errors;
-                status = _STRING_hexadecimal_value_to_char(((generic_byte & 0x0F) >> 0), &(str[str_idx++]));
+                status = _STRING_hexadecimal_digit_to_char(((generic_byte & 0x0F) >> 0), &(str[str_idx++]));
                 if (status != STRING_SUCCESS) goto errors;
             }
         }
@@ -218,7 +216,7 @@ STRING_status_t STRING_integer_to_string(int32_t value, STRING_format_t format, 
                 first_non_zero_found = 1;
             }
             if ((first_non_zero_found != 0) || (idx == 0)) {
-                status = _STRING_decimal_value_to_char(generic_byte, &(str[str_idx++]));
+                status = _STRING_decimal_digit_to_char(generic_byte, &(str[str_idx++]));
                 if (status != STRING_SUCCESS) goto errors;
             }
         }
@@ -283,7 +281,8 @@ STRING_status_t STRING_integer_to_floating_decimal_string(int32_t value, uint8_t
         goto errors;
     }
     // Extract digits.
-    _STRING_extract_decimal_digits(value_abs, (char_t*) digit_array);
+    status = _STRING_extract_decimal_digits(value_abs, (char_t*) digit_array);
+    if (status != STRING_SUCCESS) goto errors;
     // Compute number of left padding zero.
     if (divider_exponent >= value_size_digits) {
         number_of_left_zero = (divider_exponent - value_size_digits + 1);
@@ -367,7 +366,7 @@ STRING_status_t STRING_string_to_integer(char_t* str, STRING_format_t format, ui
         // Hexadecimal digits loop.
         for (char_idx = 0; char_idx < number_of_digits; char_idx++) {
             // Convert digit to value.
-            status = _STRING_hexadecimal_char_to_value((str[start_idx + char_idx]), &digit_value);
+            status = _STRING_hexadecimal_char_to_digit((str[start_idx + char_idx]), &digit_value);
             if (status != STRING_SUCCESS) goto errors;
             // Add digit to result.
             (*value) |= (digit_value << ((number_of_digits - char_idx - 1) << 2));
@@ -383,7 +382,7 @@ STRING_status_t STRING_string_to_integer(char_t* str, STRING_format_t format, ui
         // Decimal digits loop.
         for (char_idx = 0; char_idx < number_of_digits; char_idx++) {
             // Convert digit to value.
-            status = _STRING_decimal_char_to_value(str[start_idx + char_idx], &digit_value);
+            status = _STRING_decimal_char_to_digit(str[start_idx + char_idx], &digit_value);
             if (status != STRING_SUCCESS) goto errors;
             // Add digit to result.
             (*value) += (digit_value * MATH_POWER_10[number_of_digits - char_idx - 1]);
@@ -415,7 +414,7 @@ STRING_status_t STRING_byte_array_to_hexadecimal_string(uint8_t* data, uint8_t d
         if (status != STRING_SUCCESS) goto errors;
     }
 errors:
-    str[2 * idx] = STRING_CHAR_NULL; // End string.
+    str[idx << 1] = STRING_CHAR_NULL; // End string.
     return status;
 }
 
@@ -435,11 +434,8 @@ STRING_status_t STRING_hexadecimal_string_to_byte_array(char_t* str, char_t end_
     while ((str[char_idx] != end_character) && (str[char_idx] != STRING_CHAR_NULL)) {
         // Check character.
         if ((char_idx % 2) == 0) {
-            if (_STRING_is_hexadecimal_char(str[char_idx]) != STRING_SUCCESS) {
-                // Hexadecimal string end reached before ending character.
-                status = STRING_ERROR_HEXADECIMAL_INVALID;
-                goto errors;
-            }
+            status = _STRING_is_hexadecimal_char(str[char_idx]);
+            if (status != STRING_SUCCESS) goto errors;
         }
         else {
             // Check character.
@@ -451,7 +447,7 @@ STRING_status_t STRING_hexadecimal_string_to_byte_array(char_t* str, char_t end_
             status = STRING_string_to_integer(&(str[char_idx - 1]), STRING_FORMAT_HEXADECIMAL, 2, &value);
             if (status != STRING_SUCCESS) goto errors;
             // Append byte.
-            data[char_idx / 2] = (uint8_t) value;
+            data[char_idx >> 1] = (uint8_t) value;
             (*extracted_length)++;
         }
         char_idx++;
