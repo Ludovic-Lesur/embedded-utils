@@ -113,10 +113,42 @@ errors:
     return status;
 }
 
+/*******************************************************************/
+static uint8_t _STRING_get_number_of_decimal_digits(uint32_t value) {
+    // Local variables.
+    uint8_t number_of_digits = 0;
+    // Power loop.
+    for (number_of_digits = 0; number_of_digits < MATH_S32_SIZE_DECIMAL_DIGITS; number_of_digits++) {
+        if (value < MATH_POWER_10[number_of_digits]) break;
+    }
+    return ((number_of_digits == 0) ? 1 : number_of_digits);
+}
+
+/*******************************************************************/
+static void _STRING_extract_decimal_digits(uint32_t value, char_t* digit_array) {
+    // Local variables.
+    uint32_t previous_decade = 0;
+    uint8_t digit = 0;
+    uint8_t digit_array_index = 0;
+    uint8_t first_non_zero_found = 0;
+    int32_t idx = 0;
+    // Digits loop.
+    for (idx = (MATH_U32_SIZE_DECIMAL_DIGITS - 1); idx >= 0; idx--) {
+        digit = (value - previous_decade) / (MATH_POWER_10[idx]);
+        previous_decade += (digit * MATH_POWER_10[idx]);
+        if (digit != 0) {
+            first_non_zero_found = 1;
+        }
+        if ((first_non_zero_found != 0) || (idx == 0)) {
+            _STRING_decimal_value_to_char(digit, &(digit_array[digit_array_index++]));
+        }
+    }
+}
+
 /*** STRING functions ***/
 
 /*******************************************************************/
-STRING_status_t STRING_value_to_string(int32_t value, STRING_format_t format, uint8_t print_prefix, char_t* str) {
+STRING_status_t STRING_integer_to_string(int32_t value, STRING_format_t format, uint8_t print_prefix, char_t* str) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
     uint8_t first_non_zero_found = 0;
@@ -201,25 +233,88 @@ errors:
 }
 
 /*******************************************************************/
-STRING_status_t STRING_byte_array_to_hexadecimal_string(uint8_t* data, uint8_t data_size, uint8_t print_prefix, char_t* str) {
+STRING_status_t STRING_integer_to_floating_decimal_string(int32_t value, uint8_t divider_exponent, uint8_t number_of_digits, char_t* str) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
-    uint8_t idx = 0;
+    char_t digit_array[MATH_U32_SIZE_DECIMAL_DIGITS];
+    uint8_t number_of_effective_digits = number_of_digits;
+    uint32_t value_abs = 0;
+    uint8_t value_size_digits = 0;
+    uint32_t integer_part = 0;
+    uint8_t integer_part_size_digits = 0;
+    uint8_t number_of_left_zero = 0;
+    uint8_t left_zero_count = 0;
+    uint8_t str_idx = 0;
+    uint8_t digit_idx = 0;
+    uint8_t char_idx = 0;
+    // Init digit array.
+    for (char_idx = 0; char_idx < MATH_U32_SIZE_DECIMAL_DIGITS; char_idx++) digit_array[char_idx] = '0';
+    char_idx = 0;
     // Check parameters.
-    _STRING_check_pointer(data);
-    _STRING_check_pointer(str);
-    // Build string.
-    for (idx = 0; idx < data_size; idx++) {
-        status = STRING_value_to_string((int32_t) data[idx], STRING_FORMAT_HEXADECIMAL, print_prefix, &(str[idx << 1]));
-        if (status != STRING_SUCCESS) goto errors;
+    if (number_of_digits == 0) {
+        status = STRING_ERROR_NUMBER_OF_DIGITS_UNDERFLOW;
+        goto errors;
+    }
+    if ((divider_exponent >= MATH_U32_SIZE_DECIMAL_DIGITS) || (number_of_digits > MATH_U32_SIZE_DECIMAL_DIGITS)) {
+        status = STRING_ERROR_DECIMAL_OVERFLOW;
+        goto errors;
+    }
+    if (str == NULL) {
+        status = STRING_ERROR_NULL_PARAMETER;
+        goto errors;
+    }
+    // Check sign.
+    if (value < 0) {
+        str[str_idx++] = STRING_CHAR_MINUS;
+        number_of_effective_digits--;
+    }
+    if (number_of_effective_digits == 0) {
+        status = STRING_ERROR_NUMBER_OF_DIGITS_UNDERFLOW;
+        goto errors;
+    }
+    // Compute integer part.
+    MATH_abs(value, value_abs);
+    value_size_digits = _STRING_get_number_of_decimal_digits(value_abs);
+    integer_part = (value_abs / MATH_POWER_10[divider_exponent]);
+    integer_part_size_digits = _STRING_get_number_of_decimal_digits(integer_part);
+    // Check range.
+    if (integer_part_size_digits > number_of_effective_digits) {
+        status = STRING_ERROR_NUMBER_OF_DIGITS_OVERFLOW;
+        goto errors;
+    }
+    // Extract digits.
+    _STRING_extract_decimal_digits(value_abs, (char_t*) digit_array);
+    // Compute number of left padding zero.
+    if (divider_exponent >= value_size_digits) {
+        number_of_left_zero = (divider_exponent - value_size_digits + 1);
+    }
+    // Digits loop.
+    while (str_idx <= number_of_digits) {
+        // Compute digit.
+        if (char_idx == integer_part_size_digits) {
+            // Check if there is enough space for a decimal part.
+            if ((number_of_effective_digits - char_idx) < 2) break;
+            // Insert dot.
+            str[str_idx++] = STRING_CHAR_DOT;
+        }
+        else {
+            // Left padding.
+            if (left_zero_count < number_of_left_zero) {
+                str[str_idx++] = '0';
+                left_zero_count++;
+            }
+            else {
+                str[str_idx++] = digit_array[digit_idx++];
+            }
+        }
+        char_idx++;
     }
 errors:
-    str[2 * idx] = STRING_CHAR_NULL; // End string.
     return status;
 }
 
 /*******************************************************************/
-STRING_status_t STRING_string_to_value(char_t* str, STRING_format_t format, uint8_t number_of_digits, int32_t* value) {
+STRING_status_t STRING_string_to_integer(char_t* str, STRING_format_t format, uint8_t number_of_digits, int32_t* value) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
     uint8_t char_idx = 0;
@@ -307,6 +402,24 @@ errors:
 }
 
 /*******************************************************************/
+STRING_status_t STRING_byte_array_to_hexadecimal_string(uint8_t* data, uint8_t data_size, uint8_t print_prefix, char_t* str) {
+    // Local variables.
+    STRING_status_t status = STRING_SUCCESS;
+    uint8_t idx = 0;
+    // Check parameters.
+    _STRING_check_pointer(data);
+    _STRING_check_pointer(str);
+    // Build string.
+    for (idx = 0; idx < data_size; idx++) {
+        status = STRING_integer_to_string((int32_t) data[idx], STRING_FORMAT_HEXADECIMAL, print_prefix, &(str[idx << 1]));
+        if (status != STRING_SUCCESS) goto errors;
+    }
+errors:
+    str[2 * idx] = STRING_CHAR_NULL; // End string.
+    return status;
+}
+
+/*******************************************************************/
 STRING_status_t STRING_hexadecimal_string_to_byte_array(char_t* str, char_t end_character, uint8_t* data, uint8_t* extracted_length) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
@@ -335,7 +448,7 @@ STRING_status_t STRING_hexadecimal_string_to_byte_array(char_t* str, char_t end_
                 goto errors;
             }
             // Convert byte.
-            status = STRING_string_to_value(&(str[char_idx - 1]), STRING_FORMAT_HEXADECIMAL, 2, &value);
+            status = STRING_string_to_integer(&(str[char_idx - 1]), STRING_FORMAT_HEXADECIMAL, 2, &value);
             if (status != STRING_SUCCESS) goto errors;
             // Append byte.
             data[char_idx / 2] = (uint8_t) value;
@@ -456,102 +569,10 @@ STRING_status_t STRING_append_value(char_t* str, uint8_t str_size_max, int32_t v
     for (idx = 0; idx < STRING_VALUE_BUFFER_SIZE; idx++)
         str_value[idx] = STRING_CHAR_NULL;
     // Convert value to string.
-    status = STRING_value_to_string(value, format, print_prefix, str_value);
+    status = STRING_integer_to_string(value, format, print_prefix, str_value);
     if (status != STRING_SUCCESS) goto errors;
     // Add string.
     status = STRING_append_string(str, str_size_max, str_value, str_size);
-errors:
-    return status;
-}
-
-/*******************************************************************/
-STRING_status_t STRING_value_to_5_digits_string(int32_t value, char_t* str) {
-    // Local variables.
-    STRING_status_t status = STRING_SUCCESS;
-    uint8_t u1, u2, u3, u4, u5 = 0;
-    uint8_t d1, d2, d3 = 0;
-    // Convert value to message.
-    if (value < 10000) {
-        // Format = u.ddd
-        u1 = (value) / (1000);
-        d1 = (value - (u1 * 1000)) / (100);
-        d2 = (value - (u1 * 1000) - (d1 * 100)) / (10);
-        d3 = value - (u1 * 1000) - (d1 * 100) - (d2 * 10);
-        status = STRING_value_to_string(u1, STRING_FORMAT_DECIMAL, 0, &(str[0]));
-        if (status != STRING_SUCCESS) goto errors;
-        str[1] = STRING_CHAR_DOT;
-        status = STRING_value_to_string(d1, STRING_FORMAT_DECIMAL, 0, &(str[2]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(d2, STRING_FORMAT_DECIMAL, 0, &(str[3]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(d3, STRING_FORMAT_DECIMAL, 0, &(str[4]));
-        if (status != STRING_SUCCESS) goto errors;
-    }
-    else if (value < 100000) {
-        // Format = uu.dd
-        u1 = (value) / (10000);
-        u2 = (value - (u1 * 10000)) / (1000);
-        d1 = (value - (u1 * 10000) - (u2 * 1000)) / (100);
-        d2 = (value - (u1 * 10000) - (u2 * 1000) - (d1 * 100)) / (10);
-        status = STRING_value_to_string(u1, STRING_FORMAT_DECIMAL, 0, &(str[0]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(u2, STRING_FORMAT_DECIMAL, 0, &(str[1]));
-        if (status != STRING_SUCCESS) goto errors;
-        str[2] = STRING_CHAR_DOT;
-        status = STRING_value_to_string(d1, STRING_FORMAT_DECIMAL, 0, &(str[3]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(d2, STRING_FORMAT_DECIMAL, 0, &(str[4]));
-        if (status != STRING_SUCCESS) goto errors;
-    }
-    else if (value < 1000000) {
-        // Format = uuu.d
-        u1 = (value) / (100000);
-        u2 = (value - (u1 * 100000)) / (10000);
-        u3 = (value - (u1 * 100000) - (u2 * 10000)) / (1000);
-        d1 = (value - (u1 * 100000) - (u2 * 10000) - (u3 * 1000)) / (100);
-        status = STRING_value_to_string(u1, STRING_FORMAT_DECIMAL, 0, &(str[0]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(u2, STRING_FORMAT_DECIMAL, 0, &(str[1]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(u3, STRING_FORMAT_DECIMAL, 0, &(str[2]));
-        if (status != STRING_SUCCESS) goto errors;
-        str[3] = STRING_CHAR_DOT;
-        status = STRING_value_to_string(d1, STRING_FORMAT_DECIMAL, 0, &(str[4]));
-        if (status != STRING_SUCCESS) goto errors;
-    }
-    else if (value < 10000000) {
-        // Format = uuuu
-        u1 = (value) / (1000000);
-        u2 = (value - (u1 * 1000000)) / (100000);
-        u3 = (value - (u1 * 1000000) - (u2 * 100000)) / (10000);
-        u4 = (value - (u1 * 1000000) - (u2 * 100000) - (u3 * 10000)) / (1000);
-        status = STRING_value_to_string(u1, STRING_FORMAT_DECIMAL, 0, &(str[0]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(u2, STRING_FORMAT_DECIMAL, 0, &(str[1]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(u3, STRING_FORMAT_DECIMAL, 0, &(str[2]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(u4, STRING_FORMAT_DECIMAL, 0, &(str[3]));
-        if (status != STRING_SUCCESS) goto errors;
-    }
-    else {
-        // Format = uuuuu
-        u1 = (value) / (10000000);
-        u2 = (value - (u1 * 10000000)) / (1000000);
-        u3 = (value - (u1 * 10000000) - (u2 * 1000000)) / (100000);
-        u4 = (value - (u1 * 10000000) - (u2 * 1000000) - (u3 * 100000)) / (10000);
-        u5 = (value - (u1 * 10000000) - (u2 * 1000000) - (u3 * 100000) - (u4 * 10000)) / (1000);
-        status = STRING_value_to_string(u1, STRING_FORMAT_DECIMAL, 0, &(str[0]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(u2, STRING_FORMAT_DECIMAL, 0, &(str[1]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(u3, STRING_FORMAT_DECIMAL, 0, &(str[2]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(u4, STRING_FORMAT_DECIMAL, 0, &(str[3]));
-        if (status != STRING_SUCCESS) goto errors;
-        status = STRING_value_to_string(u5, STRING_FORMAT_DECIMAL, 0, &(str[4]));
-        if (status != STRING_SUCCESS) goto errors;
-    }
 errors:
     return status;
 }

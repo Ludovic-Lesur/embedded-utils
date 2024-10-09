@@ -15,15 +15,13 @@
 
 /*** STRING macros ***/
 
-#define STRING_CHAR_NULL            '\0'
-#define STRING_NULL                 "\0"
-#define STRING_CHAR_CR              '\r'
-#define STRING_CHAR_LF              '\n'
-#define STRING_CHAR_MINUS           '-'
-#define STRING_CHAR_DOT             '.'
-#define STRING_CHAR_SPACE           ' '
-
-#define STRING_DIGIT_FUNCTION_SIZE  5
+#define STRING_CHAR_NULL    '\0'
+#define STRING_NULL         "\0"
+#define STRING_CHAR_CR      '\r'
+#define STRING_CHAR_LF      '\n'
+#define STRING_CHAR_MINUS   '-'
+#define STRING_CHAR_DOT     '.'
+#define STRING_CHAR_SPACE   ' '
 
 /*** STRING structures ***/
 
@@ -43,6 +41,8 @@ typedef enum {
     STRING_ERROR_HEXADECIMAL_OVERFLOW,
     STRING_ERROR_DECIMAL_INVALID,
     STRING_ERROR_DECIMAL_OVERFLOW,
+    STRING_ERROR_NUMBER_OF_DIGITS_UNDERFLOW,
+    STRING_ERROR_NUMBER_OF_DIGITS_OVERFLOW,
     STRING_ERROR_SIZE_OVERFLOW,
     STRING_ERROR_COPY_OVERFLOW,
     STRING_ERROR_APPEND_OVERFLOW,
@@ -91,7 +91,7 @@ typedef struct {
 /*** STRING functions ***/
 
 /*!******************************************************************
- * \fn STRING_status_t STRING_value_to_string(int32_t value, STRING_format_t format, uint8_t print_prefix, char_t* str)
+ * \fn STRING_status_t STRING_integer_to_string(int32_t value, STRING_format_t format, uint8_t print_prefix, char_t* str)
  * \brief Convert an integer to the corresponding string representation.
  * \param[in]   value: Integer to convert.
  * \param[in]   format: Format of the output string.
@@ -99,7 +99,29 @@ typedef struct {
  * \param[out]  str: Pointer to the destination string.
  * \retval      Function execution status.
  *******************************************************************/
-STRING_status_t STRING_value_to_string(int32_t value, STRING_format_t format, uint8_t print_prefix, char_t* str);
+STRING_status_t STRING_integer_to_string(int32_t value, STRING_format_t format, uint8_t print_prefix, char_t* str);
+
+/*!******************************************************************
+ * \fn STRING_status_t STRING_integer_to_floating_decimal_string(int32_t value, uint8_t divider_exponent, uint8_t number_of_digits, char_t* str)
+ * \brief Convert an integer to the corresponding string representation in floating point format.
+ * \param[in]   value: Integer to convert.
+ * \param[in]   divider_exponent: Input value will be divider by 10^(divider_exponent) before being represented.
+ * \param[in]   number_of_digits: Number of digits available in the output string.
+ * \param[out]  str: Pointer to the destination string.
+ * \retval      Function execution status.
+ *******************************************************************/
+STRING_status_t STRING_integer_to_floating_decimal_string(int32_t value, uint8_t divider_exponent, uint8_t number_of_digits, char_t* str);
+
+/*!******************************************************************
+ * \fn STRING_status_t STRING_string_to_integer(char_t* str, STRING_format_t format, uint8_t number_of_digits, int32_t* value)
+ * \brief Convert a string to the corresponding value.
+ * \param[in]   str: String to convert.
+ * \param[in]   format: Format of the input string.
+ * \param[in]   number_of_digits: Number of digits of the output value.
+ * \param[out]  value: Pointer to the destination value.
+ * \retval      Function execution status.
+ *******************************************************************/
+STRING_status_t STRING_string_to_integer(char_t* str, STRING_format_t format, uint8_t number_of_digits, int32_t* value);
 
 /*!******************************************************************
  * \fn STRING_status_t STRING_byte_array_to_hexadecimal_string(uint8_t* data, uint8_t data_length, uint8_t print_prefix, char_t* str)
@@ -111,17 +133,6 @@ STRING_status_t STRING_value_to_string(int32_t value, STRING_format_t format, ui
  * \retval      Function execution status.
  *******************************************************************/
 STRING_status_t STRING_byte_array_to_hexadecimal_string(uint8_t* data, uint8_t data_size, uint8_t print_prefix, char_t* str);
-
-/*!******************************************************************
- * \fn STRING_status_t STRING_string_to_value(char_t* str, STRING_format_t format, uint8_t number_of_digits, int32_t* value)
- * \brief Convert a string to the corresponding value.
- * \param[in]   str: String to convert.
- * \param[in]   format: Format of the input string.
- * \param[in]   number_of_digits: Number of digits of the output value.
- * \param[out]  value: Pointer to the destination value.
- * \retval      Function execution status.
- *******************************************************************/
-STRING_status_t STRING_string_to_value(char_t* str, STRING_format_t format, uint8_t number_of_digits, int32_t* value);
 
 /*!******************************************************************
  * \fn STRING_status_t STRING_hexadecimal_string_to_byte_array(char_t* str, char_t end_char, uint8_t* data, uint8_t* extracted_length)
@@ -175,15 +186,6 @@ STRING_status_t STRING_append_string(char_t* str, uint8_t str_size_max, char_t* 
  * \retval      Function execution status.
  *******************************************************************/
 STRING_status_t STRING_append_value(char_t* str, uint8_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint8_t* str_size);
-
-/*!******************************************************************
- * \fn STRING_status_t STRING_value_to_5_digits_string(int32_t value, char_t* str)
- * \brief Convert a value to a 5 digits string.
- * \param[in]   value: Value to convert (will be divided by 1000 and represented as a floating number).
- * \param[out]  str: Pointer to the destination string.
- * \retval      Function execution status.
- *******************************************************************/
-STRING_status_t STRING_value_to_5_digits_string(int32_t value, char_t* str);
 
 /*******************************************************************/
 #define STRING_exit_error(base) { ERROR_check_exit(string_status, STRING_SUCCESS, base) }

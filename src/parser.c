@@ -126,7 +126,7 @@ PARSER_status_t PARSER_get_parameter(PARSER_context_t* parser_ctx, STRING_format
         goto errors;
     }
     // Convert string.
-    string_status = STRING_string_to_value(&((parser_ctx->buffer)[parser_ctx->start_idx]), format, param_length_char, parameter);
+    string_status = STRING_string_to_integer(&((parser_ctx->buffer)[parser_ctx->start_idx]), format, param_length_char, parameter);
     STRING_exit_error(PARSER_ERROR_BASE_STRING);
     // Update start index after decoding parameter.
     if ((parser_ctx->separator_idx) > 0) {
