@@ -14,6 +14,8 @@
 #include "terminal.h"
 #include "types.h"
 
+#ifndef EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE
+
 /*** TERMINAL HW functions ***/
 
 /*!******************************************************************
@@ -45,5 +47,7 @@ TERMINAL_status_t TERMINAL_HW_de_init(uint8_t instance);
  * \retval      Function execution status.
  *******************************************************************/
 TERMINAL_status_t TERMINAL_HW_write(uint8_t instance, uint8_t* data, uint32_t data_size_bytes);
+
+#endif /* EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE */
 
 #endif /* __TERMINAL_HW_H__ */

@@ -12,6 +12,8 @@
 #endif
 #include "types.h"
 
+#ifndef EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE
+
 /*** TERMINAL HW functions ***/
 
 /*******************************************************************/
@@ -43,3 +45,5 @@ TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_write(uint8_t instance, uint
 	UNUSED(data_size_bytes);
 	return status;
 }
+
+#endif /* EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE */

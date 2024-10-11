@@ -27,6 +27,8 @@ typedef enum {
     TERMINAL_ERROR_BASE_LAST = (TERMINAL_ERROR_BASE_HW_INTERFACE + EMBEDDED_UTILS_HW_INTERFACE_ERROR_BASE_LAST)
 } TERMINAL_status_t;
 
+#ifndef EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE
+
 /*!******************************************************************
  * \fn TERMINAL_HW_rx_irq_cb_t
  * \brief Byte reception interrupt callback.
@@ -96,5 +98,7 @@ TERMINAL_status_t TERMINAL_print_byte_array(uint8_t instance, uint8_t* data, uin
 
 /*******************************************************************/
 #define TERMINAL_stack_exit_error(base, code) { ERROR_check_stack_exit(terminal_status, TERMINAL_SUCCESS, base, code) }
+
+#endif /* EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE */
 
 #endif /* __TERMINAL_H__ */

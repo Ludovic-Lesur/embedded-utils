@@ -15,6 +15,8 @@
 #include "string.h"
 #include "types.h"
 
+#ifndef EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE
+
 /*** TERMINAL functions ***/
 
 /*******************************************************************/
@@ -86,3 +88,5 @@ TERMINAL_status_t TERMINAL_print_byte_array(uint8_t instance, uint8_t* data, uin
 errors:
     return status;
 }
+
+#endif /* EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE */

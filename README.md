@@ -17,6 +17,7 @@ The driver relies on:
 | `EMBEDDED_UTILS_DISABLE_MATH_DRIVER` | `defined` / `undefined` | Disable the MATH driver. |
 | `EMBEDDED_UTILS_DISABLE_PARSER_DRIVER` | `defined` / `undefined` | Disable the PARSER driver. |
 | `EMBEDDED_UTILS_DISABLE_STRING_DRIVER` | `defined` / `undefined` | Disable the STRING driver. |
+| `EMBEDDED_UTILS_DISABLE_TERMINAL_DRIVER` | `defined` / `undefined` | Disable the TERMINAL driver. |
 | `EMBEDDED_UTILS_HW_INTERFACE_ERROR_BASE_LAST` | `<value>` | Last error base of the low level terminal interface driver. |
 | `EMBEDDED_UTILS_TERMINAL_BUFFER_SIZE` | `<value>` | Internal buffer size of the terminal driver. |
 | `EMBEDDED_UTILS_ERROR_STACK_DEPTH` | `<value>` | Maximum number of errors stored in stack. |
