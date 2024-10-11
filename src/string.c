@@ -316,8 +316,8 @@ errors:
 STRING_status_t STRING_string_to_integer(char_t* str, STRING_format_t format, uint8_t number_of_digits, int32_t* value) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
-    uint8_t char_idx = 0;
-    uint8_t start_idx = 0;
+    uint32_t char_idx = 0;
+    uint32_t start_idx = 0;
     uint8_t negative_flag = 0;
     uint8_t digit_value = 0;
     // Check parameters.
@@ -401,15 +401,15 @@ errors:
 }
 
 /*******************************************************************/
-STRING_status_t STRING_byte_array_to_hexadecimal_string(uint8_t* data, uint8_t data_size, uint8_t print_prefix, char_t* str) {
+STRING_status_t STRING_byte_array_to_hexadecimal_string(uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix, char_t* str) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
-    uint8_t idx = 0;
+    uint32_t idx = 0;
     // Check parameters.
     _STRING_check_pointer(data);
     _STRING_check_pointer(str);
     // Build string.
-    for (idx = 0; idx < data_size; idx++) {
+    for (idx = 0; idx < data_size_bytes; idx++) {
         status = STRING_integer_to_string((int32_t) data[idx], STRING_FORMAT_HEXADECIMAL, print_prefix, &(str[idx << 1]));
         if (status != STRING_SUCCESS) goto errors;
     }
@@ -419,17 +419,17 @@ errors:
 }
 
 /*******************************************************************/
-STRING_status_t STRING_hexadecimal_string_to_byte_array(char_t* str, char_t end_character, uint8_t* data, uint8_t* extracted_length) {
+STRING_status_t STRING_hexadecimal_string_to_byte_array(char_t* str, char_t end_character, uint8_t* data, uint32_t* extracted_size) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
-    uint8_t char_idx = 0;
+    uint32_t char_idx = 0;
     int32_t value = 0;
     // Check parameters.
     _STRING_check_pointer(str);
     _STRING_check_pointer(data);
-    _STRING_check_pointer(extracted_length);
-    // Reset extracted length.
-    (*extracted_length) = 0;
+    _STRING_check_pointer(extracted_size);
+    // Reset extracted size.
+    (*extracted_size) = 0;
     // Char loop.
     while ((str[char_idx] != end_character) && (str[char_idx] != STRING_CHAR_NULL)) {
         // Check character.
@@ -448,7 +448,7 @@ STRING_status_t STRING_hexadecimal_string_to_byte_array(char_t* str, char_t end_
             if (status != STRING_SUCCESS) goto errors;
             // Append byte.
             data[char_idx >> 1] = (uint8_t) value;
-            (*extracted_length)++;
+            (*extracted_size)++;
         }
         char_idx++;
     }
@@ -462,7 +462,7 @@ errors:
 }
 
 /*******************************************************************/
-STRING_status_t STRING_get_size(char_t* str, uint8_t* size) {
+STRING_status_t STRING_get_size(char_t* str, uint32_t* size) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
     // Check parameters.
@@ -487,10 +487,10 @@ errors:
 STRING_status_t STRING_copy(STRING_copy_t* copy) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
-    uint8_t idx = 0;
-    uint8_t source_size = 0;
-    uint8_t start_idx = 0;
-    uint8_t destination_idx = 0;
+    uint32_t idx = 0;
+    uint32_t source_size = 0;
+    uint32_t start_idx = 0;
+    uint32_t destination_idx = 0;
     // Reset destination buffer if required.
     if ((copy->flush_flag) != 0) {
         for (idx = 0; idx < (copy->destination_size); idx++)
@@ -535,10 +535,10 @@ errors:
 }
 
 /*******************************************************************/
-STRING_status_t STRING_append_string(char_t* str, uint8_t str_size_max, char_t* new_str, uint8_t* str_size) {
+STRING_status_t STRING_append_string(char_t* str, uint32_t str_size_max, char_t* new_str, uint32_t* str_size) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
-    uint8_t idx = 0;
+    uint32_t idx = 0;
     // Fill buffer.
     while (new_str[idx] != STRING_CHAR_NULL) {
         // Check index.
@@ -556,11 +556,11 @@ errors:
 }
 
 /*******************************************************************/
-STRING_status_t STRING_append_value(char_t* str, uint8_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint8_t* str_size) {
+STRING_status_t STRING_append_value(char_t* str, uint32_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint32_t* str_size) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
     char_t str_value[STRING_VALUE_BUFFER_SIZE];
-    uint8_t idx = 0;
+    uint32_t idx = 0;
     // Reset string.
     for (idx = 0; idx < STRING_VALUE_BUFFER_SIZE; idx++)
         str_value[idx] = STRING_CHAR_NULL;

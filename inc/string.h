@@ -82,7 +82,7 @@ typedef enum {
 typedef struct {
     char_t* source;
     char_t* destination;
-    uint8_t destination_size;
+    uint32_t destination_size;
     STRING_justification_t justification;
     uint8_t flush_flag;
     char_t flush_char;
@@ -124,7 +124,7 @@ STRING_status_t STRING_integer_to_floating_decimal_string(int32_t value, uint8_t
 STRING_status_t STRING_string_to_integer(char_t* str, STRING_format_t format, uint8_t number_of_digits, int32_t* value);
 
 /*!******************************************************************
- * \fn STRING_status_t STRING_byte_array_to_hexadecimal_string(uint8_t* data, uint8_t data_length, uint8_t print_prefix, char_t* str)
+ * \fn STRING_status_t STRING_byte_array_to_hexadecimal_string(uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix, char_t* str)
  * \brief Convert a byte array to the corresponding string representation.
  * \param[in]   data: Byte array to convert.
  * \param[in]   data_size: Size of the input byte array.
@@ -132,27 +132,27 @@ STRING_status_t STRING_string_to_integer(char_t* str, STRING_format_t format, ui
  * \param[out]  str: Pointer to the destination string.
  * \retval      Function execution status.
  *******************************************************************/
-STRING_status_t STRING_byte_array_to_hexadecimal_string(uint8_t* data, uint8_t data_size, uint8_t print_prefix, char_t* str);
+STRING_status_t STRING_byte_array_to_hexadecimal_string(uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix, char_t* str);
 
 /*!******************************************************************
- * \fn STRING_status_t STRING_hexadecimal_string_to_byte_array(char_t* str, char_t end_char, uint8_t* data, uint8_t* extracted_length)
+ * \fn STRING_status_t STRING_hexadecimal_string_to_byte_array(char_t* str, char_t end_char, uint8_t* data, uint32_t* extracted_size)
  * \brief Convert a string to the corresponding byte array.
  * \param[in]   str: String to convert.
  * \param[in]   end_character: Character used as string delimiter.
  * \param[out]  data: Pointer to the destination byte array.
- * \param[out]  extracted_length: Pointer to the effective number of bytes converted.
+ * \param[out]  extracted_size: Pointer to the effective number of bytes converted.
  * \retval      Function execution status.
  *******************************************************************/
-STRING_status_t STRING_hexadecimal_string_to_byte_array(char_t* str, char_t end_character, uint8_t* data, uint8_t* extracted_length);
+STRING_status_t STRING_hexadecimal_string_to_byte_array(char_t* str, char_t end_character, uint8_t* data, uint32_t* extracted_size);
 
 /*!******************************************************************
- * \fn STRING_status_t STRING_get_size(char_t* str, uint8_t* size)
+ * \fn STRING_status_t STRING_get_size(char_t* str, uint32_t* size)
  * \brief Get the size of a NULL terminated string.
  * \param[in]   str: String to read.
  * \param[out]  size: Pointer to the string size.
  * \retval      Function execution status.
  *******************************************************************/
-STRING_status_t STRING_get_size(char_t* str, uint8_t* size);
+STRING_status_t STRING_get_size(char_t* str, uint32_t* size);
 
 /*!******************************************************************
  * \fn STRING_status_t STRING_copy(STRING_copy_t* copy)
@@ -164,7 +164,7 @@ STRING_status_t STRING_get_size(char_t* str, uint8_t* size);
 STRING_status_t STRING_copy(STRING_copy_t* copy);
 
 /*!******************************************************************
- * \fn STRING_status_t STRING_append_string(char_t* str, uint8_t str_size_max, char_t* new_str, uint8_t* str_size)
+ * \fn STRING_status_t STRING_append_string(char_t* str, uint32_t str_size_max, char_t* new_str, uint32_t* str_size)
  * \brief Append a string to another one.
  * \param[in]   str: Destination string.
  * \param[in]   str_size_max: Maximum size of the destination string.
@@ -172,10 +172,10 @@ STRING_status_t STRING_copy(STRING_copy_t* copy);
  * \param[out]  str_size: Pointer to the new size of the destination string.
  * \retval      Function execution status.
  *******************************************************************/
-STRING_status_t STRING_append_string(char_t* str, uint8_t str_size_max, char_t* new_str, uint8_t* str_size);
+STRING_status_t STRING_append_string(char_t* str, uint32_t str_size_max, char_t* new_str, uint32_t* str_size);
 
 /*!******************************************************************
- * \fn STRING_status_t STRING_append_value(char_t* str, uint8_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint8_t* str_size)
+ * \fn STRING_status_t STRING_append_value(char_t* str, uint32_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint32_t* str_size)
  * \brief Append a string to another one.
  * \param[in]   str: Destination string.
  * \param[in]   str_size_max: Maximum size of the destination string.
@@ -185,7 +185,7 @@ STRING_status_t STRING_append_string(char_t* str, uint8_t str_size_max, char_t* 
  * \param[out]  str_size: Pointer to the new size of the destination string.
  * \retval      Function execution status.
  *******************************************************************/
-STRING_status_t STRING_append_value(char_t* str, uint8_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint8_t* str_size);
+STRING_status_t STRING_append_value(char_t* str, uint32_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint32_t* str_size);
 
 /*******************************************************************/
 #define STRING_exit_error(base) { ERROR_check_exit(string_status, STRING_SUCCESS, base) }

@@ -56,8 +56,8 @@ typedef enum {
 typedef struct {
     char_t* buffer;
     uint32_t buffer_size;
-    uint8_t start_idx;
-    uint8_t separator_idx;
+    uint32_t start_idx;
+    uint32_t separator_idx;
 } PARSER_context_t;
 
 /*** PARSER functions ***/
@@ -85,17 +85,17 @@ PARSER_status_t PARSER_compare(PARSER_context_t* parser_ctx, PARSER_mode_t mode,
 PARSER_status_t PARSER_get_parameter(PARSER_context_t* parser_ctx, STRING_format_t format, char_t separator, int32_t* parameter);
 
 /*!******************************************************************
- * \fn PARSER_status_t PARSER_get_byte_array(PARSER_context_t* parser_ctx, char_t separator, uint8_t maximum_length, uint8_t exact_length, uint8_t* parameter, uint8_t* extracted_length)
+ * \fn PARSER_status_t PARSER_get_byte_array(PARSER_context_t* parser_ctx, char_t separator, uint32_t maximum_size, uint8_t exact_size, uint8_t* parameter, uint32_t* extracted_size)
  * \brief Parse a byte array within a character buffer.
  * \param[in]   parser_ctx: Parser context.
  * \param[in]   separator: Parameter separator.
- * \param[in]   maximum_length: Maximum length of the byte array to parse.
- * \param[in]   exact_length: If non zero, returns an error is the extracted length does not equal the maximum length.
+ * \param[in]   maximum_size: Maximum size of the byte array to parse.
+ * \param[in]   exact_size: If non zero, returns an error is the extracted size does not equal the maximum size.
  * \param[out]  parameter: Pointer to the parameter value.
- * \param[out]  extracted_length: Pointer to the effective length of the parsed parameter.
+ * \param[out]  extracted_size: Pointer to the effective size of the parsed parameter.
  * \retval      Function execution status.
  *******************************************************************/
-PARSER_status_t PARSER_get_byte_array(PARSER_context_t* parser_ctx, char_t separator, uint8_t maximum_length, uint8_t exact_length, uint8_t* parameter, uint8_t* extracted_length);
+PARSER_status_t PARSER_get_byte_array(PARSER_context_t* parser_ctx, char_t separator, uint32_t maximum_size, uint8_t exact_size, uint8_t* parameter, uint32_t* extracted_size);
 
 /*******************************************************************/
 #define PARSER_exit_error(base) { ERROR_check_exit(parser_status, PARSER_SUCCESS, base) }
