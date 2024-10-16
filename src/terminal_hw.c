@@ -20,7 +20,7 @@
 TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_init(uint8_t instance, TERMINAL_HW_rx_irq_cb_t rx_irq_callback) {
     // Local variables.
     TERMINAL_status_t status = TERMINAL_SUCCESS;
-	/* To be implemented */
+    /* To be implemented */
     UNUSED(instance);
     UNUSED(rx_irq_callback);
     return status;
@@ -30,7 +30,7 @@ TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_init(uint8_t instance, TERMI
 TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_de_init(uint8_t instance) {
     // Local variables.
     TERMINAL_status_t status = TERMINAL_SUCCESS;
-	/* To be implemented */
+    /* To be implemented */
     UNUSED(instance);
     return status;
 }
@@ -39,11 +39,11 @@ TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_de_init(uint8_t instance) {
 TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_write(uint8_t instance, uint8_t* data, uint32_t data_size_bytes) {
     // Local variables.
     TERMINAL_status_t status = TERMINAL_SUCCESS;
-	/* To be implemented */
+    /* To be implemented */
     UNUSED(instance);
-	UNUSED(data);
-	UNUSED(data_size_bytes);
-	return status;
+    UNUSED(data);
+    UNUSED(data_size_bytes);
+    return status;
 }
 
 #endif /* EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE */

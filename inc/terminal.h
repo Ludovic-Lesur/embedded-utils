@@ -16,6 +16,10 @@
 
 /*** TERMINAL structures ***/
 
+/*!******************************************************************
+ * \enum TERMINAL_status_t
+ * \brief Terminal driver error codes.
+ *******************************************************************/
 typedef enum {
     // Driver errors.
     TERMINAL_SUCCESS = 0,

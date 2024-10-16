@@ -43,9 +43,9 @@ static PARSER_status_t _PARSER_search_separator(PARSER_context_t* parser_ctx, ch
     // Check parameters.
     _PARSER_check_pointer(parser_ctx);
     // Starting from int8_t following the current separator (which is the start of buffer in case of first call).
-    for (idx = (parser_ctx->start_idx); idx < (parser_ctx->buffer_size); idx++) {
+    for (idx = (parser_ctx->start_index); idx < (parser_ctx->buffer_size); idx++) {
         if ((parser_ctx->buffer)[idx] == separator) {
-            (parser_ctx->separator_idx) = idx;
+            (parser_ctx->separator_index) = idx;
             status = PARSER_SUCCESS;
             break;
         }
@@ -68,24 +68,24 @@ PARSER_status_t PARSER_compare(PARSER_context_t* parser_ctx, PARSER_mode_t mode,
     // Compare all characters.
     while (reference[idx] != STRING_CHAR_NULL) {
         // Compare current character.
-        if ((parser_ctx->buffer)[(parser_ctx->start_idx) + idx] != reference[idx]) {
+        if ((parser_ctx->buffer)[(parser_ctx->start_index) + idx] != reference[idx]) {
             // Difference found or end of command, exit loop.
-            status = PARSER_ERROR_UNKNOWN_COMMAND;
+            status = PARSER_ERROR_REFERENCE_MISMATCH;
             goto errors;
         }
         idx++;
     }
     switch (mode) {
-    case PARSER_MODE_COMMAND:
+    case PARSER_MODE_STRICT:
         // Check size equality.
         if ((parser_ctx->buffer_size) != idx) {
-            status = PARSER_ERROR_UNKNOWN_COMMAND;
+            status = PARSER_ERROR_REFERENCE_MISMATCH;
             goto errors;
         }
         break;
     case PARSER_MODE_HEADER:
         // Update start index.
-        (parser_ctx->start_idx) = idx;
+        (parser_ctx->start_index) = idx;
         break;
     default:
         // Unknown mode.
@@ -113,24 +113,24 @@ PARSER_status_t PARSER_get_parameter(PARSER_context_t* parser_ctx, STRING_format
         // Search separator.
         status = _PARSER_search_separator(parser_ctx, separator);
         if (status != PARSER_SUCCESS) goto errors;
-        end_idx = (parser_ctx->separator_idx) - 1;
+        end_idx = (parser_ctx->separator_index) - 1;
     }
     else {
         end_idx = (parser_ctx->buffer_size) - 1;
     }
     // Compute parameter size.
-    param_size_char = (end_idx - (parser_ctx->start_idx) + 1);
+    param_size_char = (end_idx - (parser_ctx->start_index) + 1);
     // Check if parameter is not empty.
     if (param_size_char == 0) {
         status = PARSER_ERROR_PARAMETER_NOT_FOUND;
         goto errors;
     }
     // Convert string.
-    string_status = STRING_string_to_integer(&((parser_ctx->buffer)[parser_ctx->start_idx]), format, param_size_char, parameter);
+    string_status = STRING_string_to_integer(&((parser_ctx->buffer)[parser_ctx->start_index]), format, param_size_char, parameter);
     STRING_exit_error(PARSER_ERROR_BASE_STRING);
     // Update start index after decoding parameter.
-    if ((parser_ctx->separator_idx) > 0) {
-        (parser_ctx->start_idx) = (parser_ctx->separator_idx) + 1;
+    if ((parser_ctx->separator_index) > 0) {
+        (parser_ctx->start_index) = (parser_ctx->separator_index) + 1;
     }
 errors:
     return status;
@@ -153,13 +153,13 @@ PARSER_status_t PARSER_get_byte_array(PARSER_context_t* parser_ctx, char_t separ
         // Search separator.
         status = _PARSER_search_separator(parser_ctx, separator);
         if (status != PARSER_SUCCESS) goto errors;
-        end_idx = (parser_ctx->separator_idx) - 1;
+        end_idx = (parser_ctx->separator_index) - 1;
     }
     else {
         end_idx = (parser_ctx->buffer_size) - 1;
     }
     // Compute parameter size.
-    param_size_char = (end_idx - (parser_ctx->start_idx) + 1);
+    param_size_char = (end_idx - (parser_ctx->start_index) + 1);
     // Check if parameter is not empty.
     if (param_size_char == 0) {
         // Error in parameter -> none parameter found.
@@ -167,11 +167,11 @@ PARSER_status_t PARSER_get_byte_array(PARSER_context_t* parser_ctx, char_t separ
         goto errors;
     }
     // Convert string.
-    string_status = STRING_hexadecimal_string_to_byte_array(&((parser_ctx->buffer)[parser_ctx->start_idx]), separator, parameter, extracted_size);
+    string_status = STRING_hexadecimal_string_to_byte_array(&((parser_ctx->buffer)[parser_ctx->start_index]), separator, parameter, extracted_size);
     STRING_exit_error(PARSER_ERROR_BASE_STRING);
     // Update start index after decoding parameter.
-    if ((parser_ctx->separator_idx) > 0) {
-        (parser_ctx->start_idx) = (parser_ctx->separator_idx) + 1;
+    if ((parser_ctx->separator_index) > 0) {
+        (parser_ctx->start_index) = (parser_ctx->separator_index) + 1;
     }
     // Check size if required.
     if (((exact_size != 0) && ((*extracted_size) != maximum_size)) || ((*extracted_size) > maximum_size)) {

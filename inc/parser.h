@@ -25,7 +25,7 @@ typedef enum {
     PARSER_SUCCESS,
     PARSER_ERROR_NULL_PARAMETER,
     PARSER_ERROR_MODE,
-    PARSER_ERROR_UNKNOWN_COMMAND,
+    PARSER_ERROR_REFERENCE_MISMATCH,
     PARSER_ERROR_BUFFER_SIZE,
     PARSER_ERROR_HEADER_NOT_FOUND,
     PARSER_ERROR_SEPARATOR_NOT_FOUND,
@@ -44,7 +44,7 @@ typedef enum {
  * \brief PARSER compare modes.
  *******************************************************************/
 typedef enum {
-    PARSER_MODE_COMMAND,
+    PARSER_MODE_STRICT,
     PARSER_MODE_HEADER,
     PARSER_MODE_LAST
 } PARSER_mode_t;
@@ -56,8 +56,8 @@ typedef enum {
 typedef struct {
     char_t* buffer;
     uint32_t buffer_size;
-    uint32_t start_idx;
-    uint32_t separator_idx;
+    uint32_t start_index;
+    uint32_t separator_index;
 } PARSER_context_t;
 
 /*** PARSER functions ***/
