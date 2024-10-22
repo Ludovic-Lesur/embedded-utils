@@ -175,8 +175,8 @@ STRING_status_t STRING_copy(STRING_copy_t* copy);
 STRING_status_t STRING_append_string(char_t* str, uint32_t str_size_max, char_t* new_str, uint32_t* str_size);
 
 /*!******************************************************************
- * \fn STRING_status_t STRING_append_value(char_t* str, uint32_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint32_t* str_size)
- * \brief Append a string to another one.
+ * \fn STRING_status_t STRING_append_integer(char_t* str, uint32_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint32_t* str_size)
+ * \brief Convert an integer to its string representation and append it to another string.
  * \param[in]   str: Destination string.
  * \param[in]   str_size_max: Maximum size of the destination string.
  * \param[in]   value: Value to convert and append.
@@ -185,7 +185,20 @@ STRING_status_t STRING_append_string(char_t* str, uint32_t str_size_max, char_t*
  * \param[out]  str_size: Pointer to the new size of the destination string.
  * \retval      Function execution status.
  *******************************************************************/
-STRING_status_t STRING_append_value(char_t* str, uint32_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint32_t* str_size);
+STRING_status_t STRING_append_integer(char_t* str, uint32_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint32_t* str_size);
+
+/*!******************************************************************
+ * \fn STRING_status_t STRING_append_byte_array(char_t* str, uint32_t str_size_max, uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix, uint32_t* str_size)
+ * \brief Convert a byte array to its hexadecimal string representation and append it to another string.
+ * \param[in]   str: Destination string.
+ * \param[in]   str_size_max: Maximum size of the destination string.
+ * \param[in]   data: Byte array to append.
+ * \param[in]   data_size: Size of the input byte array.
+ * \param[in]   print_prefix: Print the base prefix if non zero.
+ * \param[out]  str_size: Pointer to the new size of the destination string.
+ * \retval      Function execution status.
+ *******************************************************************/
+STRING_status_t STRING_append_byte_array(char_t* str, uint32_t str_size_max, uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix, uint32_t* str_size);
 
 /*******************************************************************/
 #define STRING_exit_error(base) { ERROR_check_exit(string_status, STRING_SUCCESS, base) }

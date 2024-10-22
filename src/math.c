@@ -174,7 +174,7 @@ static const uint8_t MATH_ARCTAN_LUT_3[200] = {
     /* Local variables */ \
     type min = init_value; \
     uint8_t idx = 0; \
-    for (idx=0 ; idx<data_size ; idx++) { \
+    for (idx = 0; idx < data_size; idx++) { \
         if (data[idx] < min) { \
             min = data[idx]; \
         } \
@@ -187,7 +187,7 @@ static const uint8_t MATH_ARCTAN_LUT_3[200] = {
     /* Local variables */ \
     type max = init_value; \
     uint8_t idx = 0; \
-    for (idx=0 ; idx<data_size ; idx++) { \
+    for (idx = 0; idx < data_size; idx++) { \
         if (data[idx] > max) { \
             max = data[idx]; \
         } \
@@ -201,7 +201,7 @@ static const uint8_t MATH_ARCTAN_LUT_3[200] = {
     average_type average = 0; \
     uint8_t idx = 0; \
     /* Compute rolling mean */ \
-    for (idx=0 ; idx<data_size ; idx++) { \
+    for (idx = 0; idx < data_size; idx++) { \
         MATH_rolling_mean(average, idx, data[idx], average_type); \
     } \
     (*result) = (result_type) average; \
@@ -214,13 +214,13 @@ static const uint8_t MATH_ARCTAN_LUT_3[200] = {
     uint8_t idx1 = 0; \
     uint8_t idx2 = 0; \
     /* Copy input buffer into local buffer */ \
-    for (idx1=0 ; idx1<median_size ; idx1++) { \
+    for (idx1 = 0; idx1 < median_size; idx1++) { \
         local_buf[idx1] = data[idx1]; \
     } \
     /* Sort buffer in ascending order. */ \
-    for (idx1=0; idx1<median_size; ++idx1) { \
+    for (idx1 = 0; idx1 < median_size; ++idx1) { \
         buffer_sorted = 1; \
-        for (idx2=1 ; idx2<(median_size-idx1) ; ++idx2) { \
+        for (idx2 = 1; idx2 < (median_size - idx1); ++idx2) { \
             if (local_buf[idx2 - 1] > local_buf[idx2]) { \
                 temp = local_buf[idx2 - 1]; \
                 local_buf[idx2 - 1] = local_buf[idx2]; \

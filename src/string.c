@@ -17,8 +17,8 @@
 
 /*** STRING local macros ***/
 
-#define STRING_VALUE_BUFFER_SIZE    16
-#define STRING_SIZE_MAX             100
+#define STRING_VALUE_BUFFER_SIZE    256
+#define STRING_SIZE_MAX             1024
 
 /*** STRING local functions ***/
 
@@ -557,19 +557,29 @@ errors:
 }
 
 /*******************************************************************/
-STRING_status_t STRING_append_value(char_t* str, uint32_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint32_t* str_size) {
+STRING_status_t STRING_append_integer(char_t* str, uint32_t str_size_max, int32_t value, STRING_format_t format, uint8_t print_prefix, uint32_t* str_size) {
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
-    char_t str_value[STRING_VALUE_BUFFER_SIZE];
-    uint32_t idx = 0;
-    // Reset string.
-    for (idx = 0; idx < STRING_VALUE_BUFFER_SIZE; idx++)
-        str_value[idx] = STRING_CHAR_NULL;
+    char_t str_value[STRING_VALUE_BUFFER_SIZE] = { STRING_CHAR_NULL };
     // Convert value to string.
     status = STRING_integer_to_string(value, format, print_prefix, str_value);
     if (status != STRING_SUCCESS) goto errors;
     // Add string.
     status = STRING_append_string(str, str_size_max, str_value, str_size);
+errors:
+    return status;
+}
+
+/*******************************************************************/
+STRING_status_t STRING_append_byte_array(char_t* str, uint32_t str_size_max, uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix, uint32_t* str_size) {
+    // Local variables.
+    STRING_status_t status = STRING_SUCCESS;
+    char_t str_byte_array[STRING_VALUE_BUFFER_SIZE] = { STRING_CHAR_NULL };
+    // Convert byte array to hexadecimal string.
+    status = STRING_byte_array_to_hexadecimal_string(data, data_size_bytes, print_prefix, str_byte_array);
+    if (status != STRING_SUCCESS) goto errors;
+    // Add string.
+    status = STRING_append_string(str, str_size_max, str_byte_array, str_size);
 errors:
     return status;
 }

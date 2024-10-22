@@ -24,6 +24,7 @@ typedef enum {
     // Driver errors.
     TERMINAL_SUCCESS = 0,
     TERMINAL_ERROR_NULL_PARAMETER,
+    TERMINAL_ERROR_INSTANCE,
     // Low level drivers errors.
     TERMINAL_ERROR_BASE_STRING = 0x0100,
     TERMINAL_ERROR_BASE_HW_INTERFACE = (TERMINAL_ERROR_BASE_STRING + STRING_ERROR_BASE_LAST),
@@ -64,35 +65,53 @@ TERMINAL_status_t TERMINAL_close(uint8_t instance);
  * \fn TERMINAL_status_t TERMINAL_print_string(uint8_t instance, char_t* str)
  * \brief Print a message on terminal.
  * \param[in]   instance: Terminal instance to use.
- * \param[in]   str: null-terminated string to print.
+ * \param[in]   str: null-terminated string to add.
  * \param[out]  none
  * \retval      Function execution status.
  *******************************************************************/
-TERMINAL_status_t TERMINAL_print_string(uint8_t instance, char_t* str);
+TERMINAL_status_t TERMINAL_buffer_add_string(uint8_t instance, char_t* str);
 
 /*!******************************************************************
  * \fn TERMINAL_status_t TERMINAL_print_integer(uint8_t instance, int32_t value, TERMINAL_format_t format, uint8_t print_prefix)
  * \brief Print a value on terminal.
  * \param[in]   instance: Terminal instance to use.
- * \param[in]   value: Integer to print.
+ * \param[in]   value: Integer to add.
  * \param[in]   format: Format of the output string.
  * \param[in]   print_prefix: Print the base prefix if non zero.
  * \param[out]  none
  * \retval      Function execution status.
  *******************************************************************/
-TERMINAL_status_t TERMINAL_print_integer(uint8_t instance, int32_t value, STRING_format_t format, uint8_t print_prefix);
+TERMINAL_status_t TERMINAL_buffer_add_integer(uint8_t instance, int32_t value, STRING_format_t format, uint8_t print_prefix);
 
 /*!******************************************************************
  * \fn TERMINAL_status_t TERMINAL_print_byte_array(uint8_t instance, uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix)
  * \brief Print a byte array on terminal.
  * \param[in]   instance: Terminal instance to use.
- * \param[in]   data: Byte array to convert.
+ * \param[in]   data: Byte array to add.
  * \param[in]   data_size_bytes: Size of the input byte array.
  * \param[in]   print_prefix: Print the base prefix if non zero.
  * \param[out]  none
  * \retval      Function execution status.
  *******************************************************************/
-TERMINAL_status_t TERMINAL_print_byte_array(uint8_t instance, uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix);
+TERMINAL_status_t TERMINAL_buffer_add_byte_array(uint8_t instance, uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix);
+
+/*!******************************************************************
+ * \fn TERMINAL_status_t TERMINAL_print_buffer(uint8_t instance)
+ * \brief Print the buffer of a terminal.
+ * \param[in]   instance: Terminal instance to use.
+ * \param[out]  none
+ * \retval      Function execution status.
+ *******************************************************************/
+TERMINAL_status_t TERMINAL_print_buffer(uint8_t instance);
+
+/*!******************************************************************
+ * \fn TERMINAL_status_t TERMINAL_flush_buffer(uint8_t instance)
+ * \brief Flush the buffer of a terminal.
+ * \param[in]   instance: Terminal instance to use.
+ * \param[out]  none
+ * \retval      Function execution status.
+ *******************************************************************/
+TERMINAL_status_t TERMINAL_flush_buffer(uint8_t instance);
 
 /*******************************************************************/
 #define TERMINAL_exit_error(base) { ERROR_check_exit(terminal_status, TERMINAL_SUCCESS, base) }
