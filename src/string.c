@@ -17,8 +17,13 @@
 
 /*** STRING local macros ***/
 
-#define STRING_VALUE_BUFFER_SIZE    256
-#define STRING_SIZE_MAX             1024
+#define STRING_VALUE_BUFFER_SIZE            256
+#define STRING_SIZE_MAX                     1024
+#ifdef EMBEDDED_UTILS_STRING_HEXADECIMAL_UPPER_CASE
+#define STRING_HEXADECIMAL_LETTER_START     'A'
+#else
+#define STRING_HEXADECIMAL_LETTER_START     'a'
+#endif
 
 /*** STRING local functions ***/
 
@@ -102,7 +107,7 @@ static STRING_status_t _STRING_hexadecimal_digit_to_char(uint8_t value, char_t* 
         goto errors;
     }
     // Perform conversion.
-    (*chr) = (value <= 9 ? (value + '0') : (value + ('A' - 10)));
+    (*chr) = (value <= 9 ? (value + '0') : (value + (STRING_HEXADECIMAL_LETTER_START - 10)));
 errors:
     return status;
 }
@@ -540,6 +545,10 @@ STRING_status_t STRING_append_string(char_t* str, uint32_t str_size_max, char_t*
     // Local variables.
     STRING_status_t status = STRING_SUCCESS;
     uint32_t idx = 0;
+    // Check parameters.
+    _STRING_check_pointer(str);
+    _STRING_check_pointer(new_str);
+    _STRING_check_pointer(str_size);
     // Fill buffer.
     while (new_str[idx] != STRING_CHAR_NULL) {
         // Check index.
