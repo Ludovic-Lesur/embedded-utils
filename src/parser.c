@@ -78,14 +78,13 @@ PARSER_status_t PARSER_compare(PARSER_context_t* parser_ctx, PARSER_mode_t mode,
     switch (mode) {
     case PARSER_MODE_STRICT:
         // Check size equality.
-        if ((parser_ctx->buffer_size) != idx) {
+        if (((parser_ctx->buffer_size) - (parser_ctx->start_index)) != idx) {
             status = PARSER_ERROR_REFERENCE_MISMATCH;
             goto errors;
         }
         break;
     case PARSER_MODE_HEADER:
-        // Update start index.
-        (parser_ctx->start_index) = idx;
+        // Nothing to do.
         break;
     default:
         // Unknown mode.
@@ -93,6 +92,8 @@ PARSER_status_t PARSER_compare(PARSER_context_t* parser_ctx, PARSER_mode_t mode,
         goto errors;
         break;
     }
+    // Update start index.
+    (parser_ctx->start_index) += idx;
 errors:
     return status;
 }

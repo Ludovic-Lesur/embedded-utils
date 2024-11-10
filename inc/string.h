@@ -21,6 +21,7 @@
 #define STRING_CHAR_LF      '\n'
 #define STRING_CHAR_MINUS   '-'
 #define STRING_CHAR_DOT     '.'
+#define STRING_CHAR_COMMA   ','
 #define STRING_CHAR_SPACE   ' '
 
 /*** STRING structures ***/
