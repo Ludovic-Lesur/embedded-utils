@@ -17,7 +17,6 @@
 /*** AT local macros ***/
 
 #define AT_HEADER               "AT"
-#define AT_HEADER_SIZE          (sizeof(AT_HEADER) - 1)
 
 #define AT_REPLY_OK             "OK"
 #define AT_REPLY_ERROR          "ERROR_"
@@ -56,9 +55,7 @@ typedef struct {
 
 /*** AT local functions declaration ***/
 
-#if (EMBEDDED_UTILS_AT_INSTANCES_NUMBER > 0)
 static void _AT_rx_irq_callback_0(uint8_t data);
-#endif
 #if (EMBEDDED_UTILS_AT_INSTANCES_NUMBER > 1)
 static void _AT_rx_irq_callback_1(uint8_t data);
 #endif
@@ -107,9 +104,7 @@ static const AT_command_t AT_INTERNAL_COMMANDS_LIST[] = {
 #endif
 
 static const TERMINAL_rx_irq_cb_t AT_RX_IRQ_CALLBACK[EMBEDDED_UTILS_AT_INSTANCES_NUMBER] = {
-#if (EMBEDDED_UTILS_AT_INSTANCES_NUMBER > 0)
     &_AT_rx_irq_callback_0,
-#endif
 #if (EMBEDDED_UTILS_AT_INSTANCES_NUMBER > 1)
     &_AT_rx_irq_callback_1,
 #endif
@@ -157,12 +152,10 @@ errors:
     return;
 }
 
-#if (EMBEDDED_UTILS_AT_INSTANCES_NUMBER > 0)
 /*******************************************************************/
 static void _AT_rx_irq_callback_0(uint8_t data) {
     _AT_rx_irq_callback(0, data);
 }
-#endif
 
 #if (EMBEDDED_UTILS_AT_INSTANCES_NUMBER > 1)
 /*******************************************************************/
@@ -526,5 +519,14 @@ void AT_send_reply(uint8_t instance) {
 errors:
     return;
 }
+
+/*** AT compilation flags check ***/
+
+#if (EMBEDDED_UTILS_AT_INSTANCES_NUMBER > 2)
+#error "Error: AT driver only supports 0, 1 or 2 instances"
+#endif
+#if (EMBEDDED_UTILS_AT_INSTANCES_NUMBER > EMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER)
+#error "Error: Terminal instance(s) missing for AT driver"
+#endif
 
 #endif /* EMBEDDED_UTILS_AT_DRIVER_DISABLE */
