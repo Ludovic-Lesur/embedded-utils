@@ -89,7 +89,7 @@ void ERROR_import_sigfox_stack(void) {
         // Check value.
         if (sigfox_error.code != SIGFOX_EP_API_SUCCESS) {
             // Convert source to base.
-            error_code = ((ERROR_BASE_SIGFOX_EP_LIB + (sigfox_error.source * 0x0100)) + sigfox_error.code);
+            error_code = ((ERROR_BASE_SIGFOX_EP_LIB + (sigfox_error.source * ERROR_BASE_STEP)) + sigfox_error.code);
             ERROR_stack_add(error_code);
             // Increment count.
             error_count++;

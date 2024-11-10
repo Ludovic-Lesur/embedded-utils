@@ -13,6 +13,12 @@
 #endif
 #include "types.h"
 
+/*** ERROR macros ***/
+
+#define ERROR_BASE_STEP     0x0100
+
+/*** ERROR structures ***/
+
 /*!******************************************************************
  * \typedef ERROR_code_t
  * \brief Board error code type.
