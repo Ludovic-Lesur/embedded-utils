@@ -15,7 +15,7 @@
 #include "string.h"
 #include "types.h"
 
-#ifndef EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE
+#if (!(defined EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE) && (EMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER > 0))
 
 /*** TERMINAL local structures ***/
 
@@ -27,13 +27,13 @@ typedef struct {
 
 /*** TERMINAL local global variables ***/
 
-static TERMINAL_context_t terminal_ctx[EMBEDDED_UTILS_TERMINAL_NUMBER];
+static TERMINAL_context_t terminal_ctx[EMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER];
 
 /*** TERMINAL local functions ***/
 
 /*******************************************************************/
 #define _TERMINAL_check_instance(instance) { \
-    if (instance >= EMBEDDED_UTILS_TERMINAL_NUMBER) { \
+    if (instance >= EMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER) { \
         status = TERMINAL_ERROR_INSTANCE; \
         goto errors; \
     } \
@@ -42,7 +42,7 @@ static TERMINAL_context_t terminal_ctx[EMBEDDED_UTILS_TERMINAL_NUMBER];
 /*** TERMINAL functions ***/
 
 /*******************************************************************/
-TERMINAL_status_t TERMINAL_open(uint8_t instance, TERMINAL_HW_rx_irq_cb_t rx_irq_callback) {
+TERMINAL_status_t TERMINAL_open(uint8_t instance, TERMINAL_rx_irq_cb_t rx_irq_callback) {
     // Local variables.
     TERMINAL_status_t status = TERMINAL_SUCCESS;
     // Flush buffer.

@@ -32,25 +32,25 @@ typedef enum {
     TERMINAL_ERROR_BASE_LAST = (TERMINAL_ERROR_BASE_HW_INTERFACE + EMBEDDED_UTILS_HW_INTERFACE_ERROR_BASE_LAST)
 } TERMINAL_status_t;
 
-#ifndef EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE
+#if (!(defined EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE) && (EMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER > 0))
 
 /*!******************************************************************
- * \fn TERMINAL_HW_rx_irq_cb_t
+ * \fn TERMINAL_rx_irq_cb_t
  * \brief Byte reception interrupt callback.
  *******************************************************************/
-typedef void (*TERMINAL_HW_rx_irq_cb_t)(uint8_t data);
+typedef void (*TERMINAL_rx_irq_cb_t)(uint8_t data);
 
 /*** TERMINAL functions ***/
 
 /*!******************************************************************
- * \fn TERMINAL_status_t TERMINAL_open(uint8_t instance, TERMINAL_HW_rx_irq_cb_t rx_irq_callback)
+ * \fn TERMINAL_status_t TERMINAL_open(uint8_t instance, TERMINAL_rx_irq_cb_t rx_irq_callback)
  * \brief Open a terminal with a physical interface to print and receive data.
  * \param[in]   instance: Terminal instance to initialize.
  * \param[in]   rx_irq_callback: Function to be called when a byte is received.
  * \param[out]  none
  * \retval      Function execution status.
  *******************************************************************/
-TERMINAL_status_t TERMINAL_open(uint8_t instance, TERMINAL_HW_rx_irq_cb_t rx_irq_callback);
+TERMINAL_status_t TERMINAL_open(uint8_t instance, TERMINAL_rx_irq_cb_t rx_irq_callback);
 
 /*!******************************************************************
  * \fn TERMINAL_status_t TERMINAL_close(uint8_t instance)

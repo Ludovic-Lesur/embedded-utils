@@ -12,12 +12,12 @@
 #endif
 #include "types.h"
 
-#ifndef EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE
+#if (!(defined EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE) && (EMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER > 0))
 
 /*** TERMINAL HW functions ***/
 
 /*******************************************************************/
-TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_init(uint8_t instance, TERMINAL_HW_rx_irq_cb_t rx_irq_callback) {
+TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_init(uint8_t instance, TERMINAL_rx_irq_cb_t rx_irq_callback) {
     // Local variables.
     TERMINAL_status_t status = TERMINAL_SUCCESS;
     /* To be implemented */
