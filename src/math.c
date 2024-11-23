@@ -40,7 +40,6 @@
 const uint32_t MATH_POWER_10[MATH_U32_SIZE_DECIMAL_DIGITS] = { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000 };
 
 #ifdef EMBEDDED_UTILS_MATH_COS_TABLE
-// @formatter:off
 const int16_t MATH_COS_TABLE[MATH_TRIGONOMETRIC_TABLE_SIZE] = {
     1000, 1000, 999, 999, 998, 996, 995, 993, 990, 988,
     985, 982, 978, 974, 970, 966, 961, 956, 951, 946,
@@ -79,11 +78,9 @@ const int16_t MATH_COS_TABLE[MATH_TRIGONOMETRIC_TABLE_SIZE] = {
     940, 946, 951, 956, 961, 966, 970, 974, 978, 982,
     985, 988, 990, 993, 995, 996, 998, 999, 999, 1000
 };
-// @formatter:on
 #endif
 
 #ifdef EMBEDDED_UTILS_MATH_SIN_TABLE
-// @formatter:off
 const int16_t MATH_SIN_TABLE[MATH_TRIGONOMETRIC_TABLE_SIZE] = {
     0, 17, 35, 52, 70, 87, 105, 122, 139, 156,
     174, 191, 208, 225, 242, 259, 276, 292, 309, 326,
@@ -122,11 +119,9 @@ const int16_t MATH_SIN_TABLE[MATH_TRIGONOMETRIC_TABLE_SIZE] = {
     -342, -326, -309, -292, -276, -259, -242, -225, -208, -191,
     -174, -156, -139, -122, -105, -87, -70, -52, -35, -17
 };
-// @formatter:on
 #endif
 
 #ifdef EMBEDDED_UTILS_MATH_ATAN2
-// @formatter:off
 static const uint8_t MATH_ARCTAN_LUT_1[30] = {
     85, 85, 86, 86, 86, 86, 87, 87, 87, 87,
     87, 87, 88, 88, 88, 88, 88, 88, 88, 88,
@@ -164,7 +159,6 @@ static const uint8_t MATH_ARCTAN_LUT_3[200] = {
     61, 61, 61, 61, 62, 62, 62, 62, 62, 62,
     62, 62, 63, 63, 63, 63, 63, 63, 63, 63
 };
-// @formatter:on
 #endif
 
 /*** MATH local functions ***/

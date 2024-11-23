@@ -16,12 +16,12 @@
 
 /*** AT local macros ***/
 
-#define AT_HEADER               "AT"
+#define AT_HEADER       "AT"
 
-#define AT_REPLY_OK             "OK"
-#define AT_REPLY_ERROR          "ERROR_"
-#define AT_REPLY_TAB            "    "
-#define AT_REPLY_END            "\r\n"
+#define AT_REPLY_OK     "OK"
+#define AT_REPLY_ERROR  "ERROR_"
+#define AT_REPLY_TAB    "    "
+#define AT_REPLY_END    "\r\n"
 
 /*** AT local structures ***/
 
@@ -171,7 +171,7 @@ static AT_status_t _AT_print_commands_list(void) {
     AT_status_t status = AT_SUCCESS;
     uint8_t idx = 0;
     // List all commands registered in the current instance.
-    for (idx = 0; idx < at_ctx[at_common_ctx.current_instance].commands_count ; idx++) {
+    for (idx = 0; idx < at_ctx[at_common_ctx.current_instance].commands_count; idx++) {
         // Print syntax.
         AT_reply_add_string(at_common_ctx.current_instance, AT_HEADER);
         AT_reply_add_string(at_common_ctx.current_instance, (char_t*) ((at_ctx[at_common_ctx.current_instance].commands_list[idx])->syntax));
