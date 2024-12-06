@@ -21,7 +21,6 @@ The driver relies on:
 | `EMBEDDED_UTILS_HW_INTERFACE_ERROR_BASE_LAST` | `<value>` | Last error base of the low level terminal interface driver. |
 | `EMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER` | `<value>` | Number of terminals to use. |
 | `EMBEDDED_UTILS_TERMINAL_BUFFER_SIZE` | `<value>` | Internal TX buffer size of the terminal driver. |
-| `EMBEDDED_UTILS_AT_INSTANCES_NUMBER` | `0` / `1` / `2` | Number of AT instances to use. |
 | `EMBEDDED_UTILS_AT_INTERNAL_COMMANDS_ENABLE` | `undefined` / `defined` | Enable AT basic commands (ping, echo, etc.). |
 | `EMBEDDED_UTILS_AT_COMMANDS_LIST_SIZE` | `<value>` | Maximum number of commands that can be registered. |
 | `EMBEDDED_UTILS_AT_BUFFER_SIZE` | `<value>` | Internal RX buffer size of the AT driver. |
