@@ -33,6 +33,7 @@
 #define MATH_U16_MAX                            65535
 #define MATH_U16_MASK                           0xFFFF
 #define MATH_U16_SIZE_BITS                      16
+#define MATH_U16_SIZE_BYTES                     2
 #define MATH_U16_SIZE_DECIMAL_DIGITS            5
 #define MATH_U16_SIZE_HEXADECIMAL_DIGITS        4
 
@@ -40,6 +41,7 @@
 #define MATH_U32_MAX                            4294967295
 #define MATH_U32_MASK                           0xFFFFFFFF
 #define MATH_U32_SIZE_BITS                      32
+#define MATH_U32_SIZE_BYTES                     4
 #define MATH_U32_SIZE_DECIMAL_DIGITS            10
 #define MATH_U32_SIZE_HEXADECIMAL_DIGITS        8
 
@@ -54,6 +56,7 @@
 #define MATH_S16_MAX                            32767
 #define MATH_S16_MASK                           0xFFFF
 #define MATH_S16_SIZE_BITS                      16
+#define MATH_S16_SIZE_BYTES                     2
 #define MATH_S16_SIZE_DECIMAL_DIGITS            5
 #define MATH_S16_SIZE_HEXADECIMAL_DIGITS        4
 
@@ -61,6 +64,7 @@
 #define MATH_S32_MAX                            2147483647
 #define MATH_S32_MASK                           0xFFFFFFFF
 #define MATH_S32_SIZE_BITS                      32
+#define MATH_S32_SIZE_BYTES                     4
 #define MATH_S32_SIZE_DECIMAL_DIGITS            10
 #define MATH_S32_SIZE_HEXADECIMAL_DIGITS        8
 
