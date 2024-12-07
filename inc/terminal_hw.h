@@ -39,6 +39,24 @@ TERMINAL_status_t TERMINAL_HW_init(uint8_t instance, uint32_t baud_rate, TERMINA
 TERMINAL_status_t TERMINAL_HW_de_init(uint8_t instance);
 
 /*!******************************************************************
+ * \fn TERMINAL_status_t TERMINAL_HW_enable_rx(uint8_t instance)
+ * \brief Enable terminal reception.
+ * \param[in]   instance: Terminal instance to use.
+ * \param[out]  none
+ * \retval      Function execution status.
+ *******************************************************************/
+TERMINAL_status_t TERMINAL_HW_enable_rx(uint8_t instance);
+
+/*!******************************************************************
+ * \fn TERMINAL_status_t TERMINAL_HW_disable_rx(uint8_t instance)
+ * \brief Disable terminal reception.
+ * \param[in]   instance: Terminal instance to use.
+ * \param[out]  none
+ * \retval      Function execution status.
+ *******************************************************************/
+TERMINAL_status_t TERMINAL_HW_disable_rx(uint8_t instance);
+
+/*!******************************************************************
  * \fn TERMINAL_status_t TERMINAL_HW_write(uint8_t instance, uint8_t* data, uint32_t data_size_bytes)
  * \brief Write data over terminal interface.
  * \param[in]   instance: Terminal instance to use.

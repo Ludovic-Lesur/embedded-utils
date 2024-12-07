@@ -240,7 +240,7 @@ static void _AT_print_ok(void) {
 /*******************************************************************/
 static void _AT_print_error(ERROR_code_t error_code) {
     // Erase eventual pending reply.
-    TERMINAL_flush_buffer(at_ctx.terminal_instance);
+    TERMINAL_flush_tx_buffer(at_ctx.terminal_instance);
     // Reply error code.
     AT_reply_add_string(AT_REPLY_ERROR);
     // Pad with zero if needed to have always 16 bits.
@@ -281,6 +281,12 @@ AT_status_t AT_init(AT_configuration_t* configuration, PARSER_context_t** parser
     _AT_reset_parser();
     // Update parser pointer.
     (*parser_context_ptr) = &(at_ctx.parser);
+#ifdef EMBEDDED_UTILS_AT_INTERNAL_COMMANDS_ENABLE
+    // Register internal commands.
+    for (idx = 0; idx < (sizeof(AT_INTERNAL_COMMANDS_LIST) / (sizeof(AT_command_t))); idx++) {
+        AT_register_command(&(AT_INTERNAL_COMMANDS_LIST[idx]));
+    }
+#endif
     // Open terminal.
 #ifdef EMBEDDED_UTILS_AT_BAUD_RATE
     terminal_status = TERMINAL_open(at_ctx.terminal_instance, EMBEDDED_UTILS_AT_BAUD_RATE, &_AT_rx_irq_callback);
@@ -288,14 +294,11 @@ AT_status_t AT_init(AT_configuration_t* configuration, PARSER_context_t** parser
     terminal_status = TERMINAL_open(at_ctx.terminal_instance, (configuration->terminal_baud_rate), &_AT_rx_irq_callback);
 #endif
     TERMINAL_exit_error(AT_ERROR_BASE_TERMINAL);
-#ifdef EMBEDDED_UTILS_AT_INTERNAL_COMMANDS_ENABLE
-    // Register internal commands.
-    for (idx = 0; idx < (sizeof(AT_INTERNAL_COMMANDS_LIST) / (sizeof(AT_command_t))); idx++) {
-        AT_register_command(&(AT_INTERNAL_COMMANDS_LIST[idx]));
-    }
-#endif
     // Enable interrupt.
     at_ctx.flags.irq_enable = 1;
+    // Enable receiver.
+    terminal_status = TERMINAL_enable_rx(at_ctx.terminal_instance);
+    TERMINAL_exit_error(AT_ERROR_BASE_TERMINAL);
 errors:
     return status;
 }
@@ -305,6 +308,9 @@ AT_status_t AT_de_init(void) {
     // Local variables.
     AT_status_t status = AT_SUCCESS;
     TERMINAL_status_t terminal_status = TERMINAL_SUCCESS;
+    // Disable receiver.
+    terminal_status = TERMINAL_disable_rx(at_ctx.terminal_instance);
+    TERMINAL_exit_error(AT_ERROR_BASE_TERMINAL);
     // Close terminal.
     terminal_status = TERMINAL_close(at_ctx.terminal_instance);
     TERMINAL_exit_error(AT_ERROR_BASE_TERMINAL);
@@ -325,6 +331,8 @@ AT_status_t AT_process(void) {
     // Disable interrupt and clear flag.
     at_ctx.flags.irq_enable = 0;
     at_ctx.flags.process = 0;
+    // Disable receiver.
+    TERMINAL_disable_rx(at_ctx.terminal_instance);
     // Update parser.
     at_ctx.parser.buffer_size = at_ctx.rx_buffer_size;
     // Perform echo if enabled.
@@ -363,6 +371,8 @@ end:
     at_ctx.flags.process_pending = 0;
     at_ctx.flags.irq_enable = 1;
 errors:
+    // Enable receiver.
+    TERMINAL_enable_rx(at_ctx.terminal_instance);
     return status;
 }
 
@@ -433,27 +443,27 @@ errors:
 /*******************************************************************/
 void AT_reply_add_string(char_t* str) {
     // Add string.
-    TERMINAL_buffer_add_string(at_ctx.terminal_instance, str);
+    TERMINAL_tx_buffer_add_string(at_ctx.terminal_instance, str);
 }
 
 /*******************************************************************/
 void AT_reply_add_integer(int32_t value, STRING_format_t format, uint8_t print_prefix) {
     // Add integer.
-    TERMINAL_buffer_add_integer(at_ctx.terminal_instance, value, format, print_prefix);
+    TERMINAL_tx_buffer_add_integer(at_ctx.terminal_instance, value, format, print_prefix);
 }
 
 /*******************************************************************/
 void AT_reply_add_byte_array(uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix) {
     // Add byte array.
-    TERMINAL_buffer_add_byte_array(at_ctx.terminal_instance, data, data_size_bytes, print_prefix);
+    TERMINAL_tx_buffer_add_byte_array(at_ctx.terminal_instance, data, data_size_bytes, print_prefix);
 }
 
 /*******************************************************************/
 void AT_send_reply(void) {
     // Add the ending marker.
-    TERMINAL_buffer_add_string(at_ctx.terminal_instance, AT_REPLY_END);
-    TERMINAL_write_buffer(at_ctx.terminal_instance);
-    TERMINAL_flush_buffer(at_ctx.terminal_instance);
+    TERMINAL_tx_buffer_add_string(at_ctx.terminal_instance, AT_REPLY_END);
+    TERMINAL_send_tx_buffer(at_ctx.terminal_instance);
+    TERMINAL_flush_tx_buffer(at_ctx.terminal_instance);
 }
 
 /*** AT compilation flags check ***/

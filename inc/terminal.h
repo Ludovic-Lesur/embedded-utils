@@ -63,17 +63,44 @@ TERMINAL_status_t TERMINAL_open(uint8_t instance, uint32_t baud_rate, TERMINAL_r
 TERMINAL_status_t TERMINAL_close(uint8_t instance);
 
 /*!******************************************************************
- * \fn TERMINAL_status_t TERMINAL_print_string(uint8_t instance, char_t* str)
+ * \fn TERMINAL_status_t TERMINAL_enable_rx(uint8_t instance)
+ * \brief Enable terminal reception.
+ * \param[in]   instance: Terminal instance to use.
+ * \param[out]  none
+ * \retval      Function execution status.
+ *******************************************************************/
+TERMINAL_status_t TERMINAL_enable_rx(uint8_t instance);
+
+/*!******************************************************************
+ * \fn TERMINAL_status_t TERMINAL_disable_rx(uint8_t instance)
+ * \brief Disable terminal reception.
+ * \param[in]   instance: Terminal instance to use.
+ * \param[out]  none
+ * \retval      Function execution status.
+ *******************************************************************/
+TERMINAL_status_t TERMINAL_disable_rx(uint8_t instance);
+
+/*!******************************************************************
+ * \fn TERMINAL_status_t TERMINAL_flush_tx_buffer(uint8_t instance)
+ * \brief Flush the buffer of a terminal.
+ * \param[in]   instance: Terminal instance to use.
+ * \param[out]  none
+ * \retval      Function execution status.
+ *******************************************************************/
+TERMINAL_status_t TERMINAL_flush_tx_buffer(uint8_t instance);
+
+/*!******************************************************************
+ * \fn TERMINAL_status_t TERMINAL_tx_buffer_add_string(uint8_t instance, char_t* str)
  * \brief Print a message on terminal.
  * \param[in]   instance: Terminal instance to use.
  * \param[in]   str: null-terminated string to add.
  * \param[out]  none
  * \retval      Function execution status.
  *******************************************************************/
-TERMINAL_status_t TERMINAL_buffer_add_string(uint8_t instance, char_t* str);
+TERMINAL_status_t TERMINAL_tx_buffer_add_string(uint8_t instance, char_t* str);
 
 /*!******************************************************************
- * \fn TERMINAL_status_t TERMINAL_print_integer(uint8_t instance, int32_t value, TERMINAL_format_t format, uint8_t print_prefix)
+ * \fn TERMINAL_status_t TERMINAL_tx_buffer_add_integer(uint8_t instance, int32_t value, TERMINAL_format_t format, uint8_t print_prefix)
  * \brief Print a value on terminal.
  * \param[in]   instance: Terminal instance to use.
  * \param[in]   value: Integer to add.
@@ -82,10 +109,10 @@ TERMINAL_status_t TERMINAL_buffer_add_string(uint8_t instance, char_t* str);
  * \param[out]  none
  * \retval      Function execution status.
  *******************************************************************/
-TERMINAL_status_t TERMINAL_buffer_add_integer(uint8_t instance, int32_t value, STRING_format_t format, uint8_t print_prefix);
+TERMINAL_status_t TERMINAL_tx_buffer_add_integer(uint8_t instance, int32_t value, STRING_format_t format, uint8_t print_prefix);
 
 /*!******************************************************************
- * \fn TERMINAL_status_t TERMINAL_print_byte_array(uint8_t instance, uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix)
+ * \fn TERMINAL_status_t TERMINAL_tx_buffer_add_byte_array(uint8_t instance, uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix)
  * \brief Print a byte array on terminal.
  * \param[in]   instance: Terminal instance to use.
  * \param[in]   data: Byte array to add.
@@ -94,16 +121,16 @@ TERMINAL_status_t TERMINAL_buffer_add_integer(uint8_t instance, int32_t value, S
  * \param[out]  none
  * \retval      Function execution status.
  *******************************************************************/
-TERMINAL_status_t TERMINAL_buffer_add_byte_array(uint8_t instance, uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix);
+TERMINAL_status_t TERMINAL_tx_buffer_add_byte_array(uint8_t instance, uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix);
 
 /*!******************************************************************
- * \fn TERMINAL_status_t TERMINAL_write_buffer(uint8_t instance)
+ * \fn TERMINAL_status_t TERMINAL_send_tx_buffer(uint8_t instance)
  * \brief Write the buffer on terminal.
  * \param[in]   instance: Terminal instance to use.
  * \param[out]  none
  * \retval      Function execution status.
  *******************************************************************/
-TERMINAL_status_t TERMINAL_write_buffer(uint8_t instance);
+TERMINAL_status_t TERMINAL_send_tx_buffer(uint8_t instance);
 
 #ifdef EMBEDDED_UTILS_TERMINAL_MODE_BUS
 /*!******************************************************************
@@ -116,15 +143,6 @@ TERMINAL_status_t TERMINAL_write_buffer(uint8_t instance);
  *******************************************************************/
 TERMINAL_status_t TERMINAL_set_destination_address(uint8_t instance, uint8_t destination_address);
 #endif
-
-/*!******************************************************************
- * \fn TERMINAL_status_t TERMINAL_flush_buffer(uint8_t instance)
- * \brief Flush the buffer of a terminal.
- * \param[in]   instance: Terminal instance to use.
- * \param[out]  none
- * \retval      Function execution status.
- *******************************************************************/
-TERMINAL_status_t TERMINAL_flush_buffer(uint8_t instance);
 
 /*******************************************************************/
 #define TERMINAL_exit_error(base) { ERROR_check_exit(terminal_status, TERMINAL_SUCCESS, base) }

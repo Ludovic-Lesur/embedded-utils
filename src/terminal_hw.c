@@ -37,6 +37,24 @@ TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_de_init(uint8_t instance) {
 }
 
 /*******************************************************************/
+TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_enable_rx(uint8_t instance) {
+    // Local variables.
+    TERMINAL_status_t status = TERMINAL_SUCCESS;
+    /* To be implemented */
+    UNUSED(instance);
+    return status;
+}
+
+/*******************************************************************/
+TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_disable_rx(uint8_t instance) {
+    // Local variables.
+    TERMINAL_status_t status = TERMINAL_SUCCESS;
+    /* To be implemented */
+    UNUSED(instance);
+    return status;
+}
+
+/*******************************************************************/
 TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_write(uint8_t instance, uint8_t* data, uint32_t data_size_bytes) {
     // Local variables.
     TERMINAL_status_t status = TERMINAL_SUCCESS;
