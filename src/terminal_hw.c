@@ -17,11 +17,12 @@
 /*** TERMINAL HW functions ***/
 
 /*******************************************************************/
-TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_init(uint8_t instance, TERMINAL_rx_irq_cb_t rx_irq_callback) {
+TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_init(uint8_t instance, uint32_t baud_rate, TERMINAL_rx_irq_cb_t rx_irq_callback) {
     // Local variables.
     TERMINAL_status_t status = TERMINAL_SUCCESS;
     /* To be implemented */
     UNUSED(instance);
+    UNUSED(baud_rate);
     UNUSED(rx_irq_callback);
     return status;
 }

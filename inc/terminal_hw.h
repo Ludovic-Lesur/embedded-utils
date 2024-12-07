@@ -22,11 +22,12 @@
  * \fn TERMINAL_status_t TERMINAL_HW_init(uint8_t instance, TERMINAL_rx_irq_cb_t rx_irq_callback)
  * \brief Init a terminal hardware interface.
  * \param[in]   instance: Terminal instance to initialize.
+ * \param[in]   baud_rate: Terminal baud rate.
  * \param[in]   rx_irq_callback: Function to be called when a byte is received.
  * \param[out]  none
  * \retval      Function execution status.
  *******************************************************************/
-TERMINAL_status_t TERMINAL_HW_init(uint8_t instance, TERMINAL_rx_irq_cb_t rx_irq_callback);
+TERMINAL_status_t TERMINAL_HW_init(uint8_t instance, uint32_t baud_rate, TERMINAL_rx_irq_cb_t rx_irq_callback);
 
 /*!******************************************************************
  * \fn TERMINAL_status_t TERMINAL_HW_de_init(uint8_t instance)

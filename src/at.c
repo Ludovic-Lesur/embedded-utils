@@ -257,19 +257,23 @@ static void _AT_print_error(ERROR_code_t error_code) {
 /*** AT functions ***/
 
 /*******************************************************************/
-AT_status_t AT_init(uint8_t terminal_instance, AT_process_callback_t process_callback, PARSER_context_t** parser_context_ptr) {
+AT_status_t AT_init(AT_configuration_t* configuration, PARSER_context_t** parser_context_ptr) {
     // Local variables.
     AT_status_t status = AT_SUCCESS;
     TERMINAL_status_t terminal_status = TERMINAL_SUCCESS;
     uint8_t idx = 0;
     // Check parameters.
-    if (process_callback == NULL) {
+    if ((configuration == NULL) || (parser_context_ptr == NULL)) {
+        status = AT_ERROR_NULL_PARAMETER;
+        goto errors;
+    }
+    if ((configuration->process_callback) == NULL) {
         status = AT_ERROR_NULL_PARAMETER;
         goto errors;
     }
     // Init context.
-    at_ctx.process_callback = process_callback;
-    at_ctx.terminal_instance = terminal_instance;
+    at_ctx.process_callback = (configuration->process_callback);
+    at_ctx.terminal_instance = (configuration->terminal_instance);
     for (idx = 0; idx < EMBEDDED_UTILS_AT_COMMANDS_LIST_SIZE; idx++) {
         at_ctx.commands_list[idx] = NULL;
     }
@@ -278,7 +282,11 @@ AT_status_t AT_init(uint8_t terminal_instance, AT_process_callback_t process_cal
     // Update parser pointer.
     (*parser_context_ptr) = &(at_ctx.parser);
     // Open terminal.
-    terminal_status = TERMINAL_open(at_ctx.terminal_instance, &_AT_rx_irq_callback);
+#ifdef EMBEDDED_UTILS_AT_BAUD_RATE
+    terminal_status = TERMINAL_open(at_ctx.terminal_instance, EMBEDDED_UTILS_AT_BAUD_RATE, &_AT_rx_irq_callback);
+#else
+    terminal_status = TERMINAL_open(at_ctx.terminal_instance, (configuration->terminal_baud_rate), &_AT_rx_irq_callback);
+#endif
     TERMINAL_exit_error(AT_ERROR_BASE_TERMINAL);
 #ifdef EMBEDDED_UTILS_AT_INTERNAL_COMMANDS_ENABLE
     // Register internal commands.

@@ -42,14 +42,14 @@ static TERMINAL_context_t terminal_ctx[EMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER]
 /*** TERMINAL functions ***/
 
 /*******************************************************************/
-TERMINAL_status_t TERMINAL_open(uint8_t instance, TERMINAL_rx_irq_cb_t rx_irq_callback) {
+TERMINAL_status_t TERMINAL_open(uint8_t instance, uint32_t baud_rate, TERMINAL_rx_irq_cb_t rx_irq_callback) {
     // Local variables.
     TERMINAL_status_t status = TERMINAL_SUCCESS;
     // Flush buffer.
     status = TERMINAL_flush_buffer(instance);
     if (status != TERMINAL_SUCCESS) goto errors;
     // Init hardware interface.
-    status = TERMINAL_HW_init(instance, rx_irq_callback);
+    status = TERMINAL_HW_init(instance, baud_rate, rx_irq_callback);
     if (status != TERMINAL_SUCCESS) goto errors;
 errors:
     return status;

@@ -52,7 +52,7 @@ typedef void (*AT_process_callback_t)(void);
 typedef AT_status_t (*AT_command_callback_t)(void);
 
 /*!******************************************************************
- * \enum AT_command_t
+ * \struct AT_command_t
  * \brief AT command structure.
  *******************************************************************/
 typedef struct {
@@ -62,17 +62,28 @@ typedef struct {
     AT_command_callback_t callback;
 } AT_command_t;
 
+/*!******************************************************************
+ * \struct AT_configuration_t
+ * \brief AT driver configuration structure.
+ *******************************************************************/
+typedef struct {
+    uint8_t terminal_instance;
+#ifndef EMBEDDED_UTILS_AT_BAUD_RATE
+    uint32_t terminal_baud_rate;
+#endif
+    AT_process_callback_t process_callback;
+} AT_configuration_t;
+
 /*** AT functions ***/
 
 /*!******************************************************************
- * \fn AT_status_t AT_init(uint8_t terminal_instance, AT_process_callback_t process_callback, PARSER_context_t** parser_context_ptr)
+ * \fn AT_status_t AT_init(AT_configuration_t* configuration, PARSER_context_t** parser_context_ptr)
  * \brief Initialize AT command manager.
- * \param[in]   terminal_instance: Terminal instance associated to the AT interface.
- * \param[in]   process_callback: Function to be called when the AT parser has to be processed.
+ * \param[in]   configuration: Pointer to the AT configuration structure.
  * \param[out]  parser_context_ptr: Pointer which will be set to the internal AT parser.
  * \retval      Function execution status.
  *******************************************************************/
-AT_status_t AT_init(uint8_t terminal_instance, AT_process_callback_t process_callback, PARSER_context_t** parser_context_ptr);
+AT_status_t AT_init(AT_configuration_t* configuration, PARSER_context_t** parser_context_ptr);
 
 /*!******************************************************************
  * \fn AT_status_t AT_de_init(void)
