@@ -97,13 +97,25 @@ TERMINAL_status_t TERMINAL_buffer_add_integer(uint8_t instance, int32_t value, S
 TERMINAL_status_t TERMINAL_buffer_add_byte_array(uint8_t instance, uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix);
 
 /*!******************************************************************
- * \fn TERMINAL_status_t TERMINAL_print_buffer(uint8_t instance)
- * \brief Print the buffer of a terminal.
+ * \fn TERMINAL_status_t TERMINAL_write_buffer(uint8_t instance)
+ * \brief Write the buffer on terminal.
  * \param[in]   instance: Terminal instance to use.
  * \param[out]  none
  * \retval      Function execution status.
  *******************************************************************/
-TERMINAL_status_t TERMINAL_print_buffer(uint8_t instance);
+TERMINAL_status_t TERMINAL_write_buffer(uint8_t instance);
+
+#ifdef EMBEDDED_UTILS_TERMINAL_MODE_BUS
+/*!******************************************************************
+ * \fn void TERMINAL_set_destination_address(uint8_t instance, uint8_t destination_address)
+ * \brief Set destination address.
+ * \param[in]   instance: Terminal instance to use.
+ * \param[in]   destination_address: Address to use when printing the buffer.
+ * \param[out]  none
+ * \retval      Function execution status.
+ *******************************************************************/
+TERMINAL_status_t TERMINAL_set_destination_address(uint8_t instance, uint8_t destination_address);
+#endif
 
 /*!******************************************************************
  * \fn TERMINAL_status_t TERMINAL_flush_buffer(uint8_t instance)

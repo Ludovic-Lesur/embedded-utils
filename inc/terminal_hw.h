@@ -49,6 +49,18 @@ TERMINAL_status_t TERMINAL_HW_de_init(uint8_t instance);
  *******************************************************************/
 TERMINAL_status_t TERMINAL_HW_write(uint8_t instance, uint8_t* data, uint32_t data_size_bytes);
 
+#ifdef EMBEDDED_UTILS_TERMINAL_MODE_BUS
+/*!******************************************************************
+ * \fn void TERMINAL_HW_set_destination_address(uint8_t instance, uint8_t destination_address)
+ * \brief Set destination address.
+ * \param[in]   instance: Terminal instance to use.
+ * \param[in]   destination_address: Address to use when printing the buffer.
+ * \param[out]  none
+ * \retval      Function execution status.
+ *******************************************************************/
+TERMINAL_status_t TERMINAL_HW_set_destination_address(uint8_t instance, uint8_t destination_address);
+#endif
+
 #endif /* EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE */
 
 #endif /* __TERMINAL_HW_H__ */

@@ -112,7 +112,7 @@ errors:
 }
 
 /*******************************************************************/
-TERMINAL_status_t TERMINAL_print_buffer(uint8_t instance) {
+TERMINAL_status_t TERMINAL_write_buffer(uint8_t instance) {
     // Local variables.
     TERMINAL_status_t status = TERMINAL_SUCCESS;
     // Check instance.
@@ -123,6 +123,27 @@ TERMINAL_status_t TERMINAL_print_buffer(uint8_t instance) {
 errors:
     return status;
 }
+
+#ifdef EMBEDDED_UTILS_TERMINAL_MODE_BUS
+/*!******************************************************************
+ * \fn TERMINAL_status_t TERMINAL_set_destination_address(uint8_t instance, uint8_t destination_address)
+ * \brief Set destination address.
+ * \param[in]   destination_address: Address to use when printing the buffer.
+ * \param[out]  none
+ * \retval      Function execution status.
+ *******************************************************************/
+TERMINAL_status_t TERMINAL_set_destination_address(uint8_t instance, uint8_t destination_address) {
+    // Local variables.
+    TERMINAL_status_t status = TERMINAL_SUCCESS;
+    // Check instance.
+    _TERMINAL_check_instance(instance);
+    // Print message.
+    status = TERMINAL_HW_set_destination_address(instance, destination_address);
+    if (status != TERMINAL_SUCCESS) goto errors;
+errors:
+    return status;
+}
+#endif
 
 /*******************************************************************/
 TERMINAL_status_t TERMINAL_flush_buffer(uint8_t instance) {

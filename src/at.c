@@ -452,7 +452,7 @@ void AT_reply_add_byte_array(uint8_t* data, uint32_t data_size_bytes, uint8_t pr
 void AT_send_reply(void) {
     // Add the ending marker.
     TERMINAL_buffer_add_string(at_ctx.terminal_instance, AT_REPLY_END);
-    TERMINAL_print_buffer(at_ctx.terminal_instance);
+    TERMINAL_write_buffer(at_ctx.terminal_instance);
     TERMINAL_flush_buffer(at_ctx.terminal_instance);
 }
 

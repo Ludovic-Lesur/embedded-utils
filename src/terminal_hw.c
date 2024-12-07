@@ -47,4 +47,16 @@ TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_write(uint8_t instance, uint
     return status;
 }
 
+#ifdef EMBEDDED_UTILS_TERMINAL_MODE_BUS
+/*******************************************************************/
+TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_set_destination_address(uint8_t instance, uint8_t destination_address) {
+    // Local variables.
+    TERMINAL_status_t status = TERMINAL_SUCCESS;
+    /* To be implemented */
+    UNUSED(instance);
+    UNUSED(destination_address);
+    return status;
+}
+#endif
+
 #endif /* EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE */
