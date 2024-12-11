@@ -204,9 +204,9 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
  * \param[out]  none
  * \retval      none
  *******************************************************************/
-#define MATH_abs(x, y) { \
-    if (x >= 0) { y = x; } \
-    else { y = ((-1) * x); } \
+#define MATH_abs(x, y, output_type) { \
+    if (x >= 0) { y = (output_type) x; } \
+    else { y = (output_type) ((-1) * x); } \
 }
 
 /*!******************************************************************

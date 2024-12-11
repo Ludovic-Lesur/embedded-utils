@@ -248,7 +248,7 @@ static const uint8_t MATH_ARCTAN_LUT_3[200] = {
 
 #ifdef EMBEDDED_UTILS_MATH_ATAN2
 /*******************************************************************/
-MATH_status_t _MATH_arctan_ratio(int32_t x, int32_t y, int32_t* angle_degrees) {
+static MATH_status_t _MATH_arctan_ratio(int32_t x, int32_t y, int32_t* angle_degrees) {
     // Local variables.
     MATH_status_t status = MATH_SUCCESS;
     int32_t result = 0;
@@ -257,7 +257,7 @@ MATH_status_t _MATH_arctan_ratio(int32_t x, int32_t y, int32_t* angle_degrees) {
     uint8_t lut_index = 0;
     // Compute ratio.
     ratio = (((int64_t) MATH_ARCTAN_RATIO_FACTOR) * ((int64_t) y)) / ((int64_t) x);
-    MATH_abs(ratio, ratio_abs);
+    MATH_abs(ratio, ratio_abs, int64_t);
     // Check range.
     if (ratio_abs >= MATH_ARCTAN_FIXED_90_START) {
         // Fixed value.
@@ -362,7 +362,7 @@ MATH_status_t MATH_median_filter(int32_t* data, uint8_t median_size, uint8_t ave
     _MATH_median_filter(data, median_size, average_size);
     // Compute average or median value.
     if (average_size > 0) {
-        status = MATH_average(&(data[start_idx]), (end_idx - start_idx + 1), result);
+        status = MATH_average(&(data[start_idx]), (uint8_t) (end_idx - start_idx + 1), result);
     }
     else {
         (*result) = local_buf[(median_size >> 1)];
@@ -442,7 +442,7 @@ MATH_status_t MATH_two_complement_to_integer(uint32_t value, uint8_t sign_bit_po
             }
         }
         absolute_value = not_value + 1;
-        (*result) = (-1) * absolute_value;
+        (*result) = (-1) * ((int32_t) absolute_value);
     }
 errors:
     return status;
@@ -453,7 +453,7 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
     // Local variables.
     MATH_status_t status = MATH_SUCCESS;
     uint32_t absolute_value = 0;
-    uint32_t absolute_mask = ((0b1 << sign_bit_position) - 1);
+    uint32_t absolute_mask = (uint32_t) ((0b1 << sign_bit_position) - 1);
     // Check parameters.
     if (sign_bit_position >= MATH_S32_SIZE_BITS) {
         status = MATH_ERROR_SIGN_BIT;
@@ -461,7 +461,7 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
     }
     _MATH_check_pointer(result);
     // Compute absolute value.
-    MATH_abs(value, absolute_value);
+    MATH_abs(value, absolute_value, uint32_t);
     // Check size.
     if (absolute_value > absolute_mask) {
         status = MATH_ERROR_MAGNITUDE_OVERFLOW;

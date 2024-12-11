@@ -65,7 +65,7 @@ static STRING_status_t _STRING_decimal_digit_to_char(uint8_t value, char_t* chr)
         goto errors;
     }
     // Perform conversion.
-    (*chr) = (value + '0');
+    (*chr) = (char_t) (value + '0');
 errors:
     return status;
 }
@@ -107,7 +107,7 @@ static STRING_status_t _STRING_hexadecimal_digit_to_char(uint8_t value, char_t* 
         goto errors;
     }
     // Perform conversion.
-    (*chr) = (value <= 9 ? (value + '0') : (value + (STRING_HEXADECIMAL_LETTER_START - 10)));
+    (*chr) = (char_t) (value <= 9 ? (value + '0') : (value + (STRING_HEXADECIMAL_LETTER_START - 10)));
 errors:
     return status;
 }
@@ -134,7 +134,7 @@ static STRING_status_t _STRING_extract_decimal_digits(uint32_t value, char_t* di
     int32_t idx = 0;
     // Digits loop.
     for (idx = (MATH_U32_SIZE_DECIMAL_DIGITS - 1); idx >= 0; idx--) {
-        digit = (value - previous_decade) / (MATH_POWER_10[idx]);
+        digit = (uint8_t) ((value - previous_decade) / (MATH_POWER_10[idx]));
         previous_decade += (digit * MATH_POWER_10[idx]);
         if (digit != 0) {
             first_non_zero_found = 1;
@@ -167,7 +167,7 @@ STRING_status_t STRING_integer_to_string(int32_t value, STRING_format_t format, 
         str[str_idx++] = STRING_CHAR_MINUS;
     }
     // Get absolute value.
-    MATH_abs(value, abs_value);
+    MATH_abs(value, abs_value, uint32_t);
     // Build string according to format.
     switch (format) {
     case STRING_FORMAT_BOOLEAN:
@@ -215,7 +215,7 @@ STRING_status_t STRING_integer_to_string(int32_t value, STRING_format_t format, 
             str[str_idx++] = 'd';
         }
         for (idx = (MATH_S32_SIZE_DECIMAL_DIGITS - 1); idx >= 0; idx--) {
-            generic_byte = (abs_value - previous_decade) / (MATH_POWER_10[idx]);
+            generic_byte = (uint8_t) ((abs_value - previous_decade) / (MATH_POWER_10[idx]));
             previous_decade += (generic_byte * MATH_POWER_10[idx]);
             if (generic_byte != 0) {
                 first_non_zero_found = 1;
@@ -277,7 +277,7 @@ STRING_status_t STRING_integer_to_floating_decimal_string(int32_t value, uint8_t
         goto errors;
     }
     // Compute integer part.
-    MATH_abs(value, value_abs);
+    MATH_abs(value, value_abs, uint32_t);
     value_size_digits = _STRING_get_number_of_decimal_digits(value_abs);
     integer_part = (value_abs / MATH_POWER_10[divider_exponent]);
     integer_part_size_digits = _STRING_get_number_of_decimal_digits(integer_part);
@@ -291,7 +291,7 @@ STRING_status_t STRING_integer_to_floating_decimal_string(int32_t value, uint8_t
     if (status != STRING_SUCCESS) goto errors;
     // Compute number of left padding zero.
     if (divider_exponent >= value_size_digits) {
-        number_of_left_zero = (divider_exponent - value_size_digits + 1);
+        number_of_left_zero = (uint8_t) (divider_exponent - value_size_digits + 1);
     }
     // Digits loop.
     while (str_idx <= number_of_digits) {
@@ -391,7 +391,7 @@ STRING_status_t STRING_string_to_integer(char_t* str, STRING_format_t format, ui
             status = _STRING_decimal_char_to_digit(str[start_idx + char_idx], &digit_value);
             if (status != STRING_SUCCESS) goto errors;
             // Add digit to result.
-            (*value) += (digit_value * MATH_POWER_10[number_of_digits - char_idx - 1]);
+            (*value) += (int32_t) (digit_value * MATH_POWER_10[number_of_digits - char_idx - 1]);
         }
         break;
     default:

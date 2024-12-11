@@ -159,7 +159,7 @@ static AT_status_t _AT_echo_callback(void) {
     parser_status = PARSER_get_parameter(&(at_ctx.parser), STRING_FORMAT_BOOLEAN, STRING_CHAR_NULL, &enable);
     PARSER_exit_error(AT_ERROR_BASE_PARSER);
     // Update local flag.
-    at_ctx.flags.echo = enable;
+    at_ctx.flags.echo = (enable == 0) ? 0 : 1;
 errors:
     return status;
 }
