@@ -24,7 +24,6 @@
 #define AT_REPLY_OK     "OK"
 #define AT_REPLY_ERROR  "ERROR_"
 #define AT_REPLY_TAB    "    "
-#define AT_REPLY_END    "\r\n"
 
 /*** AT local structures ***/
 
@@ -461,7 +460,7 @@ void AT_reply_add_byte_array(uint8_t* data, uint32_t data_size_bytes, uint8_t pr
 /*******************************************************************/
 void AT_send_reply(void) {
     // Add the ending marker.
-    TERMINAL_tx_buffer_add_string(at_ctx.terminal_instance, AT_REPLY_END);
+    TERMINAL_tx_buffer_add_string(at_ctx.terminal_instance, EMBEDDED_UTILS_AT_REPLY_END);
     TERMINAL_send_tx_buffer(at_ctx.terminal_instance);
     TERMINAL_flush_tx_buffer(at_ctx.terminal_instance);
 }

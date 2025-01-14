@@ -15,6 +15,8 @@ The driver relies on:
 | `EMBEDDED_UTILS_DISABLE_FLAGS_FILE` | `defined` / `undefined` | Disable the `embedded_utils_flags.h` header file inclusion when compilation flags are given in the project settings or by command line. |
 | `EMBEDDED_UTILS_HW_INTERFACE_ERROR_BASE_LAST` | `<value>` | Last error base of the low level terminal interface driver. |
 | `EMBEDDED_UTILS_AT_DRIVER_DISABLE` | `defined` / `undefined` | Disable the AT driver. |
+| `EMBEDDED_UTILS_AT_BAUD_RATE` | `<value>` | Use a fixed baud rate if defined, otherwise the value is dynamically given. |
+| `EMBEDDED_UTILS_AT_REPLY_END` | `<string>` | Reply ending string. |
 | `EMBEDDED_UTILS_AT_INTERNAL_COMMANDS_ENABLE` | `undefined` / `defined` | Enable AT basic commands (ping, echo, etc.). |
 | `EMBEDDED_UTILS_AT_COMMANDS_LIST_SIZE` | `<value>` | Maximum number of commands that can be registered. |
 | `EMBEDDED_UTILS_AT_BUFFER_SIZE` | `<value>` | Internal RX buffer size of the AT driver. |
