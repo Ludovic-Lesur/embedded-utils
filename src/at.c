@@ -34,6 +34,7 @@ typedef union {
         uint8_t process :1;
         uint8_t process_pending :1;
         uint8_t echo :1;
+        uint8_t reply_sent : 1;
     };
     uint8_t all;
 } AT_flags_t;
@@ -271,6 +272,7 @@ AT_status_t AT_init(AT_configuration_t* configuration, PARSER_context_t** parser
         goto errors;
     }
     // Init context.
+    at_ctx.flags.all = 0;
     at_ctx.process_callback = (configuration->process_callback);
     at_ctx.terminal_instance = (configuration->terminal_instance);
     for (idx = 0; idx < EMBEDDED_UTILS_AT_COMMANDS_LIST_SIZE; idx++) {
@@ -339,6 +341,8 @@ AT_status_t AT_process(void) {
         AT_reply_add_string(at_ctx.rx_buffer);
         AT_send_reply();
     }
+    // Reset reply flag.
+    at_ctx.flags.reply_sent = 0;
     // Check header.
     if (PARSER_compare(&(at_ctx.parser), PARSER_MODE_HEADER, AT_HEADER) == PARSER_SUCCESS) {
         // Loop on available commands.
@@ -362,7 +366,7 @@ end:
     if (status != AT_SUCCESS) {
         _AT_print_error((ERROR_code_t) status);
     }
-    else {
+    else if (at_ctx.flags.reply_sent == 0) {
         _AT_print_ok();
     }
     _AT_reset_parser();
@@ -463,6 +467,8 @@ void AT_send_reply(void) {
     TERMINAL_tx_buffer_add_string(at_ctx.terminal_instance, EMBEDDED_UTILS_AT_REPLY_END);
     TERMINAL_send_tx_buffer(at_ctx.terminal_instance);
     TERMINAL_flush_tx_buffer(at_ctx.terminal_instance);
+    // Update flag.
+    at_ctx.flags.reply_sent = 1;
 }
 
 /*** AT compilation flags check ***/
