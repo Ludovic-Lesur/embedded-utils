@@ -33,7 +33,6 @@ typedef union {
         uint8_t irq_enable :1;
         uint8_t process :1;
         uint8_t process_pending :1;
-        uint8_t echo :1;
         uint8_t reply_sent : 1;
     };
     uint8_t all;
@@ -55,7 +54,6 @@ typedef struct {
 
 #ifdef EMBEDDED_UTILS_AT_INTERNAL_COMMANDS_ENABLE
 static AT_status_t _AT_print_commands_list(void);
-static AT_status_t _AT_echo_callback(void);
 static AT_status_t _AT_print_error_stack(void);
 static AT_status_t _AT_print_software_version(void);
 #endif
@@ -75,12 +73,6 @@ static const AT_command_t AT_INTERNAL_COMMANDS_LIST[] = {
         .parameters = NULL,
         .description = "List all commands",
         .callback = &_AT_print_commands_list
-    },
-    {
-        .syntax = "E",
-        .parameters = "<enable[bit]>",
-        .description = "Enable or disable echo",
-        .callback = &_AT_echo_callback,
     },
     {
         .syntax = "$ERROR?",
@@ -144,23 +136,6 @@ static AT_status_t _AT_print_commands_list(void) {
         AT_reply_add_string((char_t*) ((at_ctx.commands_list[idx])->description));
         AT_send_reply();
     }
-    return status;
-}
-#endif
-
-#ifdef EMBEDDED_UTILS_AT_INTERNAL_COMMANDS_ENABLE
-/*******************************************************************/
-static AT_status_t _AT_echo_callback(void) {
-    // Local variables.
-    AT_status_t status = AT_SUCCESS;
-    PARSER_status_t parser_status = PARSER_SUCCESS;
-    int32_t enable = 0;
-    // Parse parameter.
-    parser_status = PARSER_get_parameter(&(at_ctx.parser), STRING_FORMAT_BOOLEAN, STRING_CHAR_NULL, &enable);
-    PARSER_exit_error(AT_ERROR_BASE_PARSER);
-    // Update local flag.
-    at_ctx.flags.echo = (enable == 0) ? 0 : 1;
-errors:
     return status;
 }
 #endif
@@ -327,14 +302,8 @@ AT_status_t AT_process(void) {
     at_ctx.flags.process = 0;
     // Disable receiver.
     TERMINAL_disable_rx(at_ctx.terminal_instance);
-    // Update parser.
+    // Update parser and reset reply flag.
     at_ctx.parser.buffer_size = at_ctx.rx_buffer_size;
-    // Perform echo if enabled.
-    if (at_ctx.flags.echo != 0) {
-        AT_reply_add_string(at_ctx.rx_buffer);
-        AT_send_reply();
-    }
-    // Reset reply flag.
     at_ctx.flags.reply_sent = 0;
     // Check header.
     if (PARSER_compare(&(at_ctx.parser), PARSER_MODE_HEADER, AT_HEADER) == PARSER_SUCCESS) {
