@@ -22,7 +22,7 @@
 #define AT_HEADER       "AT"
 
 #define AT_REPLY_OK     "OK"
-#define AT_REPLY_ERROR  "ERROR_"
+#define AT_REPLY_ERROR  "ERROR:"
 #define AT_REPLY_TAB    "    "
 
 /*** AT local structures ***/
@@ -238,19 +238,12 @@ static void _AT_print_ok(void) {
 }
 
 /*******************************************************************/
-static void _AT_print_error(ERROR_code_t error_code) {
+static void _AT_print_error(AT_status_t at_status) {
     // Erase eventual pending reply.
     TERMINAL_flush_tx_buffer(at_ctx.terminal_instance);
     // Reply error code.
     AT_reply_add_string(AT_REPLY_ERROR);
-    // Pad with zero if needed to have always 16 bits.
-    if (error_code < 0x0100) {
-        AT_reply_add_integer(0, STRING_FORMAT_HEXADECIMAL, 1);
-        AT_reply_add_integer((int32_t) error_code, STRING_FORMAT_HEXADECIMAL, 0);
-    }
-    else {
-        AT_reply_add_integer((int32_t) error_code, STRING_FORMAT_HEXADECIMAL, 1);
-    }
+    AT_reply_add_integer((int32_t) at_status, STRING_FORMAT_HEXADECIMAL, 0);
     AT_send_reply();
 }
 
@@ -364,7 +357,7 @@ AT_status_t AT_process(void) {
     }
 end:
     if (status != AT_SUCCESS) {
-        _AT_print_error((ERROR_code_t) status);
+        _AT_print_error(status);
     }
     else if (at_ctx.flags.reply_sent == 0) {
         _AT_print_ok();
