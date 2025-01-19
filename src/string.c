@@ -251,8 +251,9 @@ STRING_status_t STRING_integer_to_floating_decimal_string(int32_t value, uint8_t
     uint8_t digit_idx = 0;
     uint8_t char_idx = 0;
     // Init digit array.
-    for (char_idx = 0; char_idx < MATH_U32_SIZE_DECIMAL_DIGITS; char_idx++)
+    for (char_idx = 0; char_idx < MATH_U32_SIZE_DECIMAL_DIGITS; char_idx++) {
         digit_array[char_idx] = '0';
+    }
     char_idx = 0;
     // Check parameters.
     if (number_of_digits == 0) {
