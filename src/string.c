@@ -294,7 +294,7 @@ STRING_status_t STRING_integer_to_floating_decimal_string(int32_t value, uint8_t
         number_of_left_zero = (uint8_t) (divider_exponent - value_size_digits + 1);
     }
     // Digits loop.
-    while (str_idx <= number_of_digits) {
+    while (str_idx < number_of_digits) {
         // Compute digit.
         if (char_idx == integer_part_size_digits) {
             // Check if there is enough space for a decimal part.
