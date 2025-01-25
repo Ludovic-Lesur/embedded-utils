@@ -41,3 +41,4 @@ The driver relies on:
 | `EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE_` | `defined` / `undefined` | Disable the TERMINAL driver. |
 | `EMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER` | `<value>` | Number of terminals to use. |
 | `EMBEDDED_UTILS_TERMINAL_BUFFER_SIZE` | `<value>` | Internal TX buffer size of the terminal driver. |
+| `EMBEDDED_UTILS_TERMINAL_MODE_BUS` | `defined` / `undefined` | Enable destination address setting in terminal driver. |
