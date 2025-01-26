@@ -146,21 +146,26 @@ static AT_status_t _AT_print_error_stack(void) {
     // Local variables.
     AT_status_t status = AT_SUCCESS;
     ERROR_code_t error = EMBEDDED_UTILS_ERROR_STACK_SUCCESS_VALUE;
+    uint32_t count = 0;
 #ifdef EMBEDDED_UTILS_ERROR_STACK_SIGFOX
     // Import Sigfox errors into MCU stack.
     ERROR_import_sigfox_stack();
 #endif
     // Unstack all errors.
-    AT_reply_add_string("[ ");
     do {
         error = ERROR_stack_read();
         if (error != EMBEDDED_UTILS_ERROR_STACK_SUCCESS_VALUE) {
-            AT_reply_add_integer((int32_t) error, STRING_FORMAT_HEXADECIMAL, 1);
-            AT_reply_add_string(" ");
+            if (count > 0) {
+                AT_reply_add_string(":");
+            }
+            AT_reply_add_integer((int32_t) error, STRING_FORMAT_HEXADECIMAL, 0);
+            count++;
         }
     }
     while (error != EMBEDDED_UTILS_ERROR_STACK_SUCCESS_VALUE);
-    AT_reply_add_string("]");
+    if (count == 0) {
+        AT_reply_add_string("EMPTY");
+    }
     AT_send_reply();
     return status;
 }
@@ -181,9 +186,8 @@ static AT_status_t _AT_print_software_version(void) {
     if (EMBEDDED_UTILS_AT_SW_VERSION_DIRTY_FLAG != 0) {
         AT_reply_add_string(".dev");
     }
-    AT_reply_add_string(" (");
-    AT_reply_add_integer((int32_t) EMBEDDED_UTILS_AT_SW_VERSION_ID, STRING_FORMAT_HEXADECIMAL, 1);
-    AT_reply_add_string(")");
+    AT_reply_add_string(":");
+    AT_reply_add_integer((int32_t) EMBEDDED_UTILS_AT_SW_VERSION_ID, STRING_FORMAT_HEXADECIMAL, 0);
     AT_send_reply();
     return status;
 }
