@@ -95,7 +95,13 @@ void ERROR_import_sigfox_stack(void) {
             error_count++;
         }
         // Error detection.
+#if (defined ERROR_STACK)
         if (error_count > ERROR_STACK) goto errors;
+#elif (defined SIGFOX_EP_ERROR_STACK)
+        if (error_count > SIGFOX_EP_ERROR_STACK) goto errors;
+#else
+#error "embedded-utils: Sigfox error stack size not defined."
+#endif
     }
     while (sigfox_error.code != SIGFOX_EP_API_SUCCESS);
 errors:

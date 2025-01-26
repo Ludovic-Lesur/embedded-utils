@@ -436,7 +436,7 @@ void AT_send_reply(void) {
 /*** AT compilation flags check ***/
 
 #if (EMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER == 0)
-#error "Error: Terminal instance(s) missing for AT driver"
+#error "embedded-utils: Terminal instance missing for AT driver"
 #endif
 
 #endif /* EMBEDDED_UTILS_AT_DRIVER_DISABLE */
