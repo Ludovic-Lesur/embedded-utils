@@ -17,6 +17,7 @@ The driver relies on:
 | `EMBEDDED_UTILS_AT_DRIVER_DISABLE` | `defined` / `undefined` | Disable the AT driver. |
 | `EMBEDDED_UTILS_AT_BAUD_RATE` | `<value>` | Use a fixed baud rate if defined, otherwise the value is dynamically given. |
 | `EMBEDDED_UTILS_AT_REPLY_END` | `<string>` | Reply ending string. |
+| `EMBEDDED_UTILS_AT_FORCE_OK` | `undefined` / `defined` | Force status printing after command success. |
 | `EMBEDDED_UTILS_AT_INTERNAL_COMMANDS_ENABLE` | `undefined` / `defined` | Enable AT basic commands (ping, echo, etc.). |
 | `EMBEDDED_UTILS_AT_COMMANDS_LIST_SIZE` | `<value>` | Maximum number of commands that can be registered. |
 | `EMBEDDED_UTILS_AT_BUFFER_SIZE` | `<value>` | Internal RX buffer size of the AT driver. |

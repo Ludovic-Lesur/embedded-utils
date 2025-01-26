@@ -33,7 +33,9 @@ typedef union {
         uint8_t irq_enable :1;
         uint8_t process :1;
         uint8_t process_pending :1;
+#ifndef EMBEDDED_UTILS_AT_FORCE_OK
         uint8_t reply_sent : 1;
+#endif
     };
     uint8_t all;
 } AT_flags_t;
@@ -308,7 +310,9 @@ AT_status_t AT_process(void) {
     TERMINAL_disable_rx(at_ctx.terminal_instance);
     // Update parser and reset reply flag.
     at_ctx.parser.buffer_size = at_ctx.rx_buffer_size;
+#ifndef EMBEDDED_UTILS_AT_FORCE_OK
     at_ctx.flags.reply_sent = 0;
+#endif
     // Check header.
     if (PARSER_compare(&(at_ctx.parser), PARSER_MODE_HEADER, AT_HEADER) == PARSER_SUCCESS) {
         // Loop on available commands.
@@ -332,8 +336,14 @@ end:
     if (status != AT_SUCCESS) {
         _AT_print_error(status);
     }
-    else if (at_ctx.flags.reply_sent == 0) {
+    else {
+#ifndef EMBEDDED_UTILS_AT_FORCE_OK
+        if (at_ctx.flags.reply_sent == 0) {
+#endif
         _AT_print_ok();
+#ifndef EMBEDDED_UTILS_AT_FORCE_OK
+        }
+#endif
     }
     _AT_reset_parser();
     // Enable interrupt.
@@ -433,8 +443,10 @@ void AT_send_reply(void) {
     TERMINAL_tx_buffer_add_string(at_ctx.terminal_instance, EMBEDDED_UTILS_AT_REPLY_END);
     TERMINAL_send_tx_buffer(at_ctx.terminal_instance);
     TERMINAL_flush_tx_buffer(at_ctx.terminal_instance);
+#ifndef EMBEDDED_UTILS_AT_FORCE_OK
     // Update flag.
     at_ctx.flags.reply_sent = 1;
+#endif
 }
 
 /*** AT compilation flags check ***/
