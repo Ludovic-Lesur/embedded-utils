@@ -7,9 +7,9 @@
 
 #include "swreg.h"
 
-#include "math.h"
+#include "maths.h"
 #include "parser.h"
-#include "string.h"
+#include "strings.h"
 #include "types.h"
 
 #ifndef EMBEDDED_UTILS_SWREG_DRIVER_DISABLE

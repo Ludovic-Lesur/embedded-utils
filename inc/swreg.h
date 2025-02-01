@@ -9,7 +9,7 @@
 #define __SWREG_H__
 
 #include "parser.h"
-#include "math.h"
+#include "maths.h"
 #include "types.h"
 
 #ifndef EMBEDDED_UTILS_SWREG_DRIVER_DISABLE

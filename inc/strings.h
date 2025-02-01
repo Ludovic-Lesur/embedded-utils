@@ -1,12 +1,12 @@
 /*
- * string.h
+ * strings.h
  *
  *  Created on: 05 dec. 2021
  *      Author: Ludo
  */
 
-#ifndef __STRING_H__
-#define __STRING_H__
+#ifndef __STRINGS_H__
+#define __STRINGS_H__
 
 #ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
 #include "embedded_utils_flags.h"
@@ -212,4 +212,4 @@ STRING_status_t STRING_append_byte_array(char_t* str, uint32_t str_size_max, uin
 
 #endif /* EMBEDDED_UTILS_STRING_DRIVER_DISABLE */
 
-#endif /* __STRING_H__ */
+#endif /* __STRINGS_H__ */

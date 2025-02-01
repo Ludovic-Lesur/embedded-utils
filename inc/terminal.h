@@ -11,7 +11,7 @@
 #ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
 #include "embedded_utils_flags.h"
 #endif
-#include "string.h"
+#include "strings.h"
 #include "types.h"
 
 /*** TERMINAL structures ***/

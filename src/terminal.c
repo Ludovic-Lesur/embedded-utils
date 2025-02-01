@@ -12,7 +12,7 @@
 #endif
 #include "error.h"
 #include "terminal_hw.h"
-#include "string.h"
+#include "strings.h"
 #include "types.h"
 
 #if (!(defined EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE) && (EMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER > 0))

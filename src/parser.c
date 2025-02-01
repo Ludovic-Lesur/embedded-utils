@@ -11,8 +11,8 @@
 #include "embedded_utils_flags.h"
 #endif
 #include "error.h"
-#include "string.h"
-#include "math.h"
+#include "strings.h"
+#include "maths.h"
 #include "types.h"
 
 #ifndef EMBEDDED_UTILS_PARSER_DRIVER_DISABLE

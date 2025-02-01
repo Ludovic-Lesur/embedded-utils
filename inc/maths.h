@@ -1,12 +1,12 @@
 /*
- * math.h
+ * maths.h
  *
  *  Created on: 28 aug. 2020
  *      Author: Ludo
  */
 
-#ifndef __MATH_H__
-#define __MATH_H__
+#ifndef __MATHS_H__
+#define __MATHS_H__
 
 #ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
 #include "embedded_utils_flags.h"
@@ -236,4 +236,4 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
 
 #endif /* EMBEDDED_UTILS_MATH_DRIVER_DISABLE */
 
-#endif /* __MATH_H__ */
+#endif /* __MATHS_H__ */

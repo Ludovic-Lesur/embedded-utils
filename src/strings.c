@@ -1,16 +1,16 @@
 /*
- * string.c
+ * strings.c
  *
  *  Created on: 05 dec. 2021
  *      Author: Ludo
  */
 
-#include "string.h"
+#include "strings.h"
 
 #ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
 #include "embedded_utils_flags.h"
 #endif
-#include "math.h"
+#include "maths.h"
 #include "types.h"
 
 #ifndef EMBEDDED_UTILS_STRING_DRIVER_DISABLE

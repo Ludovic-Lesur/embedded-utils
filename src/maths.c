@@ -1,11 +1,11 @@
 /*
- * math.c
+ * maths.c
  *
  *  Created on: 28 aug. 2020
  *      Author: Ludo
  */
 
-#include "math.h"
+#include "maths.h"
 
 #ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
 #include "embedded_utils_flags.h"
