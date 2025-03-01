@@ -77,13 +77,13 @@ void ERROR_import_sigfox_stack(void);
 #endif
 
 /*******************************************************************/
-#define ERROR_check_exit(ll_status, ll_success, ll_base)  { if (ll_status != ll_success) { status = ((ll_base << 0) + ll_status); goto errors; } }
+#define ERROR_check_exit(ll_status, ll_success, ll_base)  { if (ll_status != ll_success) { status = (((ll_base) << 0) + ll_status); goto errors; } }
 
 /*******************************************************************/
-#define ERROR_check_stack(ll_status, ll_success, ll_base) { if (ll_status != ll_success) { ERROR_stack_add((ll_base << 0) + ll_status); } }
+#define ERROR_check_stack(ll_status, ll_success, ll_base) { if (ll_status != ll_success) { ERROR_stack_add(((ll_base) << 0) + ll_status); } }
 
 /*******************************************************************/
-#define ERROR_check_stack_exit(ll_status, ll_success, ll_base, code) { if (ll_status != ll_success) { ERROR_stack_add((ll_base << 0) + ll_status); status = code; goto errors; } }
+#define ERROR_check_stack_exit(ll_status, ll_success, ll_base, code) { if (ll_status != ll_success) { ERROR_stack_add(((ll_base) << 0) + ll_status); status = code; goto errors; } }
 
 #endif /* EMBEDDED_UTILS_ERROR_DRIVER_DISABLE */
 
