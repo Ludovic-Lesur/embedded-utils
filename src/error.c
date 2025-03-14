@@ -74,9 +74,9 @@ uint8_t ERROR_stack_is_empty(void) {
     return is_empty;
 }
 
-#ifdef EMBEDDED_UTILS_ERROR_STACK_SIGFOX
 /*******************************************************************/
 void ERROR_import_sigfox_stack(void) {
+#ifdef EMBEDDED_UTILS_ERROR_STACK_SIGFOX
     // Local variables.
     SIGFOX_EP_API_status_t sigfox_ep_api_status = SIGFOX_EP_API_SUCCESS;
     ERROR_code_t error_code;
@@ -106,7 +106,7 @@ void ERROR_import_sigfox_stack(void) {
     while (sigfox_error.code != SIGFOX_EP_API_SUCCESS);
 errors:
     return;
-}
 #endif
+}
 
 #endif /* EMBEDDED_UTILS_ERROR_DRIVER_DISABLE */
