@@ -11,6 +11,7 @@
 #ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
 #include "embedded_utils_flags.h"
 #endif
+#include "error.h"
 #include "types.h"
 
 /*** STRING macros ***/
@@ -49,7 +50,7 @@ typedef enum {
     STRING_ERROR_APPEND_OVERFLOW,
     STRING_ERROR_TEXT_JUSTIFICATION,
     // Last base value.
-    STRING_ERROR_BASE_LAST = 0x0100
+    STRING_ERROR_BASE_LAST = ERROR_BASE_STEP
 } STRING_status_t;
 
 #ifndef EMBEDDED_UTILS_STRING_DRIVER_DISABLE

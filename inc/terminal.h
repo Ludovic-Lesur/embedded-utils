@@ -11,6 +11,7 @@
 #ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
 #include "embedded_utils_flags.h"
 #endif
+#include "error.h"
 #include "strings.h"
 #include "types.h"
 
@@ -26,7 +27,7 @@ typedef enum {
     TERMINAL_ERROR_NULL_PARAMETER,
     TERMINAL_ERROR_INSTANCE,
     // Low level drivers errors.
-    TERMINAL_ERROR_BASE_STRING = 0x0100,
+    TERMINAL_ERROR_BASE_STRING = ERROR_BASE_STEP,
     TERMINAL_ERROR_BASE_HW_INTERFACE = (TERMINAL_ERROR_BASE_STRING + STRING_ERROR_BASE_LAST),
     // Last base value.
     TERMINAL_ERROR_BASE_LAST = (TERMINAL_ERROR_BASE_HW_INTERFACE + EMBEDDED_UTILS_HW_INTERFACE_ERROR_BASE_LAST)

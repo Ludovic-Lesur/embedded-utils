@@ -11,6 +11,7 @@
 #ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
 #include "embedded_utils_flags.h"
 #endif
+#include "error.h"
 #include "types.h"
 
 /*** MATH macros ***/
@@ -116,7 +117,7 @@ typedef enum {
     MATH_ERROR_SIGN_BIT,
     MATH_ERROR_MAGNITUDE_OVERFLOW,
     // Last base value.
-    MATH_ERROR_BASE_LAST = 0x0100
+    MATH_ERROR_BASE_LAST = ERROR_BASE_STEP
 } MATH_status_t;
 
 #ifndef EMBEDDED_UTILS_MATH_DRIVER_DISABLE

@@ -11,6 +11,7 @@
 #ifndef EMBEDDED_UTILS_DISABLE_FLAGS_FILE
 #include "embedded_utils_flags.h"
 #endif
+#include "error.h"
 #include "strings.h"
 #include "types.h"
 
@@ -32,7 +33,7 @@ typedef enum {
     PARSER_ERROR_PARAMETER_NOT_FOUND,
     PARSER_ERROR_BYTE_ARRAY_SIZE,
     // Low level drivers errors.
-    PARSER_ERROR_BASE_STRING = 0x0100,
+    PARSER_ERROR_BASE_STRING = ERROR_BASE_STEP,
     // Last base value.
     PARSER_ERROR_BASE_LAST = (PARSER_ERROR_BASE_STRING + STRING_ERROR_BASE_LAST)
 } PARSER_status_t;
