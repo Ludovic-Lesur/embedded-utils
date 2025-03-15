@@ -283,14 +283,13 @@ AT_status_t AT_de_init(void) {
     // Local variables.
     AT_status_t status = AT_SUCCESS;
     TERMINAL_status_t terminal_status = TERMINAL_SUCCESS;
+    // Disable interrupt.
+    at_ctx.flags.irq_enable = 0;
     // Disable receiver.
-    terminal_status = TERMINAL_disable_rx(at_ctx.terminal_instance);
-    TERMINAL_exit_error(AT_ERROR_BASE_TERMINAL);
+    TERMINAL_disable_rx(at_ctx.terminal_instance);
     // Close terminal.
     terminal_status = TERMINAL_close(at_ctx.terminal_instance);
     TERMINAL_exit_error(AT_ERROR_BASE_TERMINAL);
-    // Disable interrupt.
-    at_ctx.flags.irq_enable = 0;
 errors:
     return status;
 }
