@@ -26,7 +26,6 @@ The driver relies on:
 | `EMBEDDED_UTILS_AT_SW_VERSION_INDEX` | `<value>` | Software version index. |
 | `EMBEDDED_UTILS_AT_SW_VERSION_DIRTY_FLAG` | `0` / `1` | Software version dirty flag. |
 | `EMBEDDED_UTILS_AT_SW_VERSION_ID` | `<value>` | Software version ID. |
-| `EMBEDDED_UTILS_ERROR_DRIVER_DISABLE` | `defined` / `undefined` | Disable the ERROR driver. |
 | `EMBEDDED_UTILS_ERROR_STACK_DEPTH` | `<value>` | Maximum number of errors stored in stack. |
 | `EMBEDDED_UTILS_ERROR_STACK_SUCCESS_VALUE` | `<value>` | Default value to store in stack when there is no error. |
 | `EMBEDDED_UTILS_ERROR_STACK_SIGFOX` | `undefined` / `defined` | Enable specific function to import Sigfox EP library errors in stack. | 

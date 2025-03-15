@@ -17,8 +17,6 @@
 #include "sigfox_error.h"
 #endif
 
-#ifndef EMBEDDED_UTILS_ERROR_DRIVER_DISABLE
-
 /*** ERROR local structures ***/
 
 /*******************************************************************/
@@ -105,8 +103,6 @@ void ERROR_import_sigfox_stack(void) {
     }
     while (sigfox_error.code != SIGFOX_EP_API_SUCCESS);
 errors:
-    return;
 #endif
+    return;
 }
-
-#endif /* EMBEDDED_UTILS_ERROR_DRIVER_DISABLE */
