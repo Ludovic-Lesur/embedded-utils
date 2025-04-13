@@ -29,7 +29,7 @@
 
 /*******************************************************************/
 #define _PARSER_check_size(void) { \
-    if ((parser_ctx -> buffer_size) == 0) { \
+    if ((parser_ctx->buffer_size) == 0) { \
         status = PARSER_ERROR_BUFFER_SIZE; \
         goto errors; \
     } \
