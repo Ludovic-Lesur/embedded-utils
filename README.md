@@ -21,6 +21,9 @@ The driver relies on:
 | `EMBEDDED_UTILS_AT_INTERNAL_COMMANDS_ENABLE` | `undefined` / `defined` | Enable AT basic commands (ping, echo, etc.). |
 | `EMBEDDED_UTILS_AT_COMMANDS_LIST_SIZE` | `<value>` | Maximum number of commands that can be registered. |
 | `EMBEDDED_UTILS_AT_BUFFER_SIZE` | `<value>` | Internal RX buffer size of the AT driver. |
+| `EMBEDDED_UTILS_AT_BOARD_NAME` | `<value>` | Board name. |
+| `EMBEDDED_UTILS_AT_HW_VERSION_MAJOR` | `<value>` | Hardware major version. |
+| `EMBEDDED_UTILS_AT_HW_VERSION_MINOR` | `<value>` | Hardware minor version. |
 | `EMBEDDED_UTILS_AT_SW_VERSION_MAJOR` | `<value>` | Software major version. |
 | `EMBEDDED_UTILS_AT_SW_VERSION_MINOR` | `<value>` | Software minor version. |
 | `EMBEDDED_UTILS_AT_SW_VERSION_INDEX` | `<value>` | Software version index. |

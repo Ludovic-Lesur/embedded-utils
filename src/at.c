@@ -57,7 +57,7 @@ typedef struct {
 #ifdef EMBEDDED_UTILS_AT_INTERNAL_COMMANDS_ENABLE
 static AT_status_t _AT_print_commands_list(void);
 static AT_status_t _AT_print_error_stack(void);
-static AT_status_t _AT_print_software_version(void);
+static AT_status_t _AT_print_informations(void);
 #endif
 
 /*** AT local global variables ***/
@@ -77,16 +77,16 @@ static const AT_command_t AT_INTERNAL_COMMANDS_LIST[] = {
         .callback = &_AT_print_commands_list
     },
     {
+        .syntax = "I",
+        .parameters = NULL,
+        .description = "Read board informations",
+        .callback = &_AT_print_informations
+    },
+    {
         .syntax = "$ERROR?",
         .parameters = NULL,
         .description = "Read error stack",
         .callback = &_AT_print_error_stack
-    },
-    {
-        .syntax = "$V?",
-        .parameters = NULL,
-        .description = "Get software version",
-        .callback = &_AT_print_software_version
     }
 };
 #endif
@@ -175,9 +175,23 @@ static AT_status_t _AT_print_error_stack(void) {
 
 #ifdef EMBEDDED_UTILS_AT_INTERNAL_COMMANDS_ENABLE
 /*******************************************************************/
-static AT_status_t _AT_print_software_version(void) {
+static AT_status_t _AT_print_informations(void) {
     // Local variables.
     AT_status_t status = AT_SUCCESS;
+    // Print board name.
+#ifdef EMBEDDED_UTILS_AT_BOARD_NAME
+    AT_reply_add_string(EMBEDDED_UTILS_AT_BOARD_NAME);
+    AT_send_reply();
+#endif
+#ifdef EMBEDDED_UTILS_AT_HW_VERSION_MAJOR
+    // Print hardware version.
+    AT_reply_add_string("hw");
+    AT_reply_add_integer((int32_t) EMBEDDED_UTILS_AT_HW_VERSION_MAJOR, STRING_FORMAT_DECIMAL, 0);
+    AT_reply_add_string(".");
+    AT_reply_add_integer((int32_t) EMBEDDED_UTILS_AT_HW_VERSION_MINOR, STRING_FORMAT_DECIMAL, 0);
+    AT_send_reply();
+#endif
+#ifdef EMBEDDED_UTILS_AT_SW_VERSION_MAJOR
     // Print software version.
     AT_reply_add_string("sw");
     AT_reply_add_integer((int32_t) EMBEDDED_UTILS_AT_SW_VERSION_MAJOR, STRING_FORMAT_DECIMAL, 0);
@@ -191,6 +205,7 @@ static AT_status_t _AT_print_software_version(void) {
     AT_reply_add_string(":");
     AT_reply_add_integer((int32_t) EMBEDDED_UTILS_AT_SW_VERSION_ID, STRING_FORMAT_HEXADECIMAL, 0);
     AT_send_reply();
+#endif
     return status;
 }
 #endif
