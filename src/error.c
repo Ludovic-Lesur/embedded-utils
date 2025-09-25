@@ -34,8 +34,9 @@ static ERROR_context_t error_ctx;
 /*******************************************************************/
 void ERROR_stack_init(void) {
     // Reset stack.
-    for (error_ctx.stack_idx = 0; error_ctx.stack_idx < EMBEDDED_UTILS_ERROR_STACK_DEPTH; error_ctx.stack_idx++)
+    for (error_ctx.stack_idx = 0; error_ctx.stack_idx < EMBEDDED_UTILS_ERROR_STACK_DEPTH; error_ctx.stack_idx++) {
         error_ctx.stack[error_ctx.stack_idx] = EMBEDDED_UTILS_ERROR_STACK_SUCCESS_VALUE;
+    }
     error_ctx.stack_idx = 0;
 }
 
