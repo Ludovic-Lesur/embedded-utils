@@ -29,15 +29,15 @@
 
 /*******************************************************************/
 typedef union {
-    struct {
-        uint8_t irq_enable :1;
-        uint8_t process :1;
-        uint8_t process_pending :1;
-#ifndef EMBEDDED_UTILS_AT_FORCE_OK
-        uint8_t reply_sent : 1;
-#endif
-    };
     uint8_t all;
+    struct {
+#ifndef EMBEDDED_UTILS_AT_FORCE_OK
+        uint8_t reply_sent :1;
+#endif
+        uint8_t process_pending :1;
+        uint8_t process :1;
+        uint8_t irq_enable :1;
+    } __attribute__((scalar_storage_order("big-endian"))) __attribute__((packed));
 } AT_flags_t;
 
 /*******************************************************************/
