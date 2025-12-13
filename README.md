@@ -41,7 +41,47 @@ The driver relies on:
 | `EMBEDDED_UTILS_STRING_DRIVER_DISABLE` | `defined` / `undefined` | Disable the STRING driver. |
 | `EMBEDDED_UTILS_STRING_HEXADECIMAL_UPPER_CASE` | `undefined` / `defined` | Select format when converting hexadecimal numbers into string. |
 | `EMBEDDED_UTILS_SWREG_DRIVER_DISABLE` | `defined` / `undefined` | Disable the SWREG driver. |
-| `EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE_` | `defined` / `undefined` | Disable the TERMINAL driver. |
+| `EMBEDDED_UTILS_TERMINAL_DRIVER_DISABLE` | `defined` / `undefined` | Disable the TERMINAL driver. |
 | `EMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER` | `<value>` | Number of terminals to use. |
 | `EMBEDDED_UTILS_TERMINAL_BUFFER_SIZE` | `<value>` | Internal TX buffer size of the terminal driver. |
 | `EMBEDDED_UTILS_TERMINAL_MODE_BUS` | `defined` / `undefined` | Enable destination address setting in terminal driver. |
+
+# Build
+
+A static library can be compiled by command line with `cmake`.
+
+```bash
+mkdir build
+cd build
+cmake -DCMAKE_TOOLCHAIN_FILE="<toolchain_file_path>" \
+      -DTOOLCHAIN_PATH="<arm-none-eabi-gcc_path>" \
+      -DTYPES_PATH="<types_file_path>" \
+      -DEMBEDDED_UTILS_HW_INTERFACE_ERROR_BASE_LAST=0 \
+      -DEMBEDDED_UTILS_AT_BAUD_RATE=OFF \
+      -DEMBEDDED_UTILS_AT_REPLY_END=\"\\r\\n\" \
+      -DEMBEDDED_UTILS_AT_FORCE_OK=ON
+      -DEMBEDDED_UTILS_AT_INTERNAL_COMMANDS_ENABLE=ON \
+      -DEMBEDDED_UTILS_AT_COMMANDS_LIST_SIZE=32 \
+      -DEMBEDDED_UTILS_AT_BUFFER_SIZE=64 \
+      -DEMBEDDED_UTILS_AT_BOARD_NAME=\"name\" \
+      -DEMBEDDED_UTILS_AT_HW_VERSION_MAJOR=0 \
+      -DEMBEDDED_UTILS_AT_HW_VERSION_MINOR=0 \
+      -DEMBEDDED_UTILS_AT_SW_VERSION_MAJOR=0 \
+      -DEMBEDDED_UTILS_AT_SW_VERSION_MINOR=0 \
+      -DEMBEDDED_UTILS_AT_SW_VERSION_INDEX=0 \
+      -DEMBEDDED_UTILS_AT_SW_VERSION_DIRTY_FLAG=0 \
+      -DEMBEDDED_UTILS_AT_SW_VERSION_ID=0 \
+      -DEMBEDDED_UTILS_ERROR_STACK_DEPTH=32 \
+      -DEMBEDDED_UTILS_ERROR_STACK_SUCCESS_VALUE=0 \
+      -DEMBEDDED_UTILS_ERROR_STACK_SIGFOX=OFF \
+      -DEMBEDDED_UTILS_MATH_PRECISION=0 `\
+      -DEMBEDDED_UTILS_MATH_COS_TABLE=ON \
+      -DEMBEDDED_UTILS_MATH_SIN_TABLE=ON \
+      -DEMBEDDED_UTILS_MATH_ATAN2=ON \
+      -DEMBEDDED_UTILS_STRING_HEXADECIMAL_UPPER_CASE=OFF \
+      -DEMBEDDED_UTILS_TERMINAL_INSTANCES_NUMBER=1 \
+      -DEMBEDDED_UTILS_TERMINAL_BUFFER_SIZE=64 \
+      -DEMBEDDED_UTILS_TERMINAL_MODE_BUS=OFF \
+      -G "Unix Makefiles" ..
+make all
+```
