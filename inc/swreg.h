@@ -66,6 +66,16 @@ uint32_t SWREG_read_field(uint32_t reg_value, uint32_t field_mask);
  *******************************************************************/
 PARSER_status_t SWREG_parse_register(PARSER_context_t* parser_ctx, char_t separator, uint32_t* reg_value);
 
+/*******************************************************************/
+#define SWREG_check_field(field_mask, condition, default_value, action) { \
+    /* Check value */ \
+    if (SWREG_read_field(reg_value, field_mask) condition) { \
+        /* Write default value */ \
+        SWREG_write_field(&new_reg_value, &new_reg_mask, default_value, field_mask); \
+        action; \
+    } \
+}
+
 #endif /* EMBEDDED_UTILS_SWREG_DRIVER_DISABLE */
 
 #endif /* __SWREG_H__ */
