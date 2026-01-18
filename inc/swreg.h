@@ -57,6 +57,26 @@ void SWREG_write_field(uint32_t* reg_value, uint32_t* reg_mask, uint32_t field_v
 uint32_t SWREG_read_field(uint32_t reg_value, uint32_t field_mask);
 
 /*!******************************************************************
+ * \fn void SWREG_write_byte_array(uint8_t* data, uint8_t data_size_bytes, uint32_t* reg_list)
+ * \brief Write byte array in 32-bits registers.
+ * \param[in]   data: Bytes to write.
+ * \param[in]   data_size_byte: Number of bytes to write.
+ * \param[out]  reg_list: Pointer to the destination registers.
+ * \retval      none
+ *******************************************************************/
+void SWREG_write_byte_array(uint8_t* data, uint8_t data_size_bytes, uint32_t* reg_list);
+
+/*!******************************************************************
+ * \fn void SWREG_read_byte_array(uint8_t* data, uint8_t data_size_bytes, uint32_t* reg_list)
+ * \brief Read multiple 32-bits registers into a byte array.
+ * \param[in]   reg_list: Pointer to the source registers.
+ * \param[in]   data_size_byte: Number of bytes to read.
+ * \param[out]  data: Pointer to the destination byte array.
+ * \retval      Function execution status.
+ *******************************************************************/
+void SWREG_read_byte_array(uint8_t* data, uint8_t data_size_bytes, uint32_t* reg_list);
+
+/*!******************************************************************
  * \fn PARSER_status_t SWREG_parse_register(PARSER_context_t* parser_ctx, char_t separator, uint32_t* reg_value)
  * \brief Parse a register within a character buffer.
  * \param[in]   parser_ctx: Parser context.
@@ -67,11 +87,15 @@ uint32_t SWREG_read_field(uint32_t reg_value, uint32_t field_mask);
 PARSER_status_t SWREG_parse_register(PARSER_context_t* parser_ctx, char_t separator, uint32_t* reg_value);
 
 /*******************************************************************/
-#define SWREG_check_field(field_mask, condition, default_value, action) { \
+#define SWREG_secure_field(field_mask, get_function, convert_function, condition_1, condition_2, default_value, action) { \
+    /* Read value */ \
+    generic_u32 = get_function(SWREG_read_field(new_reg_value, field_mask)); \
     /* Check value */ \
-    if (SWREG_read_field(reg_value, field_mask) condition) { \
-        /* Write default value */ \
-        SWREG_write_field(&new_reg_value, &new_reg_mask, default_value, field_mask); \
+    if ((generic_u32 condition_1) || (generic_u32 condition_2)) { \
+        /* Remove field from mask */ \
+        (*reg_mask) &= (~field_mask); \
+        /* Set field to default value */ \
+        SWREG_write_field(reg_value, &generic_u32, convert_function(default_value), field_mask); \
         action; \
     } \
 }

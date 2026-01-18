@@ -59,6 +59,42 @@ uint32_t SWREG_read_field(uint32_t reg_value, uint32_t field_mask) {
 }
 
 /*******************************************************************/
+void SWREG_write_byte_array(uint8_t* data, uint8_t data_size_bytes, uint32_t* reg_list) {
+    // Local variables.
+    uint8_t idx = 0;
+    uint8_t shift = 0;
+    uint8_t reg_addr = 0;
+    uint32_t reg_value = 0;
+    uint32_t reg_mask = 0;
+    // Byte loop.
+    for (idx = 0; idx < data_size_bytes; idx++) {
+        // Compute address, mask and value.
+        reg_addr = (idx >> 2);
+        shift = ((idx % 4) << 3);
+        reg_mask = (0xFF << shift);
+        reg_value = (data[idx] << shift);
+        // Write register.
+        SWREG_modify_register((uint32_t*) &(reg_list[reg_addr]), reg_value, reg_mask);
+    }
+}
+
+/*******************************************************************/
+void SWREG_read_byte_array(uint8_t* data, uint8_t data_size_bytes, uint32_t* reg_list) {
+    // Local variables.
+    uint8_t idx = 0;
+    uint8_t reg_addr = 0;
+    uint32_t reg_mask = 0;
+    // Byte loop.
+    for (idx = 0; idx < data_size_bytes; idx++) {
+        // Compute address and mask.
+        reg_addr = (idx >> 2);
+        reg_mask = (0xFF << ((idx % 4) << 3));
+        // Fill data.
+        data[idx] = (uint8_t) SWREG_read_field(reg_list[reg_addr], reg_mask);
+    }
+}
+
+/*******************************************************************/
 PARSER_status_t SWREG_parse_register(PARSER_context_t* parser_ctx, char_t separator, uint32_t* reg_value) {
     // Local variables.
     PARSER_status_t status = PARSER_SUCCESS;
