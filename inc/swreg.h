@@ -89,9 +89,9 @@ PARSER_status_t SWREG_parse_register(PARSER_context_t* parser_ctx, char_t separa
 /*******************************************************************/
 #define SWREG_secure_field(field_mask, get_function, convert_function, condition_1, condition_2, default_value, action) { \
     /* Read value */ \
-    generic_u32 = get_function(SWREG_read_field(new_reg_value, field_mask)); \
+    generic_s32 = get_function(SWREG_read_field(new_reg_value, field_mask)); \
     /* Check value */ \
-    if ((generic_u32 condition_1) || (generic_u32 condition_2)) { \
+    if ((generic_s32 condition_1) || (generic_s32 condition_2)) { \
         /* Remove field from mask */ \
         (*reg_mask) &= (~field_mask); \
         /* Set field to default value */ \
