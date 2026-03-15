@@ -20,7 +20,7 @@
 /*******************************************************************/
 TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_init(uint8_t instance, uint32_t baud_rate, TERMINAL_rx_irq_cb_t rx_irq_callback) {
     // Local variables.
-    TERMINAL_status_t status = TERMINAL_SUCCESS;
+    TERMINAL_status_t status = TERMINAL_ERROR_HW_FUNCTION_NOT_IMPLEMENTED;
     /* To be implemented */
     UNUSED(instance);
     UNUSED(baud_rate);
@@ -31,7 +31,7 @@ TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_init(uint8_t instance, uint3
 /*******************************************************************/
 TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_de_init(uint8_t instance) {
     // Local variables.
-    TERMINAL_status_t status = TERMINAL_SUCCESS;
+    TERMINAL_status_t status = TERMINAL_ERROR_HW_FUNCTION_NOT_IMPLEMENTED;
     /* To be implemented */
     UNUSED(instance);
     return status;
@@ -40,7 +40,7 @@ TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_de_init(uint8_t instance) {
 /*******************************************************************/
 TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_enable_rx(uint8_t instance) {
     // Local variables.
-    TERMINAL_status_t status = TERMINAL_SUCCESS;
+    TERMINAL_status_t status = TERMINAL_ERROR_HW_FUNCTION_NOT_IMPLEMENTED;
     /* To be implemented */
     UNUSED(instance);
     return status;
@@ -49,7 +49,7 @@ TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_enable_rx(uint8_t instance) 
 /*******************************************************************/
 TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_disable_rx(uint8_t instance) {
     // Local variables.
-    TERMINAL_status_t status = TERMINAL_SUCCESS;
+    TERMINAL_status_t status = TERMINAL_ERROR_HW_FUNCTION_NOT_IMPLEMENTED;
     /* To be implemented */
     UNUSED(instance);
     return status;
@@ -58,7 +58,7 @@ TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_disable_rx(uint8_t instance)
 /*******************************************************************/
 TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_write(uint8_t instance, uint8_t* data, uint32_t data_size_bytes) {
     // Local variables.
-    TERMINAL_status_t status = TERMINAL_SUCCESS;
+    TERMINAL_status_t status = TERMINAL_ERROR_HW_FUNCTION_NOT_IMPLEMENTED;
     /* To be implemented */
     UNUSED(instance);
     UNUSED(data);
@@ -70,7 +70,7 @@ TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_write(uint8_t instance, uint
 /*******************************************************************/
 TERMINAL_status_t __attribute__((weak)) TERMINAL_HW_set_destination_address(uint8_t instance, uint8_t destination_address) {
     // Local variables.
-    TERMINAL_status_t status = TERMINAL_SUCCESS;
+    TERMINAL_status_t status = TERMINAL_ERROR_HW_FUNCTION_NOT_IMPLEMENTED;
     /* To be implemented */
     UNUSED(instance);
     UNUSED(destination_address);
