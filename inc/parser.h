@@ -23,7 +23,7 @@
  *******************************************************************/
 typedef enum {
     // Driver errors.
-    PARSER_SUCCESS,
+    PARSER_SUCCESS = 0,
     PARSER_ERROR_NULL_PARAMETER,
     PARSER_ERROR_MODE,
     PARSER_ERROR_REFERENCE_MISMATCH,
@@ -45,7 +45,7 @@ typedef enum {
  * \brief PARSER compare modes.
  *******************************************************************/
 typedef enum {
-    PARSER_MODE_STRICT,
+    PARSER_MODE_STRICT = 0,
     PARSER_MODE_HEADER,
     PARSER_MODE_LAST
 } PARSER_mode_t;
