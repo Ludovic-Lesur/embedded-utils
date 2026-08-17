@@ -246,6 +246,14 @@ static const uint8_t MATH_ARCTAN_LUT_3[200] = {
     } \
 }
 
+/*******************************************************************/
+#define _MATH_check_size(size) { \
+    if (size == 0) { \
+        status = MATH_ERROR_DATA_SIZE; \
+        goto errors; \
+    } \
+}
+
 #ifdef EMBEDDED_UTILS_MATH_ATAN2
 /*******************************************************************/
 static MATH_status_t _MATH_arctan_ratio(int32_t x, int32_t y, int32_t* angle_degrees) {
@@ -309,6 +317,7 @@ MATH_status_t MATH_min(int32_t* data, uint8_t data_size, int32_t* result) {
     // Check parameters.
     _MATH_check_pointer(data);
     _MATH_check_pointer(result);
+    _MATH_check_size(data_size);
     // Compute minimum value.
     _MATH_min(data, data_size, int32_t, MATH_S32_MAX);
 errors:
@@ -322,6 +331,7 @@ MATH_status_t MATH_max(int32_t* data, uint8_t data_size, int32_t* result) {
     // Check parameters.
     _MATH_check_pointer(data);
     _MATH_check_pointer(result);
+    _MATH_check_size(data_size);
     // Compute minimum value.
     _MATH_max(data, data_size, int32_t, MATH_S32_MIN);
 errors:
@@ -335,6 +345,7 @@ MATH_status_t MATH_average(int32_t* data, uint8_t data_size, int32_t* result) {
     // Check parameters.
     _MATH_check_pointer(data);
     _MATH_check_pointer(result);
+    _MATH_check_size(data_size);
     // Compute average.
 #if (EMBEDDED_UTILS_MATH_PRECISION == 2)
     _MATH_average(data, data_size, float64_t, int32_t);
@@ -358,10 +369,11 @@ MATH_status_t MATH_median_filter(int32_t* data, uint8_t median_size, uint8_t ave
     // Check parameters.
     _MATH_check_pointer(data);
     _MATH_check_pointer(result);
+    _MATH_check_size(median_size);
     // Compute median filter.
     _MATH_median_filter(data, median_size, average_size);
     // Compute average or median value.
-    if (average_size > 0) {
+    if (average_size > 1) {
         status = MATH_average(&(data[start_idx]), (uint8_t) (end_idx - start_idx + 1), result);
     }
     else {
