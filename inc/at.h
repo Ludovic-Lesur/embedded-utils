@@ -153,13 +153,13 @@ void AT_reply_add_integer(int32_t value, STRING_format_t format, uint8_t print_p
 void AT_reply_add_byte_array(uint8_t* data, uint32_t data_size_bytes, uint8_t print_prefix);
 
 /*!******************************************************************
- * \fn void AT_send_reply(void)
+ * \fn void AT_reply_send(void)
  * \brief Send the reply buffer.
  * \param[in]   none
  * \param[out]  none
  * \retval      none
  *******************************************************************/
-void AT_send_reply(void);
+void AT_reply_send(void);
 
 /*******************************************************************/
 #define AT_exit_error(base) { ERROR_check_exit(at_status, AT_SUCCESS, base) }

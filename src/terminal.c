@@ -46,7 +46,7 @@ TERMINAL_status_t TERMINAL_open(uint8_t instance, uint32_t baud_rate, TERMINAL_r
     // Local variables.
     TERMINAL_status_t status = TERMINAL_SUCCESS;
     // Flush buffer.
-    status = TERMINAL_flush_tx_buffer(instance);
+    status = TERMINAL_tx_buffer_flush(instance);
     if (status != TERMINAL_SUCCESS) goto errors;
     // Init hardware interface.
     status = TERMINAL_HW_init(instance, baud_rate, rx_irq_callback);
@@ -95,7 +95,7 @@ errors:
 }
 
 /*******************************************************************/
-TERMINAL_status_t TERMINAL_flush_tx_buffer(uint8_t instance) {
+TERMINAL_status_t TERMINAL_tx_buffer_flush(uint8_t instance) {
     // Local variables.
     TERMINAL_status_t status = TERMINAL_SUCCESS;
     uint32_t idx = 0;
@@ -154,7 +154,7 @@ errors:
 }
 
 /*******************************************************************/
-TERMINAL_status_t TERMINAL_send_tx_buffer(uint8_t instance) {
+TERMINAL_status_t TERMINAL_tx_buffer_send(uint8_t instance) {
     // Local variables.
     TERMINAL_status_t status = TERMINAL_SUCCESS;
     // Check instance.

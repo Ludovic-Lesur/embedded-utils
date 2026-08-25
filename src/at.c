@@ -132,11 +132,11 @@ static AT_status_t _AT_print_commands_list(void) {
         AT_reply_add_string((char_t*) ((at_ctx.commands_list[idx])->syntax));
         // Print parameters.
         AT_reply_add_string((char_t*) ((at_ctx.commands_list[idx])->parameters));
-        AT_send_reply();
+        AT_reply_send();
         // Print description.
         AT_reply_add_string(AT_REPLY_TAB);
         AT_reply_add_string((char_t*) ((at_ctx.commands_list[idx])->description));
-        AT_send_reply();
+        AT_reply_send();
     }
     return status;
 }
@@ -168,7 +168,7 @@ static AT_status_t _AT_print_error_stack(void) {
     if (count == 0) {
         AT_reply_add_string("EMPTY");
     }
-    AT_send_reply();
+    AT_reply_send();
     return status;
 }
 #endif
@@ -181,7 +181,7 @@ static AT_status_t _AT_print_informations(void) {
     // Print board name.
 #ifdef EMBEDDED_UTILS_AT_BOARD_NAME
     AT_reply_add_string(EMBEDDED_UTILS_AT_BOARD_NAME);
-    AT_send_reply();
+    AT_reply_send();
 #endif
 #ifdef EMBEDDED_UTILS_AT_HW_VERSION_MAJOR
     // Print hardware version.
@@ -189,7 +189,7 @@ static AT_status_t _AT_print_informations(void) {
     AT_reply_add_integer((int32_t) EMBEDDED_UTILS_AT_HW_VERSION_MAJOR, STRING_FORMAT_DECIMAL, 0);
     AT_reply_add_string(".");
     AT_reply_add_integer((int32_t) EMBEDDED_UTILS_AT_HW_VERSION_MINOR, STRING_FORMAT_DECIMAL, 0);
-    AT_send_reply();
+    AT_reply_send();
 #endif
 #ifdef EMBEDDED_UTILS_AT_SW_VERSION_MAJOR
     // Print software version.
@@ -204,7 +204,7 @@ static AT_status_t _AT_print_informations(void) {
     }
     AT_reply_add_string(":");
     AT_reply_add_integer((int32_t) EMBEDDED_UTILS_AT_SW_VERSION_ID, STRING_FORMAT_HEXADECIMAL, 0);
-    AT_send_reply();
+    AT_reply_send();
 #endif
     return status;
 }
@@ -230,17 +230,17 @@ static void _AT_reset_parser(void) {
 static void _AT_print_ok(void) {
     // Reply OK.
     AT_reply_add_string(AT_REPLY_OK);
-    AT_send_reply();
+    AT_reply_send();
 }
 
 /*******************************************************************/
 static void _AT_print_error(AT_status_t at_status) {
     // Erase eventual pending reply.
-    TERMINAL_flush_tx_buffer(at_ctx.terminal_instance);
+    TERMINAL_tx_buffer_flush(at_ctx.terminal_instance);
     // Reply error code.
     AT_reply_add_string(AT_REPLY_ERROR);
     AT_reply_add_integer((int32_t) at_status, STRING_FORMAT_HEXADECIMAL, 0);
-    AT_send_reply();
+    AT_reply_send();
 }
 
 /*** AT functions ***/
@@ -452,11 +452,11 @@ void AT_reply_add_byte_array(uint8_t* data, uint32_t data_size_bytes, uint8_t pr
 }
 
 /*******************************************************************/
-void AT_send_reply(void) {
+void AT_reply_send(void) {
     // Add the ending marker.
     TERMINAL_tx_buffer_add_string(at_ctx.terminal_instance, EMBEDDED_UTILS_AT_REPLY_END);
-    TERMINAL_send_tx_buffer(at_ctx.terminal_instance);
-    TERMINAL_flush_tx_buffer(at_ctx.terminal_instance);
+    TERMINAL_tx_buffer_send(at_ctx.terminal_instance);
+    TERMINAL_tx_buffer_flush(at_ctx.terminal_instance);
 #ifndef EMBEDDED_UTILS_AT_FORCE_OK
     // Update flag.
     at_ctx.flags.reply_sent = 1;
