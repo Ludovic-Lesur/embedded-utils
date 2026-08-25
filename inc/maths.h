@@ -212,22 +212,6 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
 }
 
 /*!******************************************************************
- * \fn MATH_rolling_mean(value, number_of_samples, new_sample, value_type)
- * \brief Compute rolling mean.
- * \param[in]   value: Current value to update.
- * \param[in]   number_of_samples: Current number of samples.
- * \param[in]   new_sample: New sample to add.
- * \param[in]   value_type: Type of the value.
- * \param[out]  none
- * \retval      none
- *******************************************************************/
-#define MATH_rolling_mean(value, number_of_samples, new_sample, value_type) { \
-    /* Compute rolling mean */ \
-    value = (((value * ((value_type) number_of_samples)) + ((value_type) new_sample)) / ((value_type) (number_of_samples + 1))); \
-    number_of_samples++; \
-}
-
-/*!******************************************************************
  * \fn MATH_rounded_division(output, output_type, value, divider)
  * \brief Divide a value and round the result to the nearest integer.
  * \param[in]   value: Input argument.
@@ -239,6 +223,22 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
 #define MATH_rounded_division(output, output_type, value, divider) { \
     /* Compute rounded division */ \
     output = (output_type) ((((int32_t) value) + ((int32_t) (divider / 2))) / ((int32_t) divider)); \
+}
+
+/*!******************************************************************
+ * \fn MATH_rolling_mean(value, number_of_samples, new_sample, value_type)
+ * \brief Compute rolling mean.
+ * \param[in]   value: Current value to update.
+ * \param[in]   number_of_samples: Current number of samples.
+ * \param[in]   new_sample: New sample to add.
+ * \param[in]   value_type: Type of the value.
+ * \param[out]  none
+ * \retval      none
+ *******************************************************************/
+#define MATH_rolling_mean(value, number_of_samples, new_sample, value_type) { \
+    /* Compute rolling mean */ \
+    MATH_rounded_division(value, value_type, ((value * ((value_type) number_of_samples)) + ((value_type) new_sample)), (number_of_samples + 1)); \
+    number_of_samples++; \
 }
 
 /*******************************************************************/
