@@ -164,81 +164,6 @@ static const uint8_t MATH_ARCTAN_LUT_3[200] = {
 /*** MATH local functions ***/
 
 /*******************************************************************/
-#define _MATH_min(data, data_size, type, init_value) { \
-    /* Local variables */ \
-    type min = init_value; \
-    uint8_t idx = 0; \
-    for (idx = 0; idx < data_size; idx++) { \
-        if (data[idx] < min) { \
-            min = data[idx]; \
-        } \
-    } \
-    (*result) = min; \
-}
-
-/*******************************************************************/
-#define _MATH_max(data, data_size, type, init_value) { \
-    /* Local variables */ \
-    type max = init_value; \
-    uint8_t idx = 0; \
-    for (idx = 0; idx < data_size; idx++) { \
-        if (data[idx] > max) { \
-            max = data[idx]; \
-        } \
-    } \
-    (*result) = max; \
-}
-
-/*******************************************************************/
-#define _MATH_average(data, data_size, average_type, result_type) { \
-    /* Local variables */ \
-    average_type average = 0; \
-    uint8_t idx = 0; \
-    /* Compute rolling mean */ \
-    for (idx = 0; idx < data_size; idx++) { \
-        MATH_rolling_mean(average, idx, data[idx], average_type); \
-    } \
-    (*result) = (result_type) average; \
-}
-
-/*******************************************************************/
-#define _MATH_median_filter(data, median_size, average_size) { \
-    /* Local variables */ \
-    uint8_t buffer_sorted = 0; \
-    uint8_t idx1 = 0; \
-    uint8_t idx2 = 0; \
-    /* Copy input buffer into local buffer */ \
-    for (idx1 = 0; idx1 < median_size; idx1++) { \
-        local_buf[idx1] = data[idx1]; \
-    } \
-    /* Sort buffer in ascending order. */ \
-    for (idx1 = 0; idx1 < median_size; ++idx1) { \
-        buffer_sorted = 1; \
-        for (idx2 = 1; idx2 < (median_size - idx1); ++idx2) { \
-            if (local_buf[idx2 - 1] > local_buf[idx2]) { \
-                temp = local_buf[idx2 - 1]; \
-                local_buf[idx2 - 1] = local_buf[idx2]; \
-                local_buf[idx2] = temp; \
-                buffer_sorted = 0; \
-            } \
-        } \
-        if (buffer_sorted != 0) break; \
-    } \
-    /* Compute start and end indexes for final averaging */ \
-    if (average_size > 0) { \
-        /* Clamp value */ \
-        if (average_size > median_size) { \
-            average_size = median_size; \
-        } \
-        start_idx = (median_size >> 1) - (average_size >> 1); \
-        end_idx =   (median_size >> 1) + (average_size >> 1); \
-        if (end_idx >= median_size) { \
-            end_idx = (median_size - 1); \
-        } \
-    } \
-}
-
-/*******************************************************************/
 #define _MATH_check_pointer(ptr) { \
     if (ptr == NULL) { \
         status = MATH_ERROR_NULL_PARAMETER; \
@@ -314,12 +239,19 @@ errors:
 MATH_status_t MATH_min(int32_t* data, uint8_t data_size, int32_t* result) {
     // Local variables.
     MATH_status_t status = MATH_SUCCESS;
+    int32_t min = MATH_S32_MAX;
+    uint8_t idx = 0;
     // Check parameters.
     _MATH_check_pointer(data);
     _MATH_check_pointer(result);
     _MATH_check_size(data_size);
-    // Compute minimum value.
-    _MATH_min(data, data_size, int32_t, MATH_S32_MAX);
+    // Data loop.
+    for (idx = 0; idx < data_size; idx++) {
+        if (data[idx] < min) {
+            min = data[idx];
+        }
+    }
+    (*result) = min;
 errors:
     return status;
 }
@@ -328,12 +260,19 @@ errors:
 MATH_status_t MATH_max(int32_t* data, uint8_t data_size, int32_t* result) {
     // Local variables.
     MATH_status_t status = MATH_SUCCESS;
+    int32_t max = MATH_S32_MIN;
+    uint8_t idx = 0;
     // Check parameters.
     _MATH_check_pointer(data);
     _MATH_check_pointer(result);
     _MATH_check_size(data_size);
-    // Compute minimum value.
-    _MATH_max(data, data_size, int32_t, MATH_S32_MIN);
+    // Data loop.
+    for (idx = 0; idx < data_size; idx++) {
+        if (data[idx] > max) {
+            max = data[idx];
+        }
+    }
+    (*result) = max;
 errors:
     return status;
 }
@@ -342,18 +281,19 @@ errors:
 MATH_status_t MATH_average(int32_t* data, uint8_t data_size, int32_t* result) {
 // Local variables.
     MATH_status_t status = MATH_SUCCESS;
+    int64_t tmp_s64 = 0;
+    uint8_t idx = 0;
     // Check parameters.
     _MATH_check_pointer(data);
     _MATH_check_pointer(result);
     _MATH_check_size(data_size);
-    // Compute average.
-#if (EMBEDDED_UTILS_MATH_PRECISION == 2)
-    _MATH_average(data, data_size, float64_t, int32_t);
-#elif (EMBEDDED_UTILS_MATH_PRECISION == 1)
-    _MATH_average(data, data_size, float32_t, int32_t);
-#else
-    _MATH_average(data, data_size, int32_t, int32_t);
-#endif
+    // Sum all data.
+    for (idx = 0; idx < data_size; idx++) {
+        tmp_s64 += ((int64_t) (data[idx]));
+    }
+    tmp_s64 = ((tmp_s64) / ((int64_t) data_size));
+    // Update result.
+    (*result) = ((int32_t) (tmp_s64));
 errors:
     return status;
 }
@@ -362,22 +302,49 @@ errors:
 MATH_status_t MATH_median_filter(int32_t* data, uint8_t median_size, uint8_t average_size, int32_t* result) {
     // Local variables.
     MATH_status_t status = MATH_SUCCESS;
-    int32_t local_buf[MATH_MEDIAN_FILTER_SIZE_MAX];
+    int32_t buffer[MATH_MEDIAN_FILTER_SIZE_MAX];
     int32_t temp = 0;
     uint8_t start_idx = 0;
     uint8_t end_idx = 0;
+    uint8_t buffer_sorted = 0;
+    uint8_t idx1 = 0;
+    uint8_t idx2 = 0;
     // Check parameters.
     _MATH_check_pointer(data);
     _MATH_check_pointer(result);
     _MATH_check_size(median_size);
-    // Compute median filter.
-    _MATH_median_filter(data, median_size, average_size);
-    // Compute average or median value.
+    // Copy input buffer into local buffer.
+    for (idx1 = 0; idx1 < median_size; idx1++) {
+        buffer[idx1] = data[idx1];
+    }
+    // Sort buffer in ascending order.
+    for (idx1 = 0; idx1 < median_size; ++idx1) {
+        buffer_sorted = 1;
+        for (idx2 = 1; idx2 < (median_size - idx1); ++idx2) {
+            if (buffer[idx2 - 1] > buffer[idx2]) {
+                temp = buffer[idx2 - 1];
+                buffer[idx2 - 1] = buffer[idx2];
+                buffer[idx2] = temp;
+                buffer_sorted = 0;
+            }
+        }
+        if (buffer_sorted != 0) break;
+    }
+    // Compute start and end indexes for final averaging.
     if (average_size > 1) {
+        // Clamp value.
+        if (average_size > median_size) {
+            average_size = median_size;
+        }
+        start_idx = (median_size >> 1) - (average_size >> 1);
+        end_idx =   (median_size >> 1) + (average_size >> 1);
+        if (end_idx >= median_size) {
+            end_idx = (median_size - 1);
+        }
         status = MATH_average(&(data[start_idx]), (uint8_t) (end_idx - start_idx + 1), result);
     }
     else {
-        (*result) = local_buf[(median_size >> 1)];
+        (*result) = buffer[(median_size >> 1)];
     }
 errors:
     return status;
@@ -482,6 +449,29 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
     (*result) = (absolute_value & absolute_mask);
     if (value < 0) {
         (*result) |= (0b1 << sign_bit_position);
+    }
+errors:
+    return status;
+}
+
+/*******************************************************************/
+MATH_status_t MATH_rounded_division(int32_t value, int32_t divider, int32_t* result) {
+    // Local variables.
+    MATH_status_t status = MATH_SUCCESS;
+    // Check parameters.
+    if (divider == 0) {
+        status = MATH_ERROR_UNDEFINED;
+        goto errors;
+    }
+    _MATH_check_pointer(result);
+    // Check sign.
+    if (((value >= 0) && (divider >= 0)) || ((value <= 0) && (divider <= 0))) {
+        // Add half of divider.
+        (*result) = ((value + (divider / 2)) / (divider));
+    }
+    else {
+        // Subtract half of divider.
+        (*result) = ((value - (divider / 2)) / (divider));
     }
 errors:
     return status;

@@ -199,45 +199,45 @@ MATH_status_t MATH_two_complement_to_integer(uint32_t value, uint8_t sign_bit_po
 MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_position, uint32_t* result);
 
 /*!******************************************************************
+ * \fn MATH_status_t MATH_rounded_division(int32_t value, int32_t divider, int32_t* result)
+ * \brief Divide a value and round the result to the nearest integer.
+ * \param[in]   value: Input argument.
+ * \param[in]   divider: Divider argument.
+ * \param[out]  result: Pointer to the result.
+ * \retval      Function execution status.
+ *******************************************************************/
+MATH_status_t MATH_rounded_division(int32_t value, int32_t divider, int32_t* result);
+
+/*!******************************************************************
  * \fn MATH_abs(x, y)
  * \brief Compute the absolute value.
  * \param[in]   x: Input argument.
  * \param[in]   y: Output result.
+ * \param[in]   type: Variables type.
  * \param[out]  none
  * \retval      none
  *******************************************************************/
-#define MATH_abs(x, y, output_type) { \
-    if (x >= 0) { y = (output_type) x; } \
-    else { y = (output_type) ((-1) * x); } \
-}
-
-/*!******************************************************************
- * \fn MATH_rounded_division(output, output_type, value, divider)
- * \brief Divide a value and round the result to the nearest integer.
- * \param[in]   value: Input argument.
- * \param[in]   divider: Divider argument.
- * \param[in]   output_type: Output result type.
- * \param[out]  output: Output result.
- * \retval      none
- *******************************************************************/
-#define MATH_rounded_division(output, output_type, value, divider) { \
-    /* Compute rounded division */ \
-    output = (output_type) ((((int32_t) value) + ((int32_t) (divider / 2))) / ((int32_t) divider)); \
+#define MATH_abs(x, y, type) { \
+    if (x >= 0) { \
+        y = (type) x; } \
+    else { \
+        y = (type) ((-1) * x); \
+    } \
 }
 
 /*!******************************************************************
  * \fn MATH_rolling_mean(value, number_of_samples, new_sample, value_type)
- * \brief Compute rolling mean.
+ * \brief Compute rolling mean (should only be used with float types).
  * \param[in]   value: Current value to update.
  * \param[in]   number_of_samples: Current number of samples.
  * \param[in]   new_sample: New sample to add.
- * \param[in]   value_type: Type of the value.
+ * \param[in]   type: Mean type.
  * \param[out]  none
  * \retval      none
  *******************************************************************/
-#define MATH_rolling_mean(value, number_of_samples, new_sample, value_type) { \
+#define MATH_rolling_mean(mean, number_of_samples, new_sample, type) { \
     /* Compute rolling mean */ \
-    MATH_rounded_division(value, value_type, ((value * ((value_type) number_of_samples)) + ((value_type) new_sample)), (number_of_samples + 1)); \
+    mean = (((mean * ((type) number_of_samples)) + ((type) new_sample)) / ((type) (number_of_samples + 1))); \
     number_of_samples++; \
 }
 
