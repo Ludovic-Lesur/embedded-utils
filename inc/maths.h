@@ -87,6 +87,20 @@
 
 #define MATH_TRIGONOMETRIC_TABLE_SIZE           MATH_2_PI_DEGREES
 
+#define MATH_SECONDS_PER_MINUTE                 60
+#define MATH_SECONDS_PER_HOUR                   3600
+#define MATH_SECONDS_PER_DAY                    86400
+#define MATH_SECONDS_PER_WEEK                   604800
+
+#define MATH_MINUTES_PER_HOUR                   60
+#define MATH_MINUTES_PER_DAY                    1440
+#define MATH_MINUTES_PER_WEEK                   10080
+
+#define MATH_HOURS_PER_DAY                      24
+#define MATH_HOURS_PER_WEEK                     168
+
+#define MATH_DAYS_PER_WEEK                      7
+
 /*** MATH global variables ***/
 
 extern const uint32_t MATH_POWER_10[MATH_U32_SIZE_DECIMAL_DIGITS];
