@@ -79,9 +79,6 @@
 #define MATH_PERMILLE_MIN                       0
 #define MATH_PERMILLE_MAX                       1000
 
-#if (EMBEDDED_UTILS_MATH_PRECISION > 0)
-#define MATH_PI_RADIAN                          3.141592654
-#endif
 #define MATH_2_PI_DEGREES                       360
 #define MATH_3_PI_4_DEGREES                     270
 #define MATH_PI_DEGREES                         180

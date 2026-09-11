@@ -33,7 +33,6 @@ The driver relies on:
 | `EMBEDDED_UTILS_ERROR_STACK_SUCCESS_VALUE` | `<value>` | Default value to store in stack when there is no error. |
 | `EMBEDDED_UTILS_ERROR_STACK_SIGFOX` | `undefined` / `defined` | Enable specific function to import Sigfox EP library errors in stack. | 
 | `EMBEDDED_UTILS_MATH_DRIVER_DISABLE` | `defined` / `undefined` | Disable the MATH driver. |
-| `EMBEDDED_UTILS_MATH_PRECISION` | `0` / `1` / `2` | Math computation mode: `0` = using integer `1` = using float `2` = using double. |
 | `EMBEDDED_UTILS_MATH_COS_TABLE` | `undefined` / `defined` | Enable cosine table declaration. |
 | `EMBEDDED_UTILS_MATH_SIN_TABLE` | `undefined` / `defined` | Enable sine table declaration. |
 | `EMBEDDED_UTILS_MATH_ATAN2` | `undefined` / `defined` | Enable atan2 function. |
@@ -74,7 +73,6 @@ cmake -DCMAKE_TOOLCHAIN_FILE="<toolchain_file_path>" \
       -DEMBEDDED_UTILS_ERROR_STACK_DEPTH=32 \
       -DEMBEDDED_UTILS_ERROR_STACK_SUCCESS_VALUE=0 \
       -DEMBEDDED_UTILS_ERROR_STACK_SIGFOX=OFF \
-      -DEMBEDDED_UTILS_MATH_PRECISION=0 \
       -DEMBEDDED_UTILS_MATH_COS_TABLE=ON \
       -DEMBEDDED_UTILS_MATH_SIN_TABLE=ON \
       -DEMBEDDED_UTILS_MATH_ATAN2=ON \
