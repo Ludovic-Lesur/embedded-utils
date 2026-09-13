@@ -80,7 +80,7 @@
 #define MATH_PERMILLE_MAX                       1000
 
 #define MATH_2_PI_DEGREES                       360
-#define MATH_3_PI_4_DEGREES                     270
+#define MATH_3_PI_2_DEGREES                     270
 #define MATH_PI_DEGREES                         180
 #define MATH_PI_2_DEGREES                       90
 #define MATH_PI_4_DEGREES                       45

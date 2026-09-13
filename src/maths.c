@@ -378,7 +378,7 @@ MATH_status_t MATH_atan2(int32_t x, int32_t y, int32_t* angle_degrees) {
     }
     else {
         // Check y sign.
-        result = (y >= 0) ? MATH_PI_2_DEGREES : MATH_3_PI_4_DEGREES;
+        result = (y >= 0) ? MATH_PI_2_DEGREES : MATH_3_PI_2_DEGREES;
     }
     // Apply modulo.
     if (result == MATH_2_PI_DEGREES) {
@@ -479,7 +479,7 @@ MATH_status_t MATH_rounded_division(int32_t value, int32_t divider, int32_t* res
     quotient = ((numerator) / ((int64_t) divider));
     // Check range.
     if ((quotient > MATH_S32_MAX) || (quotient < MATH_S32_MIN)) {
-        status = MATH_ERROR_UNDEFINED;
+        status = MATH_ERROR_OVERFLOW;
         goto errors;
     }
     (*result) = (int32_t) quotient;
