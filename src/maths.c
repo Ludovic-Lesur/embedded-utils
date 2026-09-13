@@ -423,7 +423,7 @@ MATH_status_t MATH_two_complement_to_integer(uint32_t value, uint8_t sign_bit_po
             }
         }
         absolute_value = not_value + 1;
-        (*result) = (-1) * ((int32_t) absolute_value);
+        (*result) = (((sign_bit_position == 31) && (absolute_value == 0x80000000)) ? MATH_S32_MIN : ((-1) * ((int32_t) absolute_value)));
     }
 errors:
     return status;
