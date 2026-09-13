@@ -341,7 +341,7 @@ MATH_status_t MATH_median_filter(int32_t* data, uint8_t median_size, uint8_t ave
         if (end_idx >= median_size) {
             end_idx = (median_size - 1);
         }
-        status = MATH_average(&(data[start_idx]), (uint8_t) (end_idx - start_idx + 1), result);
+        status = MATH_average(&(buffer[start_idx]), (uint8_t) (end_idx - start_idx + 1), result);
     }
     else {
         (*result) = buffer[(median_size >> 1)];
