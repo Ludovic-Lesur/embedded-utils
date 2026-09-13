@@ -408,16 +408,18 @@ MATH_status_t MATH_two_complement_to_integer(uint32_t value, uint8_t sign_bit_po
         goto errors;
     }
     _MATH_check_pointer(result);
+    // Keep only the encoded bits.
+    value &= ((sign_bit_position == 31) ? 0xFFFFFFFF : ((((uint32_t) 1) << (sign_bit_position + 1)) - ((uint32_t) 1)));
     // Check sign bit.
-    if ((value & (0b1 << sign_bit_position)) == 0) {
+    if ((value & (((uint32_t) 1) << sign_bit_position)) == 0) {
         // Value is positive: nothing to do.
         (*result) = (int32_t) value;
     }
     else {
         // Value is negative.
         for (bit_idx = 0; bit_idx <= sign_bit_position; bit_idx++) {
-            if ((value & (0b1 << bit_idx)) == 0) {
-                not_value |= (0b1 << bit_idx);
+            if ((value & (((uint32_t) 1) << bit_idx)) == 0) {
+                not_value |= (((uint32_t) 1) << bit_idx);
             }
         }
         absolute_value = not_value + 1;
@@ -432,7 +434,7 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
     // Local variables.
     MATH_status_t status = MATH_SUCCESS;
     uint32_t absolute_value = 0;
-    uint32_t absolute_mask = (uint32_t) ((0b1 << sign_bit_position) - 1);
+    uint32_t absolute_mask = ((sign_bit_position == 31) ? 0x7FFFFFFF : ((((uint32_t) 1) << sign_bit_position) - ((uint32_t) 1)));
     // Check parameters.
     if (sign_bit_position >= MATH_S32_SIZE_BITS) {
         status = MATH_ERROR_SIGN_BIT;
@@ -448,7 +450,7 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
     }
     (*result) = (absolute_value & absolute_mask);
     if (value < 0) {
-        (*result) |= (0b1 << sign_bit_position);
+        (*result) |= (((uint32_t) 1) << sign_bit_position);
     }
 errors:
     return status;
