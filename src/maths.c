@@ -458,6 +458,8 @@ errors:
 MATH_status_t MATH_rounded_division(int32_t value, int32_t divider, int32_t* result) {
     // Local variables.
     MATH_status_t status = MATH_SUCCESS;
+    int64_t numerator = 0;
+    int64_t quotient = 0;
     // Check parameters.
     if (divider == 0) {
         status = MATH_ERROR_UNDEFINED;
@@ -467,12 +469,20 @@ MATH_status_t MATH_rounded_division(int32_t value, int32_t divider, int32_t* res
     // Check sign.
     if (((value >= 0) && (divider >= 0)) || ((value <= 0) && (divider <= 0))) {
         // Add half of divider.
-        (*result) = ((value + (divider / 2)) / (divider));
+        numerator = ((int64_t) value) + (((int64_t) divider) / 2);
     }
     else {
         // Subtract half of divider.
-        (*result) = ((value - (divider / 2)) / (divider));
+        numerator = ((int64_t) value) - (((int64_t) divider) / 2);
     }
+    // Compute fraction.
+    quotient = ((numerator) / ((int64_t) divider));
+    // Check range.
+    if ((quotient > MATH_S32_MAX) || (quotient < MATH_S32_MIN)) {
+        status = MATH_ERROR_UNDEFINED;
+        goto errors;
+    }
+    (*result) = (int32_t) quotient;
 errors:
     return status;
 }
