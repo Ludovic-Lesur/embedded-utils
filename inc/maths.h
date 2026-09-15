@@ -210,6 +210,16 @@ MATH_status_t MATH_two_complement_to_integer(uint32_t value, uint8_t sign_bit_po
 MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_position, uint32_t* result);
 
 /*!******************************************************************
+ * \fn MATH_status_t MATH_signed_magnitude_to_integer(uint32_t value, uint8_t sign_bit_position, int32_t* result)
+ * \brief Convert a signed magnitude representation to a standard 32-bits two complement value.
+ * \param[in]   value: Signed magnitude value to convert.
+ * \param[in]   sign_bit_position: Sign bit position in the value, expressed as a bit index from 0.
+ * \param[out]  result: Pointer to the result.
+ * \retval      Function execution status.
+ *******************************************************************/
+MATH_status_t MATH_signed_magnitude_to_integer(uint32_t value, uint8_t sign_bit_position, int32_t* result);
+
+/*!******************************************************************
  * \fn MATH_status_t MATH_rounded_division(int32_t value, int32_t divider, int32_t* result)
  * \brief Divide a value and round the result to the nearest integer.
  * \param[in]   value: Input argument.

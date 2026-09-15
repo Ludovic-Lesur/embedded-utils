@@ -434,13 +434,15 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
     // Local variables.
     MATH_status_t status = MATH_SUCCESS;
     uint32_t absolute_value = 0;
-    uint32_t absolute_mask = ((sign_bit_position == 31) ? 0x7FFFFFFF : ((((uint32_t) 1) << sign_bit_position) - ((uint32_t) 1)));
+    uint32_t absolute_mask = 0;
     // Check parameters.
     if (sign_bit_position >= MATH_S32_SIZE_BITS) {
         status = MATH_ERROR_SIGN_BIT;
         goto errors;
     }
     _MATH_check_pointer(result);
+    // Compute absolute mask.
+    absolute_mask = ((sign_bit_position == 31) ? 0x7FFFFFFF : ((((uint32_t) 1) << sign_bit_position) - ((uint32_t) 1)));
     // Compute absolute value.
     MATH_abs(value, absolute_value, uint32_t);
     // Check size.
@@ -449,8 +451,32 @@ MATH_status_t MATH_integer_to_signed_magnitude(int32_t value, uint8_t sign_bit_p
         goto errors;
     }
     (*result) = (absolute_value & absolute_mask);
+    // Add sign bit.
     if (value < 0) {
         (*result) |= (((uint32_t) 1) << sign_bit_position);
+    }
+errors:
+    return status;
+}
+
+/*******************************************************************/
+MATH_status_t MATH_signed_magnitude_to_integer(uint32_t value, uint8_t sign_bit_position, int32_t* result) {
+    // Local variables.
+    MATH_status_t status = MATH_SUCCESS;
+    uint32_t absolute_mask = 0;
+    // Check parameters.
+    if (sign_bit_position >= MATH_S32_SIZE_BITS) {
+        status = MATH_ERROR_SIGN_BIT;
+        goto errors;
+    }
+    _MATH_check_pointer(result);
+    // Compute absolute mask.
+    absolute_mask = ((sign_bit_position == 31) ? 0x7FFFFFFF : ((((uint32_t) 1) << sign_bit_position) - ((uint32_t) 1)));
+    // Compute absolute value.
+    (*result) = (int32_t) (value & absolute_mask);
+    // Check sign bit.
+    if ((value & (absolute_mask + 1)) != 0) {
+        (*result) = ((-1) * (*result));
     }
 errors:
     return status;
