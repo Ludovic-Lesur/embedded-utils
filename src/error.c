@@ -14,6 +14,7 @@
 #ifdef EMBEDDED_UTILS_ERROR_STACK_SIGFOX
 #include "error_base.h"
 #include "sigfox_ep_api.h"
+#include "sigfox_ep_flags.h"
 #include "sigfox_error.h"
 #endif
 
@@ -73,9 +74,9 @@ uint8_t ERROR_stack_is_empty(void) {
     return is_empty;
 }
 
+#ifdef EMBEDDED_UTILS_ERROR_STACK_SIGFOX
 /*******************************************************************/
 void ERROR_import_sigfox_stack(void) {
-#ifdef EMBEDDED_UTILS_ERROR_STACK_SIGFOX
     // Local variables.
     SIGFOX_EP_API_status_t sigfox_ep_api_status = SIGFOX_EP_API_SUCCESS;
     ERROR_code_t error_code;
@@ -94,16 +95,16 @@ void ERROR_import_sigfox_stack(void) {
             error_count++;
         }
         // Error detection.
-#if (defined ERROR_STACK)
-        if (error_count > ERROR_STACK) goto errors;
-#elif (defined SIGFOX_EP_ERROR_STACK)
         if (error_count > SIGFOX_EP_ERROR_STACK) goto errors;
-#else
-#error "embedded-utils: Sigfox error stack size not defined."
-#endif
     }
     while (sigfox_error.code != SIGFOX_EP_API_SUCCESS);
 errors:
-#endif
     return;
 }
+#endif
+
+/*** ERROR compilation flags check ***/
+
+#if ((defined EMBEDDED_UTILS_ERROR_STACK_SIGFOX) && !(defined SIGFOX_EP_ERROR_STACK))
+#error "embedded-utils: Sigfox error stack not available."
+#endif

@@ -60,6 +60,7 @@ ERROR_code_t ERROR_stack_read(void);
  *******************************************************************/
 uint8_t ERROR_stack_is_empty(void);
 
+#ifdef EMBEDDED_UTILS_ERROR_STACK_SIGFOX
 /*!******************************************************************
  * \fn void ERROR_import_sigfox_stack(void)
  * \brief Import the Sigfox EP library error stack in the MCU stack.
@@ -68,6 +69,7 @@ uint8_t ERROR_stack_is_empty(void);
  * \retval      none
  *******************************************************************/
 void ERROR_import_sigfox_stack(void);
+#endif
 
 /*******************************************************************/
 #define ERROR_check_exit(ll_status, ll_success, ll_base)  { if (ll_status != ll_success) { status = (((ll_base) << 0) + ll_status); goto errors; } }
