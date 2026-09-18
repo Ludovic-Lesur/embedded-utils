@@ -88,18 +88,42 @@
 #define MATH_TRIGONOMETRIC_TABLE_SIZE           MATH_2_PI_DEGREES
 
 #define MATH_SECONDS_PER_MINUTE                 60
-#define MATH_SECONDS_PER_HOUR                   3600
-#define MATH_SECONDS_PER_DAY                    86400
-#define MATH_SECONDS_PER_WEEK                   604800
-
 #define MATH_MINUTES_PER_HOUR                   60
-#define MATH_MINUTES_PER_DAY                    1440
-#define MATH_MINUTES_PER_WEEK                   10080
-
 #define MATH_HOURS_PER_DAY                      24
-#define MATH_HOURS_PER_WEEK                     168
-
 #define MATH_DAYS_PER_WEEK                      7
+#define MATH_DAYS_PER_MONTH                     31
+#define MATH_DAYS_PER_YEAR                      365
+#define MATH_MONTHS_PER_YEAR                    12
+
+#define MATH_SECONDS_PER_HOUR                   (MATH_SECONDS_PER_MINUTE * MATH_MINUTES_PER_HOUR)
+#define MATH_SECONDS_PER_DAY                    (MATH_SECONDS_PER_HOUR * MATH_HOURS_PER_DAY)
+#define MATH_SECONDS_PER_WEEK                   (MATH_SECONDS_PER_DAY * MATH_DAYS_PER_WEEK)
+#define MATH_SECONDS_PER_MONTH                  (MATH_SECONDS_PER_DAY * MATH_DAYS_PER_MONTH)
+#define MATH_SECONDS_PER_YEAR                   (MATH_SECONDS_PER_DAY * MATH_DAYS_PER_YEAR)
+
+#define MATH_MINUTES_PER_DAY                    (MATH_MINUTES_PER_HOUR * MATH_HOURS_PER_DAY)
+#define MATH_MINUTES_PER_WEEK                   (MATH_MINUTES_PER_DAY * MATH_DAYS_PER_WEEK)
+#define MATH_MINUTES_PER_MONTH                  (MATH_MINUTES_PER_DAY * MATH_DAYS_PER_MONTH)
+#define MATH_MINUTES_PER_YEAR                   (MATH_MINUTES_PER_DAY * MATH_DAYS_PER_YEAR)
+
+#define MATH_HOURS_PER_WEEK                     (MATH_HOURS_PER_DAY * MATH_DAYS_PER_WEEK)
+#define MATH_HOURS_PER_MONTH                    (MATH_HOURS_PER_DAY * MATH_DAYS_PER_MONTH)
+#define MATH_HOURS_PER_YEAR                     (MATH_HOURS_PER_DAY * MATH_DAYS_PER_YEAR)
+
+#define MATH_DATE_MIN                           1
+#define MATH_DATE_MAX                           31
+
+#define MATH_MONTH_MIN                          1
+#define MATH_MONTH_MAX                          12
+
+#define MATH_YEAR_MIN                           2026
+#define MATH_YEAR_MAX                           2094
+
+#define MATH_LATITUDE_DEGREES_MAX               90
+#define MATH_LATITUDE_MINUTES_MAX               60
+
+#define MATH_LONGITUDE_DEGREES_MAX              180
+#define MATH_LONGITUDE_MINUTES_MAX              60
 
 /*** MATH global variables ***/
 
