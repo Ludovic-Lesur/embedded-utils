@@ -88,6 +88,13 @@ void ERROR_import_sigfox_stack(void) {
         if (sigfox_ep_api_status != SIGFOX_EP_API_SUCCESS) goto errors;
         // Check value.
         if (sigfox_error.code != SIGFOX_EP_API_SUCCESS) {
+            // Ignore network errors.
+#ifdef SIGFOX_EP_REGULATORY
+            if ((sigfox_error.source == SIGFOX_ERROR_SOURCE_SIGFOX_EP_API) && (sigfox_error.code == SIGFOX_EP_API_ERROR_TX_FORBIDDEN)) continue;
+#endif
+#ifdef SIGFOX_EP_BIDIRECTIONAL
+            if ((sigfox_error.source == SIGFOX_ERROR_SOURCE_SIGFOX_EP_API) && (sigfox_error.code == SIGFOX_EP_API_ERROR_DOWNLINK_TIMEOUT)) continue;
+#endif
             // Convert source to base.
             error_code = ((ERROR_BASE_SIGFOX_EP_LIB + (sigfox_error.source * ERROR_BASE_STEP)) + sigfox_error.code);
             ERROR_stack_add(error_code);
