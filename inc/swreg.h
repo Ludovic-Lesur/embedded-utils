@@ -86,10 +86,24 @@ void SWREG_read_byte_array(uint8_t* data, uint8_t data_size_bytes, uint32_t* reg
  *******************************************************************/
 PARSER_status_t SWREG_parse_register(PARSER_context_t* parser_ctx, char_t separator, uint32_t* reg_value);
 
-/*******************************************************************/
+/*!******************************************************************
+ * \fn SWREG_secure_field(field_mask, get_function, convert_function, condition_1, condition_2, default_value, action)
+ * \brief Secure a register field.
+ * \param[in]   reg_value: Pointer to the register to secure.
+ * \param[in]   reg_mask: Pointer to the register access mask.
+ * \param[in]   field_mask: Mask of the field to secure.
+ * \param[in]   get_function: Function to call to get the physical field value.
+ * \param[in]   convert_function: Function to call to convert the field physical value.
+ * \param[in]   condition_1: First forbidden condition.
+ * \param[in]   condition_2: Second forbidden condition.
+ * \param[in]   default_value: Value to set in field if any forbidden condition is met.
+ * \param[in]   action: Action to perform if any forbidden condition is met.
+ * \param[out]  none
+ * \retval      none
+ *******************************************************************/
 #define SWREG_secure_field(field_mask, get_function, convert_function, condition_1, condition_2, default_value, action) { \
     /* Read value */ \
-    generic_s32 = get_function(SWREG_read_field(new_reg_value, field_mask)); \
+    generic_s32 = get_function(SWREG_read_field((*reg_value), field_mask)); \
     /* Check value */ \
     if ((generic_s32 condition_1) || (generic_s32 condition_2)) { \
         /* Remove field from mask */ \
